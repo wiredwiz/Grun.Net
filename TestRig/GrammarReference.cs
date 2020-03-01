@@ -1,12 +1,12 @@
 ﻿#region BSD 3-Clause License
 
 // <copyright file="GrammarReference.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// Copyright 2020 
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2020, 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -54,10 +54,28 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       /// </summary>
       /// <param name="assemblyPath">The assembly path.</param>
       /// <param name="grammarName">Name of the grammar.</param>
-      public GrammarReference([NotNull] string assemblyPath, [NotNull] string grammarName)
+      /// <param name="lexerType">Type of the lexer.</param>
+      /// <param name="parserType">Type of the parser.</param>
+      /// <exception cref="ArgumentNullException">
+      ///    assemblyPath
+      ///    or
+      ///    grammarName
+      ///    or
+      ///    parserType
+      ///    or
+      ///    lexerType was <see langword="null" />
+      /// </exception>
+      // ReSharper disable once TooManyDependencies
+      public GrammarReference(
+         [NotNull] string assemblyPath,
+         [NotNull] string grammarName,
+         [NotNull] Type lexerType,
+         [NotNull] Type parserType)
       {
          AssemblyPath = assemblyPath ?? throw new ArgumentNullException(nameof(assemblyPath));
          GrammarName = grammarName ?? throw new ArgumentNullException(nameof(grammarName));
+         Lexer = lexerType ?? throw new ArgumentNullException(nameof(lexerType));
+         Parser = parserType ?? throw new ArgumentNullException(nameof(parserType));
       }
 
       #endregion
@@ -75,5 +93,21 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       /// <value>The name of the grammar.</value>
       [NotNull]
       public string GrammarName { get; }
+
+      /// <summary>
+      ///    Gets the grammar's lexer type.
+      /// </summary>
+      /// <value>The lexer type.</value>
+      /// <see cref="Antlr4.Runtime.Lexer" />
+      [NotNull]
+      public Type Lexer { get; }
+
+      /// <summary>
+      ///    Gets the grammar's parser type.
+      /// </summary>
+      /// <value>The parser type.</value>
+      /// <see cref="Antlr4.Runtime.Parser" />
+      [NotNull]
+      public Type Parser { get; }
    }
 }

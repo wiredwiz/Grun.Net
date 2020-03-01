@@ -64,9 +64,8 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
          if (reference is null) throw new ArgumentNullException(nameof(reference));
          if (stream is null) throw new ArgumentNullException(nameof(stream));
 
-         var assembly = Assembly.LoadFile(reference.AssemblyPath);
-         var lexerType = assembly.GetType($"{reference.GrammarName}Lexer");
-         var lexer = Activator.CreateInstance(lexerType, stream) as Lexer;
+         Assembly.LoadFile(reference.AssemblyPath);
+         var lexer = Activator.CreateInstance(reference.Lexer, stream) as Lexer;
          return lexer;
       }
 
@@ -86,9 +85,8 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
          if (reference is null) throw new ArgumentNullException(nameof(reference));
          if (stream is null) throw new ArgumentNullException(nameof(stream));
 
-         var assembly = Assembly.LoadFile(reference.AssemblyPath);
-         var lexerType = assembly.GetType($"{reference.GrammarName}Parser");
-         var lexer = Activator.CreateInstance(lexerType, stream) as Parser;
+         Assembly.LoadFile(reference.AssemblyPath);
+         var lexer = Activator.CreateInstance(reference.Parser, stream) as Parser;
          return lexer;
       }
    }

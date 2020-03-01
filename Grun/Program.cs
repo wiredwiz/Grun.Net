@@ -36,6 +36,12 @@
 
 #endregion
 
+using System;
+using System.Reflection;
+using Antlr4.Runtime;
+using CommandLine;
+using Parser = CommandLine.Parser;
+
 namespace Org.Edgerunner.ANTLR.Tools.Testing
 {
    /// <summary>
@@ -47,6 +53,47 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
 
       private static void Main(string[] args)
       {
+         Parser.Default.ParseArguments<Options>(args)
+                   .WithParsed<Options>(o =>
+                   {
+                      if (o.Tokens)
+                      {
+                         var workingDirectory = Environment.CurrentDirectory;
+                         var scanner = new Grammar.Scanner();
+                         var loader = new Grammar.Loader();
+                         var grammar = scanner.LocateGrammar(workingDirectory, o.GrammarName);
+                         if (grammar == null)
+                         {
+                            Console.WriteLine($"Could not find an assembly that defines grammar \"{o.GrammarName}\" in the current working directory");
+                            return;
+                         }
+
+                         string line = null;
+                         string data = string.Empty;
+                         Console.WriteLine("Enter text to be parsed:");
+                         while ((line = Console.ReadLine()) != null)
+                         {
+                            data += line + Environment.NewLine;
+                         }
+
+                         var inputStream = new AntlrInputStream(data);
+                         var lexer = loader.LoadLexer(grammar, inputStream);
+                         var commonTokenStream = new CommonTokenStream(lexer);
+                         commonTokenStream.Fill();
+                         var tokens = commonTokenStream.GetTokens();
+                         foreach (var token in tokens)
+                            Console.WriteLine(token.ToString());
+                         //var parser = loader.LoadParser(grammar, commonTokenStream);
+                         //parser.BuildParseTree = true;
+                         //var rule = grammar.Parser.GetMethod(o.RuleName);
+                         //if (rule == null)
+                         //{
+                         //   Console.WriteLine($"Could not find a parser rule named \"{o.RuleName}\" for grammar \"{grammar.GrammarName}\"");
+                         //   return;
+                         //}
+                         //rule.Invoke(parser, null);
+                      }
+                   });
       }
 
       #endregion

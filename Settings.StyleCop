@@ -3,20 +3,15 @@
     <StringProperty Name="MergeSettingsFiles">NoMerge</StringProperty>
     <CollectionProperty Name="RecognizedWords">
       <Value>Edgerunner</Value>
-      <Value>emdk</Value>
       <Value>enum</Value>
       <Value>guid</Value>
-      <Value>handheld</Value>
       <Value>ip</Value>
       <Value>keyguard</Value>
-      <Value>Nav</Value>
-      <Value>Navision</Value>
+      <Value>lexers</Value>
       <Value>Ninject</Value>
       <Value>OS</Value>
       <Value>parameterless</Value>
-      <Value>Spyder</Value>
-      <Value>ucc</Value>
-      <Value>upc</Value>
+      <Value>parsers</Value>
     </CollectionProperty>
   </GlobalSettings>
   <Analyzers>
