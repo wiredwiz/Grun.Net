@@ -4,11 +4,15 @@ on: [push]
 
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: checkout
         uses: actions/checkout@v1
-      - name: Build DotNET461
-        run: |
-           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
-           .\MSBuild.exe $Env:GITHUB_WORKSPACE\Grun.Net.sln
+      - name: Setup Nuget.exe
+        uses: warrenbuckley/Setup-Nuget@v1
+      - name: Restore packages
+        uses: nuget restore Grun.Net.sln
+      - name: Setup MSBuild.exe
+        uses: warrenbuckley/Setup-MSBuild@v1
+      - name: Build with MSBuild
+        uses: msbuild Grun.Net.sln -p:Configuration=Release
