@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRig", "TestRig\TestRig.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B8535ED-1440-4F63-9F90-A086FD870EF3}"
 	ProjectSection(SolutionItems) = preProject
-		Edgerunner.ANTLR.Tools.Testing.sln.DotSettings = Edgerunner.ANTLR.Tools.Testing.sln.DotSettings
+		Grun.Net.sln.DotSettings = Grun.Net.sln.DotSettings
 		LICENSE = LICENSE
 		README.md = README.md
 		Settings.StyleCop = Settings.StyleCop
