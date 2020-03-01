@@ -1,4 +1,4 @@
-name: NetFrameWork.Legacy.CI
+name: .Net Framework CI
 
 on: [push]
  
