@@ -6,3 +6,4 @@ These tools are meant to supplement the need to continually build java classes t
 As of this moment the --Tokens option is the only one supported.  Support for additional options will follow shortly.
 
 ![.Net Framework CI](https://github.com/wiredwiz/Grun.Net/workflows/.Net%20Framework%20CI/badge.svg)
+[![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://raw.githubusercontent.com/antlr/antlr4/master/LICENSE.txt)
