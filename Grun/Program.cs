@@ -55,45 +55,49 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       {
          Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
-                   {
-                      if (o.Tokens)
                       {
-                         var workingDirectory = Environment.CurrentDirectory;
-                         var scanner = new Grammar.Scanner();
-                         var loader = new Grammar.Loader();
-                         var grammar = scanner.LocateGrammar(workingDirectory, o.GrammarName);
-                         if (grammar == null)
+                         if (o.Tokens)
                          {
-                            Console.WriteLine($"Could not find an assembly that defines grammar \"{o.GrammarName}\" in the current working directory");
-                            return;
-                         }
+                            var workingDirectory = Environment.CurrentDirectory;
+                            var scanner = new Grammar.Scanner();
+                            var loader = new Grammar.Loader();
+                            var grammar = scanner.LocateGrammar(workingDirectory, o.GrammarName);
+                            if (grammar == null)
+                            {
+                               Console.WriteLine(
+                                                 $"Could not find an assembly that defines grammar \"{o.GrammarName}\" in the current working directory");
+                               return;
+                            }
 
-                         string line = null;
-                         string data = string.Empty;
-                         Console.WriteLine("Enter text to be parsed:");
-                         while ((line = Console.ReadLine()) != null)
-                         {
-                            data += line + Environment.NewLine;
-                         }
+                            string line = null;
+                            string data = string.Empty;
+                            Console.WriteLine("Enter text to be parsed:");
+                            while ((line = Console.ReadLine()) != null)
+                            {
+                               data += line + Environment.NewLine;
+                            }
 
-                         var inputStream = new AntlrInputStream(data);
-                         var lexer = loader.LoadLexer(grammar, inputStream);
-                         var commonTokenStream = new CommonTokenStream(lexer);
-                         commonTokenStream.Fill();
-                         var tokens = commonTokenStream.GetTokens();
-                         foreach (var token in tokens)
-                            Console.WriteLine(token.ToString());
-                         //var parser = loader.LoadParser(grammar, commonTokenStream);
-                         //parser.BuildParseTree = true;
-                         //var rule = grammar.Parser.GetMethod(o.RuleName);
-                         //if (rule == null)
-                         //{
-                         //   Console.WriteLine($"Could not find a parser rule named \"{o.RuleName}\" for grammar \"{grammar.GrammarName}\"");
-                         //   return;
-                         //}
-                         //rule.Invoke(parser, null);
-                      }
-                   });
+                            var inputStream = new AntlrInputStream(data);
+                            var lexer = loader.LoadLexer(grammar, inputStream);
+                            var commonTokenStream = new CommonTokenStream(lexer);
+                            commonTokenStream.Fill();
+                            var tokens = commonTokenStream.GetTokens();
+                            foreach (var token in tokens)
+                               Console.WriteLine(token.ToString());
+                         }
+                         else if (o.Diagnostics)
+                            Console.WriteLine("This option is not yet supported.");
+                         else if (o.Trace)
+                            Console.WriteLine("This option is not yet supported.");
+                         else if (o.Gui)
+                            Console.WriteLine("This option is not yet supported.");
+                         else if (string.IsNullOrEmpty(o.EncodingName))
+                            Console.WriteLine("This option is not yet supported.");
+                         else if (string.IsNullOrEmpty(o.PostScript))
+                            Console.WriteLine("This option is not yet supported.");
+                         else if (string.IsNullOrEmpty(o.FileNames))
+                            Console.WriteLine("This option is not yet supported.");
+                      });
       }
 
       #endregion
