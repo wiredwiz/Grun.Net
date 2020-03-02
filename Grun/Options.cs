@@ -55,19 +55,19 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       [Value(2, MetaName = "Input Filename(s)", HelpText = "File names to parse", Required = false)]
       public string FileNames { get; set; }
 
-      [Value(2, MetaName = "indicates whether tracing should be performed", HelpText = "Trace parsing")]
+      [Option("trace", Required = false, HelpText = "Trace parsing")]
       public bool Trace { get; set; }
 
-      [Value(2, MetaName = "Display parser Gui", HelpText = "Display parse gui")]
+      [Option("gui", Required = false, HelpText = "Display parse gui")]
       public bool Gui { get; set; }
 
-      [Value(2, MetaName = "Perform diagnostics", HelpText = "Parse with diagnostics")]
+      [Option("diagnostics", Required = false, HelpText = "Parse with diagnostics")]
       public bool Diagnostics { get; set; }
 
-      [Value(2, MetaName = "Encoding to use", HelpText = "Encoding type to use")]
+      [Option("encoding", Required = false, HelpText = "Encoding type to use")]
       public string EncodingName { get; set; }
 
-      [Value(2, MetaName = "Output parse tree as postscript", HelpText = "File to output postscript parse tree too")]
+      [Option("ps", Required = false, HelpText = "File to output postscript parse tree too")]
       public string PostScript { get; set; }
 
    }
