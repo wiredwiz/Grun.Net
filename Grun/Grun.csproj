@@ -41,6 +41,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,6 +59,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GunWin\GunWin.csproj">
+      <Project>{a3568fa3-d6b3-4165-af95-cdb78d86f416}</Project>
+      <Name>GunWin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestRig\TestRig.csproj">
       <Project>{4e020f1d-27bf-4853-8573-474d7edb4e72}</Project>
       <Name>TestRig</Name>

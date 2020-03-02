@@ -49,13 +49,16 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       [Value(1, MetaName = "Rule Name", HelpText = "ANTLR grammar rule to use", Required = true)]
       public string RuleName { get; set; }
 
-      [Option("tokens", Required = false, HelpText = "Demo token option help text.")]
+      [Option("tokens", Required = false, HelpText = "Display list of grammar tokens.")]
       public bool Tokens { get; set; }
 
-      [Value(2, MetaName = "Input Filename(s)", HelpText = "File names to parse", Required = false)]
-      public string FileNames { get; set; }
+      [Option("tree", Required = false, HelpText = "Display a Lisp-style parse tree.")]
+      public bool Tree { get; set; }
 
-      [Option("trace", Required = false, HelpText = "Trace parsing")]
+      [Value(2, MetaName = "Input Filename", HelpText = "File name to parse", Required = false)]
+      public string FileName { get; set; }
+
+      [Option("trace", Required = false, HelpText = "Trace grammar parsing")]
       public bool Trace { get; set; }
 
       [Option("gui", Required = false, HelpText = "Display parse gui")]

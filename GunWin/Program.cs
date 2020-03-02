@@ -18,7 +18,7 @@ namespace GunWin
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         Application.Run(new Analyzer());
+         Application.Run(new VisualAnalyzer());
       }
    }
 }

@@ -56,9 +56,9 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
       /// <returns>A new <see cref="Antlr4.Runtime.Lexer" />.</returns>
       /// <exception cref="ArgumentNullException"><paramref name="reference"/> or <paramref name="stream"/> are <see langword="null"/></exception>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="reference" /> is <see langword="null" /></exception>
-      /// <exception cref="T:System.IO.FileLoadException">A file that was found could not be loaded.</exception>
-      /// <exception cref="T:System.IO.FileNotFoundException">The assembly path is an empty string ("") or does not exist.</exception>
-      /// <exception cref="T:System.BadImageFormatException">The assembly path is not a valid assembly.</exception>
+      /// <exception cref="T:System.IO.FileLoadException">Grammar assembly could not be loaded.</exception>
+      /// <exception cref="T:System.IO.FileNotFoundException">The grammar assembly path is an empty string ("") or does not exist.</exception>
+      /// <exception cref="T:System.BadImageFormatException">The grammar assembly path is not a valid assembly.</exception>
       public Antlr4.Runtime.Lexer LoadLexer([NotNull] GrammarReference reference, [NotNull] ICharStream stream)
       {
          if (reference is null) throw new ArgumentNullException(nameof(reference));

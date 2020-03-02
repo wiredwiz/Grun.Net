@@ -61,21 +61,19 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       ///    or
       ///    grammarName
       ///    or
-      ///    parserType
-      ///    or
-      ///    lexerType was <see langword="null" />
+      ///    lexerType was <see langword="null" /> or empty.
       /// </exception>
       // ReSharper disable once TooManyDependencies
       public GrammarReference(
          [NotNull] string assemblyPath,
          [NotNull] string grammarName,
          [NotNull] Type lexerType,
-         [NotNull] Type parserType)
+         [CanBeNull] Type parserType)
       {
          AssemblyPath = assemblyPath ?? throw new ArgumentNullException(nameof(assemblyPath));
          GrammarName = grammarName ?? throw new ArgumentNullException(nameof(grammarName));
          Lexer = lexerType ?? throw new ArgumentNullException(nameof(lexerType));
-         Parser = parserType ?? throw new ArgumentNullException(nameof(parserType));
+         Parser = parserType;
       }
 
       #endregion
@@ -107,7 +105,7 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       /// </summary>
       /// <value>The parser type.</value>
       /// <see cref="Antlr4.Runtime.Parser" />
-      [NotNull]
+      [CanBeNull]
       public Type Parser { get; }
    }
 }

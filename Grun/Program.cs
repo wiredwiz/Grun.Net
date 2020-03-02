@@ -37,9 +37,11 @@
 #endregion
 
 using System;
-using System.Reflection;
+using System.IO;
+using System.Windows.Forms;
 using Antlr4.Runtime;
 using CommandLine;
+
 using Parser = CommandLine.Parser;
 
 namespace Org.Edgerunner.ANTLR.Tools.Testing
@@ -51,16 +53,17 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
    {
       #region Static
 
+      [STAThread]
       private static void Main(string[] args)
       {
-         Parser.Default.ParseArguments<Options>(args)
-                   .WithParsed<Options>(o =>
-                      {
-                         if (o.Tokens)
+         try
+         {
+            Parser.Default.ParseArguments<Options>(args)
+                      .WithParsed<Options>(o =>
                          {
                             var workingDirectory = Environment.CurrentDirectory;
                             var scanner = new Grammar.Scanner();
-                            var loader = new Grammar.Loader();
+
                             var grammar = scanner.LocateGrammar(workingDirectory, o.GrammarName);
                             if (grammar == null)
                             {
@@ -69,35 +72,58 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
                                return;
                             }
 
-                            string line = null;
-                            string data = string.Empty;
-                            Console.WriteLine("Enter text to be parsed:");
-                            while ((line = Console.ReadLine()) != null)
-                            {
-                               data += line + Environment.NewLine;
-                            }
+                            string line;
+                            var data = string.Empty;
 
-                            var inputStream = new AntlrInputStream(data);
-                            var lexer = loader.LoadLexer(grammar, inputStream);
-                            var commonTokenStream = new CommonTokenStream(lexer);
-                            commonTokenStream.Fill();
-                            var tokens = commonTokenStream.GetTokens();
-                            foreach (var token in tokens)
-                               Console.WriteLine(token.ToString());
-                         }
-                         else if (o.Diagnostics)
-                            Console.WriteLine("This option is not yet supported.");
-                         else if (o.Trace)
-                            Console.WriteLine("This option is not yet supported.");
-                         else if (o.Gui)
-                            Console.WriteLine("This option is not yet supported.");
-                         else if (string.IsNullOrEmpty(o.EncodingName))
-                            Console.WriteLine("This option is not yet supported.");
-                         else if (string.IsNullOrEmpty(o.PostScript))
-                            Console.WriteLine("This option is not yet supported.");
-                         else if (string.IsNullOrEmpty(o.FileNames))
-                            Console.WriteLine("This option is not yet supported.");
-                      });
+                            if (!string.IsNullOrEmpty(o.FileName))
+                               using (StreamReader reader = new StreamReader(o.FileName))
+                                  data = reader.ReadToEnd();
+                            else
+                               while ((line = Console.ReadLine()) != null)
+                                  data += line + Environment.NewLine;
+
+                            if (o.Tokens)
+                            {
+                               var analyzer = new Grammar.Analyzer(grammar, data);
+                               var tokens = analyzer.Tokenize();
+                               foreach (var token in tokens)
+                                  Console.WriteLine(token.ToString());
+                            }
+                            else if (o.Diagnostics)
+                               Console.WriteLine("This option is not yet supported.");
+                            else if (o.Trace)
+                               Console.WriteLine("This option is not yet supported.");
+                            else if (o.Tree)
+                            {
+                               var analyzer = new Grammar.Analyzer(grammar, data);
+                               analyzer.Parse(o.RuleName);
+                               Console.WriteLine(analyzer.StringSourceTree);
+                            }
+                            else if (o.Gui)
+                            {
+                               Application.EnableVisualStyles();
+                               Application.SetCompatibleTextRenderingDefault(false);
+                               var visualAnalyzer = new VisualAnalyzer();
+                               visualAnalyzer.SetSourceCode(data);
+                               visualAnalyzer.SetGrammar(grammar);
+                               visualAnalyzer.SetDefaultParserRule(o.RuleName);
+                               visualAnalyzer.ParseSource();
+                               Application.Run(visualAnalyzer);
+                            }
+                            else if (string.IsNullOrEmpty(o.EncodingName))
+                               Console.WriteLine("This option is not yet supported.");
+                            else if (string.IsNullOrEmpty(o.PostScript))
+                               Console.WriteLine("This option is not yet supported.");
+                            else if (string.IsNullOrEmpty(o.FileName))
+                               Console.WriteLine("This option is not yet supported.");
+                         });
+         }
+         // ReSharper disable once CatchAllClause
+         catch (Exception ex)
+         {
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.StackTrace);
+         }
       }
 
       #endregion

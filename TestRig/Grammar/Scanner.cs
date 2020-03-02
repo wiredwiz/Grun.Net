@@ -37,7 +37,6 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -163,6 +162,24 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
          }
       }
 
+      /// <summary>
+      /// Gets the parser rules for the specified grammar.
+      /// </summary>
+      /// <param name="reference">The grammar reference.</param>
+      /// <returns>An <see cref="IEnumerable{String}"/> containing the parser rules (if any).</returns>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="reference"/> is <see langword="null"/></exception>
+      public IEnumerable<string> GetParserRulesForGrammar([NotNull] GrammarReference reference)
+      {
+         if (reference is null) throw new ArgumentNullException(nameof(reference));
+
+         if (reference.Parser == null)
+            return new string[0];
+
+         var methods = reference.Parser.GetMethods()
+            .Where(m => m.GetCustomAttributes(typeof(RuleVersionAttribute), false).Length > 0);
+         return from method in methods select method.Name;
+      }
+
       private List<GrammarReference> FindGrammars([NotNull] string path, string name = null)
       {
          var di = new DirectoryInfo(path);
@@ -173,33 +190,34 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
          {
             var assembly = Assembly.LoadFile(file.FullName);
 
-            var parsers = FindGrammarParsersInAssembly(assembly);
+            // We make parsers an explicit list to avoid multiple enumerations
+            var parsers = FindGrammarParsersInAssembly(assembly).ToList();
             var lexers = FindGrammarLexersInAssembly(assembly);
-            IEnumerable<ParserType> matches;
+            IEnumerable<LexerType> matches;
             if (!string.IsNullOrEmpty(name))
-               matches = from parser in parsers
-                         where parser.GrammarName == name
-                         select parser;
+               matches = from lexer in lexers
+                         where lexer.GrammarName == name
+                         select lexer;
             else
-               matches = parsers;
+               matches = lexers;
 
-            foreach (var parser in matches)
+            foreach (var lexer in matches)
             {
-               LexerType lexer;
+               ParserType parser;
                try
                {
-                  lexer = (from candidate in lexers
-                           where candidate.GrammarName == parser.GrammarName
+                  parser = (from candidate in parsers
+                           where candidate.GrammarName == lexer.GrammarName
                            select candidate).First();
                }
                catch (InvalidOperationException ex)
                {
-                  throw new GrammarException($"Cannot find a matching lexer for grammar \"{parser.GrammarName}\"", ex);
+                  throw new GrammarException($"Cannot find a matching lexer for grammar \"{lexer.GrammarName}\"", ex);
                }
                
                var grammarRef = new GrammarReference(
                                                      file.FullName,
-                                                     parser.GrammarName,
+                                                     lexer.GrammarName,
                                                      lexer.ActualType,
                                                      parser.ActualType);
                results.Add(grammarRef);
