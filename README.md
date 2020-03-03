@@ -6,6 +6,8 @@ These tools are meant to supplement the need to continually build java classes t
 ![.Net Framework CI](https://github.com/wiredwiz/Grun.Net/workflows/.Net%20Framework%20CI/badge.svg)
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://raw.githubusercontent.com/antlr/antlr4/master/LICENSE.txt)
 
+### Grun.exe
+
 A breakdown of option statuses follows
 - --tokens [**Full Suport**]
 - --gui [**Partial Support**]
@@ -18,7 +20,7 @@ A breakdown of option statuses follows
 The gui flag simply opens the GrunWin tool.  Eventually this tool will be able to be run
 separately with it's own command line flags.  
 
-### GrunWin
+### GrunWin.exe
 GrunWin is more than just a graphical parse tree viewer.  It also displays a tab with
 the grid view of tokens and a robust editor window.  As code is changed in the editor,
 GrunWin continues to re-parse for tokens and rebuild the graphical parse tree.  I eventually
