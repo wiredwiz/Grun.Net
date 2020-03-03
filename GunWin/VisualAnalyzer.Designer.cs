@@ -30,7 +30,6 @@
       {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisualAnalyzer));
-         Microsoft.Msagl.Core.Geometry.Curves.PlaneTransformation planeTransformation1 = new Microsoft.Msagl.Core.Geometry.Curves.PlaneTransformation();
          this.splitContainer1 = new System.Windows.Forms.SplitContainer();
          this.cmbRules = new System.Windows.Forms.ComboBox();
          this.lblParserRule = new System.Windows.Forms.Label();
@@ -38,19 +37,21 @@
          this.tabControlParse = new System.Windows.Forms.TabControl();
          this.tabParseTree = new System.Windows.Forms.TabPage();
          this.tabTokens = new System.Windows.Forms.TabPage();
-         this.gViewer1 = new Microsoft.Msagl.GraphViewerGdi.GViewer();
          this.tokenListView = new BrightIdeasSoftware.ObjectListView();
          this.colText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colLine = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colChannel = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colType = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colStart = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colStop = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colLength = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).BeginInit();
          this.tabControlParse.SuspendLayout();
-         this.tabParseTree.SuspendLayout();
          this.tabTokens.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).BeginInit();
          this.SuspendLayout();
@@ -126,6 +127,7 @@
          this.CodeEditor.Size = new System.Drawing.Size(317, 588);
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
+         this.CodeEditor.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChanged);
          // 
          // tabControlParse
          // 
@@ -141,7 +143,6 @@
          // 
          // tabParseTree
          // 
-         this.tabParseTree.Controls.Add(this.gViewer1);
          this.tabParseTree.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.tabParseTree.Location = new System.Drawing.Point(4, 29);
          this.tabParseTree.Name = "tabParseTree";
@@ -163,58 +164,27 @@
          this.tabTokens.Text = "Tokens";
          this.tabTokens.UseVisualStyleBackColor = true;
          // 
-         // gViewer1
-         // 
-         this.gViewer1.ArrowheadLength = 10D;
-         this.gViewer1.AsyncLayout = false;
-         this.gViewer1.AutoScroll = true;
-         this.gViewer1.BackwardEnabled = false;
-         this.gViewer1.BuildHitTree = true;
-         this.gViewer1.CurrentLayoutMethod = Microsoft.Msagl.GraphViewerGdi.LayoutMethod.UseSettingsOfTheGraph;
-         this.gViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.gViewer1.EdgeInsertButtonVisible = true;
-         this.gViewer1.FileName = "";
-         this.gViewer1.ForwardEnabled = false;
-         this.gViewer1.Graph = null;
-         this.gViewer1.InsertingEdge = false;
-         this.gViewer1.LayoutAlgorithmSettingsButtonVisible = true;
-         this.gViewer1.LayoutEditingEnabled = true;
-         this.gViewer1.Location = new System.Drawing.Point(3, 3);
-         this.gViewer1.LooseOffsetForRouting = 0.25D;
-         this.gViewer1.MouseHitDistance = 0.05D;
-         this.gViewer1.Name = "gViewer1";
-         this.gViewer1.NavigationVisible = true;
-         this.gViewer1.NeedToCalculateLayout = true;
-         this.gViewer1.OffsetForRelaxingInRouting = 0.6D;
-         this.gViewer1.PaddingForEdgeRouting = 8D;
-         this.gViewer1.PanButtonPressed = false;
-         this.gViewer1.SaveAsImageEnabled = true;
-         this.gViewer1.SaveAsMsaglEnabled = true;
-         this.gViewer1.SaveButtonVisible = true;
-         this.gViewer1.SaveGraphButtonVisible = true;
-         this.gViewer1.SaveInVectorFormatEnabled = true;
-         this.gViewer1.Size = new System.Drawing.Size(624, 592);
-         this.gViewer1.TabIndex = 0;
-         this.gViewer1.TightOffsetForRouting = 0.125D;
-         this.gViewer1.ToolBarIsVisible = true;
-         this.gViewer1.Transform = planeTransformation1;
-         this.gViewer1.UndoRedoButtonsVisible = true;
-         this.gViewer1.WindowZoomButtonPressed = false;
-         this.gViewer1.ZoomF = 1D;
-         this.gViewer1.ZoomWindowThreshold = 0.05D;
-         // 
          // tokenListView
          // 
          this.tokenListView.AllColumns.Add(this.colText);
+         this.tokenListView.AllColumns.Add(this.colType);
          this.tokenListView.AllColumns.Add(this.colLine);
          this.tokenListView.AllColumns.Add(this.colColumn);
          this.tokenListView.AllColumns.Add(this.colChannel);
+         this.tokenListView.AllColumns.Add(this.colStart);
+         this.tokenListView.AllColumns.Add(this.colStop);
+         this.tokenListView.AllColumns.Add(this.colLength);
          this.tokenListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colText,
+            this.colType,
             this.colLine,
             this.colColumn,
-            this.colChannel});
+            this.colChannel,
+            this.colStart,
+            this.colStop,
+            this.colLength});
          this.tokenListView.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.tokenListView.HideSelection = false;
          this.tokenListView.Location = new System.Drawing.Point(3, 3);
          this.tokenListView.Name = "tokenListView";
          this.tokenListView.Size = new System.Drawing.Size(624, 592);
@@ -229,13 +199,12 @@
          this.colText.CellPadding = null;
          this.colText.Groupable = false;
          this.colText.Text = "Text";
-         this.colText.Width = 82;
+         this.colText.Width = 102;
          // 
          // colLine
          // 
          this.colLine.AspectName = "Line";
          this.colLine.CellPadding = null;
-         this.colLine.Groupable = false;
          this.colLine.Text = "Line";
          // 
          // colColumn
@@ -251,7 +220,33 @@
          this.colChannel.AspectName = "Channel";
          this.colChannel.CellPadding = null;
          this.colChannel.Text = "Channel";
-         this.colChannel.Width = 100;
+         this.colChannel.Width = 76;
+         // 
+         // colType
+         // 
+         this.colType.AspectName = "Type";
+         this.colType.CellPadding = null;
+         this.colType.Text = "Type";
+         this.colType.Width = 119;
+         // 
+         // colStart
+         // 
+         this.colStart.AspectName = "Start";
+         this.colStart.CellPadding = null;
+         this.colStart.Text = "Start";
+         // 
+         // colStop
+         // 
+         this.colStop.AspectName = "Stop";
+         this.colStop.CellPadding = null;
+         this.colStop.Text = "Stop";
+         // 
+         // colLength
+         // 
+         this.colLength.AspectName = "Length";
+         this.colLength.CellPadding = null;
+         this.colLength.Text = "Length";
+         this.colLength.Width = 66;
          // 
          // VisualAnalyzer
          // 
@@ -269,7 +264,6 @@
          this.splitContainer1.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).EndInit();
          this.tabControlParse.ResumeLayout(false);
-         this.tabParseTree.ResumeLayout(false);
          this.tabTokens.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).EndInit();
          this.ResumeLayout(false);
@@ -285,12 +279,15 @@
       private System.Windows.Forms.TabControl tabControlParse;
       private System.Windows.Forms.TabPage tabParseTree;
       private System.Windows.Forms.TabPage tabTokens;
-      private Microsoft.Msagl.GraphViewerGdi.GViewer gViewer1;
       private BrightIdeasSoftware.ObjectListView tokenListView;
       private BrightIdeasSoftware.OLVColumn colText;
       private BrightIdeasSoftware.OLVColumn colLine;
       private BrightIdeasSoftware.OLVColumn colColumn;
       private BrightIdeasSoftware.OLVColumn colChannel;
+      private BrightIdeasSoftware.OLVColumn colType;
+      private BrightIdeasSoftware.OLVColumn colStart;
+      private BrightIdeasSoftware.OLVColumn colStop;
+      private BrightIdeasSoftware.OLVColumn colLength;
    }
 }
 

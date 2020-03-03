@@ -83,12 +83,15 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       /// </summary>
       public void ParseSource()
       {
+         if (_Grammar == null)
+            return; 
+
          var analyzer = new Grammar.Analyzer(_Grammar, CodeEditor.Text);
          analyzer.Parse(cmbRules.SelectedItem.ToString());
-         PopulateTokens(analyzer.Tokens);
+         PopulateTokens(analyzer.DisplayTokens);
       }
 
-      private void PopulateTokens(IList<IToken> tokens)
+      private void PopulateTokens(IList<TokenViewModel> tokens)
       {
          tokenListView.SetObjects(tokens);
       }
@@ -131,6 +134,11 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
          _DefaultRule = rule;
          cmbRules.Refresh();
          cmbRules.SelectedIndex = cmbRules.FindStringExact(rule);
+      }
+
+      private void CodeEditor_TextChanged(object sender, FastColoredTextBoxNS.TextChangedEventArgs e)
+      {
+         ParseSource();
       }
    }
 }

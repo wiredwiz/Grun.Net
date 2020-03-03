@@ -36,6 +36,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using Antlr4.Runtime;
@@ -84,6 +85,12 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
       public IList<IToken> Tokens { get; private set; }
 
       /// <summary>
+      /// Gets the display tokens.
+      /// </summary>
+      /// <value>The display tokens.</value>
+      public IList<TokenViewModel> DisplayTokens { get; private set; }
+
+      /// <summary>
       /// Gets the parse context.
       /// </summary>
       /// <value>The parse context.</value>
@@ -116,6 +123,7 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
          var commonTokenStream = new CommonTokenStream(lexer);
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
+         DisplayTokens = ConvertTokensForDisplay(lexer, Tokens);
          return Tokens;
       }
 
@@ -141,8 +149,18 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
             throw new GrammarException($"No parser rule with name \"{ruleName}\" found.");
          ParseContext = methodInfo.Invoke(parser, null) as ParserRuleContext;
          Tokens = commonTokenStream.GetTokens();
+         DisplayTokens = ConvertTokensForDisplay(lexer, Tokens);
          StringSourceTree = ParseContext.ToStringTree(parser);
          IsParsed = true;
+      }
+
+      private IList<TokenViewModel> ConvertTokensForDisplay(Lexer lexer, IEnumerable<IToken> tokens)
+      {
+         var viewTokens = new List<TokenViewModel>();
+         foreach (var token in tokens)
+            viewTokens.Add(new TokenViewModel(lexer, token));
+
+         return viewTokens;
       }
    }
 }
