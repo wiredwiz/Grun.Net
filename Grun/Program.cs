@@ -37,12 +37,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
-using Antlr4.Runtime;
-using CommandLine;
 
-using Parser = CommandLine.Parser;
+using Antlr4.Runtime.Misc;
+
+using CommandLine;
+using CommandLine.Text;
 
 namespace Org.Edgerunner.ANTLR.Tools.Testing
 {
@@ -54,13 +57,37 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       #region Static
 
       [STAThread]
+      // ReSharper disable once MethodTooLong
       private static void Main(string[] args)
       {
          try
          {
-            Parser.Default.ParseArguments<Options>(args)
-                      .WithParsed<Options>(o =>
+            var parser = new Parser(with => with.HelpWriter = null);
+            var parserResult = parser.ParseArguments<Options>(args);
+            parserResult
+                      .WithParsed(o =>
                          {
+                            var options = Grammar.ParseOption.None;
+                            var loadGui = false;
+                            var showParseTree = false;
+                            var showTokens = false;
+                            var useDiagnostics = false;
+                            var useTracing = false;
+
+                            if (o.Tokens) options |= Grammar.ParseOption.Tokens | Grammar.ParseOption.DisplayTokens;
+                            if (o.Diagnostics) options |= Grammar.ParseOption.Diagnostics;
+                            if (o.Trace) options |= Grammar.ParseOption.Trace;
+                            if (o.Tree) options |= Grammar.ParseOption.Tree;
+                            if (o.Gui)
+                            {
+                               loadGui = true;
+                               options |= Grammar.ParseOption.Tokens;
+                               options |= Grammar.ParseOption.Tree;
+                            }
+
+                            if (!string.IsNullOrEmpty(o.PostScript))
+                               Console.WriteLine("Option --ps is not yet supported.");
+
                             var workingDirectory = Environment.CurrentDirectory;
                             var scanner = new Grammar.Scanner();
 
@@ -76,47 +103,29 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
                             var data = string.Empty;
 
                             if (!string.IsNullOrEmpty(o.FileName))
-                               using (StreamReader reader = new StreamReader(o.FileName))
+                            {
+                               var encodingToUse = !string.IsNullOrEmpty(o.EncodingName) ? Encoding.GetEncoding(o.EncodingName) : Encoding.Default;
+                               using (var reader = new StreamReader(o.FileName, encodingToUse))
                                   data = reader.ReadToEnd();
+                            }
                             else
                                while ((line = Console.ReadLine()) != null)
                                   data += line + Environment.NewLine;
 
-                            if (o.Tokens)
+                            // If tokens are the only option we've received, we don't need to parse
+                            if ((options | Grammar.ParseOption.Tokens) == (Grammar.ParseOption.Tokens | Grammar.ParseOption.DisplayTokens))
                             {
-                               var analyzer = new Grammar.Analyzer(grammar, data);
-                               var tokens = analyzer.Tokenize();
-                               foreach (var token in tokens)
-                                  Console.WriteLine(token.ToString());
+                               DisplayTokens(grammar, data);
+                               return;
                             }
-                            else if (o.Diagnostics)
-                               Console.WriteLine("This option is not yet supported.");
-                            else if (o.Trace)
-                               Console.WriteLine("This option is not yet supported.");
-                            else if (o.Tree)
-                            {
-                               var analyzer = new Grammar.Analyzer(grammar, data);
-                               analyzer.Parse(o.RuleName);
-                               Console.WriteLine(analyzer.StringSourceTree);
-                            }
-                            else if (o.Gui)
-                            {
-                               Application.EnableVisualStyles();
-                               Application.SetCompatibleTextRenderingDefault(false);
-                               var visualAnalyzer = new VisualAnalyzer();
-                               visualAnalyzer.SetSourceCode(data);
-                               visualAnalyzer.SetGrammar(grammar);
-                               visualAnalyzer.SetDefaultParserRule(o.RuleName);
-                               visualAnalyzer.ParseSource();
-                               Application.Run(visualAnalyzer);
-                            }
-                            else if (string.IsNullOrEmpty(o.EncodingName))
-                               Console.WriteLine("This option is not yet supported.");
-                            else if (string.IsNullOrEmpty(o.PostScript))
-                               Console.WriteLine("This option is not yet supported.");
-                            else if (string.IsNullOrEmpty(o.FileName))
-                               Console.WriteLine("This option is not yet supported.");
-                         });
+
+                            if (options != Grammar.ParseOption.None)
+                              DisplayParseTree(grammar, data, o.RuleName, options);
+
+                            if (loadGui)
+                               LoadGui(data, grammar, o.RuleName);
+                         })
+                      .WithNotParsed(errs => DisplayHelp(parserResult, errs));
          }
          // ReSharper disable once CatchAllClause
          catch (Exception ex)
@@ -124,6 +133,63 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.StackTrace);
          }
+      }
+
+      // ReSharper disable once FlagArgument
+      private static void DisplayParseTree(GrammarReference grammar, string data, string ruleName, Grammar.ParseOption option)
+      {
+         var analyzer = new Grammar.Analyzer(grammar, data);
+         analyzer.Parse(ruleName, option);
+
+         Console.WriteLine(analyzer.StringSourceTree);
+      }
+
+      private static void DisplayTokens(GrammarReference grammar, string data)
+      {
+         var analyzer = new Grammar.Analyzer(grammar, data);
+         var tokens = analyzer.Tokenize();
+         foreach (var token in tokens)
+            Console.WriteLine(token.ToString());
+      }
+
+      private static void LoadGui(string data, GrammarReference grammar, string parserRule)
+      {
+         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            var visualAnalyzer = new VisualAnalyzer();
+            visualAnalyzer.SetSourceCode(data);
+            visualAnalyzer.SetGrammar(grammar);
+            visualAnalyzer.SetDefaultParserRule(parserRule);
+            visualAnalyzer.ParseSource();
+            Application.Run(visualAnalyzer);
+         }
+      }
+
+      /// <summary>
+      /// Displays the help message.
+      /// </summary>
+      /// <typeparam name="T">The option type</typeparam>
+      /// <param name="result">The command line parser result.</param>
+      /// <param name="errors">The parser errors.</param>
+      // ReSharper disable once UnusedParameter.Local
+      private static void DisplayHelp<T>([NotNull] ParserResult<T> result, IEnumerable<Error> errors)
+      {
+         if (result is null) throw new ArgumentNullException(nameof(result));
+
+         var helpText = HelpText.AutoBuild(
+            result,
+            h =>
+               {
+                  // ReSharper disable StringLiteralTypo
+                  h.AddPostOptionsLine("Use startRuleName = 'tokens' if GrammarName is a lexer grammar.");
+                  h.AddPostOptionsLine("Omitting Input Filename makes Grun.Net read from stdin.");
+                  // ReSharper restore StringLiteralTypo
+                  return HelpText.DefaultParsingErrorsHandler(result, h);
+               },
+            e => e);
+
+         Console.WriteLine(helpText);
       }
 
       #endregion

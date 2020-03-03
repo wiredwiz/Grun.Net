@@ -39,19 +39,21 @@
          this.tabTokens = new System.Windows.Forms.TabPage();
          this.tokenListView = new BrightIdeasSoftware.ObjectListView();
          this.colText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colType = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colLine = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colChannel = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-         this.colType = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colStart = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colStop = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colLength = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.pnlGraph = new System.Windows.Forms.Panel();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).BeginInit();
          this.tabControlParse.SuspendLayout();
+         this.tabParseTree.SuspendLayout();
          this.tabTokens.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).BeginInit();
          this.SuspendLayout();
@@ -101,6 +103,7 @@
          this.CodeEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+         this.CodeEditor.AutoCompleteBrackets = true;
          this.CodeEditor.AutoCompleteBracketsList = new char[] {
         '(',
         ')',
@@ -118,10 +121,15 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
+         this.CodeEditor.LeftBracket = '(';
+         this.CodeEditor.LeftBracket2 = '[';
          this.CodeEditor.Location = new System.Drawing.Point(3, 40);
          this.CodeEditor.Name = "CodeEditor";
          this.CodeEditor.Paddings = new System.Windows.Forms.Padding(0);
+         this.CodeEditor.RightBracket = ')';
+         this.CodeEditor.RightBracket2 = ']';
          this.CodeEditor.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
          this.CodeEditor.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("CodeEditor.ServiceColors")));
          this.CodeEditor.Size = new System.Drawing.Size(317, 588);
@@ -143,6 +151,7 @@
          // 
          // tabParseTree
          // 
+         this.tabParseTree.Controls.Add(this.pnlGraph);
          this.tabParseTree.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.tabParseTree.Location = new System.Drawing.Point(4, 29);
          this.tabParseTree.Name = "tabParseTree";
@@ -201,27 +210,6 @@
          this.colText.Text = "Text";
          this.colText.Width = 102;
          // 
-         // colLine
-         // 
-         this.colLine.AspectName = "Line";
-         this.colLine.CellPadding = null;
-         this.colLine.Text = "Line";
-         // 
-         // colColumn
-         // 
-         this.colColumn.AspectName = "Column";
-         this.colColumn.CellPadding = null;
-         this.colColumn.Groupable = false;
-         this.colColumn.Text = "Column";
-         this.colColumn.Width = 71;
-         // 
-         // colChannel
-         // 
-         this.colChannel.AspectName = "Channel";
-         this.colChannel.CellPadding = null;
-         this.colChannel.Text = "Channel";
-         this.colChannel.Width = 76;
-         // 
          // colType
          // 
          this.colType.AspectName = "Type";
@@ -229,15 +217,36 @@
          this.colType.Text = "Type";
          this.colType.Width = 119;
          // 
+         // colLine
+         // 
+         this.colLine.AspectName = "LineNumber";
+         this.colLine.CellPadding = null;
+         this.colLine.Text = "Line";
+         // 
+         // colColumn
+         // 
+         this.colColumn.AspectName = "ColumnPosition";
+         this.colColumn.CellPadding = null;
+         this.colColumn.Groupable = false;
+         this.colColumn.Text = "Column";
+         this.colColumn.Width = 71;
+         // 
+         // colChannel
+         // 
+         this.colChannel.AspectName = "ChannelId";
+         this.colChannel.CellPadding = null;
+         this.colChannel.Text = "Channel";
+         this.colChannel.Width = 76;
+         // 
          // colStart
          // 
-         this.colStart.AspectName = "Start";
+         this.colStart.AspectName = "StartPosition";
          this.colStart.CellPadding = null;
          this.colStart.Text = "Start";
          // 
          // colStop
          // 
-         this.colStop.AspectName = "Stop";
+         this.colStop.AspectName = "StopPosition";
          this.colStop.CellPadding = null;
          this.colStop.Text = "Stop";
          // 
@@ -247,6 +256,14 @@
          this.colLength.CellPadding = null;
          this.colLength.Text = "Length";
          this.colLength.Width = 66;
+         // 
+         // pnlGraph
+         // 
+         this.pnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.pnlGraph.Location = new System.Drawing.Point(3, 3);
+         this.pnlGraph.Name = "pnlGraph";
+         this.pnlGraph.Size = new System.Drawing.Size(624, 592);
+         this.pnlGraph.TabIndex = 0;
          // 
          // VisualAnalyzer
          // 
@@ -264,6 +281,7 @@
          this.splitContainer1.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).EndInit();
          this.tabControlParse.ResumeLayout(false);
+         this.tabParseTree.ResumeLayout(false);
          this.tabTokens.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).EndInit();
          this.ResumeLayout(false);
@@ -288,6 +306,7 @@
       private BrightIdeasSoftware.OLVColumn colStart;
       private BrightIdeasSoftware.OLVColumn colStop;
       private BrightIdeasSoftware.OLVColumn colLength;
+      private System.Windows.Forms.Panel pnlGraph;
    }
 }
 

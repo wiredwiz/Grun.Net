@@ -87,7 +87,7 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
             return; 
 
          var analyzer = new Grammar.Analyzer(_Grammar, CodeEditor.Text);
-         analyzer.Parse(cmbRules.SelectedItem.ToString());
+         analyzer.Parse(cmbRules.SelectedItem.ToString(), ParseOption.Tokens | ParseOption.Tree);
          PopulateTokens(analyzer.DisplayTokens);
       }
 

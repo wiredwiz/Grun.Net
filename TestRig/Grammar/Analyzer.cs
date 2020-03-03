@@ -131,10 +131,15 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
       /// Parses the text for the specified rule name.
       /// </summary>
       /// <param name="ruleName">Name of the rule.</param>
-      /// <exception cref="GrammarException">No parser found for the specified grammar.</exception>
-      /// <exception cref="GrammarException">No matching parser rule exists.</exception>
-      public void Parse(string ruleName)
+      /// <param name="option">The parsing options to use.</param>
+      /// <exception cref="ArgumentNullException"><paramref name="ruleName"/> is <see langword="null"/> or empty.</exception>
+      /// <exception cref="GrammarException">No parser found for supplied grammar</exception>
+      /// <exception cref="GrammarException"><paramref name="ruleName"/> is not a valid parser rule.</exception>
+      /// <exception cref="T:System.ArgumentNullException">No parser found for the specified grammar.</exception>
+      public void Parse([NotNull] string ruleName, ParseOption option)
       {
+         if (string.IsNullOrEmpty(ruleName))
+            throw new ArgumentNullException(nameof(ruleName));
          if (Grammar.Parser == null)
             throw new GrammarException($"No parser found for grammar \"{Grammar.GrammarName}\"");
 
@@ -142,20 +147,51 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
          var inputStream = new AntlrInputStream(Text);
          var lexer = loader.LoadLexer(Grammar, inputStream);
          var commonTokenStream = new CommonTokenStream(lexer);
+
+         commonTokenStream.Fill();
+         var tokens = commonTokenStream.GetTokens();
+
+         if ((option & ParseOption.Tokens) != 0)
+            Tokens = (option & ParseOption.Tokens) != 0 ? tokens : new List<IToken>();
+
+         if ((option & ParseOption.DisplayTokens) != 0)
+            foreach (var token in tokens)
+               Console.WriteLine(token.ToString());
+
          var parser = loader.LoadParser(Grammar, commonTokenStream);
-         parser.BuildParseTree = true;
+
+         // Handle Tree parsing option
+         parser.BuildParseTree = (option & ParseOption.Tree) != 0;
+
+         // Handle Diagnostics parsing option
+         if ((option & ParseOption.Diagnostics) != 0)
+         {
+            parser.AddErrorListener(new DiagnosticErrorListener());
+            parser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.LlExactAmbigDetection;
+         }
+
+         // Handle Sll parsing option
+         if ((option & ParseOption.Sll) != 0)
+            parser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.Sll;
+
+         // Handle Trace parsing option
+         parser.Trace = (option & ParseOption.Trace) != 0;
+
          var methodInfo = Grammar.Parser.GetMethod(ruleName);
          if (methodInfo == null)
             throw new GrammarException($"No parser rule with name \"{ruleName}\" found.");
+
          ParseContext = methodInfo.Invoke(parser, null) as ParserRuleContext;
-         Tokens = commonTokenStream.GetTokens();
          DisplayTokens = ConvertTokensForDisplay(lexer, Tokens);
-         StringSourceTree = ParseContext.ToStringTree(parser);
+         StringSourceTree = (option & ParseOption.Tree) != 0 ? ParseContext.ToStringTree(parser) : string.Empty;
          IsParsed = true;
       }
 
-      private IList<TokenViewModel> ConvertTokensForDisplay(Lexer lexer, IEnumerable<IToken> tokens)
+      private IList<TokenViewModel> ConvertTokensForDisplay([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
       {
+         if (lexer is null) throw new ArgumentNullException(nameof(lexer));
+         if (tokens is null) throw new ArgumentNullException(nameof(tokens));
+
          var viewTokens = new List<TokenViewModel>();
          foreach (var token in tokens)
             viewTokens.Add(new TokenViewModel(lexer, token));

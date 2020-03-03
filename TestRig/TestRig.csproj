@@ -52,6 +52,7 @@
     <Compile Include="GrammarReference.cs" />
     <Compile Include="Grammar\Analyzer.cs" />
     <Compile Include="Grammar\Loader.cs" />
+    <Compile Include="Grammar\ParseOption.cs" />
     <Compile Include="Grammar\Scanner.cs" />
     <Compile Include="Grammar\TokenViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

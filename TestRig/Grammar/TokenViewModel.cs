@@ -38,27 +38,87 @@ using Antlr4.Runtime;
 
 namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
 {
+   /// <summary>
+   /// Struct that represents a lightweight view model for IToken instances
+   /// </summary>
+   /// <seealso cref="Antlr4.Runtime.IToken"/>
    public struct TokenViewModel
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="TokenViewModel"/> struct.
+      /// </summary>
+      /// <param name="lexer">The lexer.</param>
+      /// <param name="token">The token.</param>
       public TokenViewModel(Lexer lexer, IToken token)
       {
-         Text = token.Text;
-         Type = token.Type > -1 ? lexer.TokenNames[token.Type] : string.Empty;
-         Line = token.Line;
-         Column = token.Column;
-         Channel = token.Channel;
+         Text = FormatTokenText(token);
+         Type = token.Type > -1 ? lexer.Vocabulary.GetDisplayName(token.Type) : string.Empty;
+         LineNumber = token.Line;
+         ColumnPosition = token.Column;
+         ChannelId = token.Channel;
          Length = token.StopIndex - token.StartIndex + 1;
-         Start = token.StartIndex;
-         Stop = token.StopIndex;
+         StartPosition = token.StartIndex;
+         StopPosition = token.StopIndex;
       }
 
+      /// <summary>
+      /// Gets the token text.
+      /// </summary>
+      /// <value>The token text.</value>
       public string Text { get; }
+
+      /// <summary>
+      /// Gets the token type.
+      /// </summary>
+      /// <value>The token type.</value>
       public string Type { get; }
-      public int Line { get; }
-      public int Column { get; }
+
+      /// <summary>
+      /// Gets the line number where the token occurs.
+      /// </summary>
+      /// <value>The line number.</value>
+      public int LineNumber { get; }
+
+      /// <summary>
+      /// Gets the column position of the token within the source line.
+      /// </summary>
+      /// <value>The column position.</value>
+      public int ColumnPosition { get; }
+
+      /// <summary>
+      /// Gets the token length.
+      /// </summary>
+      /// <value>The token length.</value>
       public int Length { get;  }
-      public int Start { get; }
-      public int Stop { get; }
-      public int Channel { get; }
+
+      /// <summary>
+      /// Gets the start position of the token within the source.
+      /// </summary>
+      /// <value>The start position.</value>
+      public int StartPosition { get; }
+
+      /// <summary>
+      /// Gets the stop position of the token within the source.
+      /// </summary>
+      /// <value>The stop position.</value>
+      public int StopPosition { get; }
+
+      /// <summary>
+      /// Gets the channel id for the token.
+      /// </summary>
+      /// <value>The channel id.</value>
+      public int ChannelId { get; }
+
+      private static string FormatTokenText(IToken token)
+      {
+         switch (token.Text)
+         {
+            case "\r": return "\\r";
+            case "\n": return "\\n";
+            case "\t": return "\\t";
+         }
+
+         return token.Text;
+      }
    }
 }
