@@ -36,6 +36,7 @@
          this.CodeEditor = new FastColoredTextBoxNS.FastColoredTextBox();
          this.tabControlParse = new System.Windows.Forms.TabControl();
          this.tabParseTree = new System.Windows.Forms.TabPage();
+         this.pnlGraph = new System.Windows.Forms.Panel();
          this.tabTokens = new System.Windows.Forms.TabPage();
          this.tokenListView = new BrightIdeasSoftware.ObjectListView();
          this.colText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -46,7 +47,15 @@
          this.colStart = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colStop = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colLength = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-         this.pnlGraph = new System.Windows.Forms.Panel();
+         this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+         this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.loadGrammarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+         this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.tracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.diagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.simpleLLModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -56,13 +65,14 @@
          this.tabParseTree.SuspendLayout();
          this.tabTokens.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).BeginInit();
+         this.menuStrip1.SuspendLayout();
          this.SuspendLayout();
          // 
          // splitContainer1
          // 
          this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
          this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+         this.splitContainer1.Location = new System.Drawing.Point(0, 24);
          this.splitContainer1.Name = "splitContainer1";
          // 
          // splitContainer1.Panel1
@@ -75,7 +85,7 @@
          // splitContainer1.Panel2
          // 
          this.splitContainer1.Panel2.Controls.Add(this.tabControlParse);
-         this.splitContainer1.Size = new System.Drawing.Size(969, 633);
+         this.splitContainer1.Size = new System.Drawing.Size(969, 609);
          this.splitContainer1.SplitterDistance = 325;
          this.splitContainer1.TabIndex = 0;
          // 
@@ -121,7 +131,6 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -132,7 +141,7 @@
          this.CodeEditor.RightBracket2 = ']';
          this.CodeEditor.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
          this.CodeEditor.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("CodeEditor.ServiceColors")));
-         this.CodeEditor.Size = new System.Drawing.Size(317, 588);
+         this.CodeEditor.Size = new System.Drawing.Size(317, 564);
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
          this.CodeEditor.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChanged);
@@ -146,7 +155,7 @@
          this.tabControlParse.Location = new System.Drawing.Point(0, 0);
          this.tabControlParse.Name = "tabControlParse";
          this.tabControlParse.SelectedIndex = 0;
-         this.tabControlParse.Size = new System.Drawing.Size(638, 631);
+         this.tabControlParse.Size = new System.Drawing.Size(638, 607);
          this.tabControlParse.TabIndex = 0;
          // 
          // tabParseTree
@@ -161,6 +170,14 @@
          this.tabParseTree.Text = "Parse Tree";
          this.tabParseTree.UseVisualStyleBackColor = true;
          // 
+         // pnlGraph
+         // 
+         this.pnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.pnlGraph.Location = new System.Drawing.Point(3, 3);
+         this.pnlGraph.Name = "pnlGraph";
+         this.pnlGraph.Size = new System.Drawing.Size(624, 592);
+         this.pnlGraph.TabIndex = 0;
+         // 
          // tabTokens
          // 
          this.tabTokens.Controls.Add(this.tokenListView);
@@ -168,7 +185,7 @@
          this.tabTokens.Location = new System.Drawing.Point(4, 29);
          this.tabTokens.Name = "tabTokens";
          this.tabTokens.Padding = new System.Windows.Forms.Padding(3);
-         this.tabTokens.Size = new System.Drawing.Size(630, 598);
+         this.tabTokens.Size = new System.Drawing.Size(630, 574);
          this.tabTokens.TabIndex = 1;
          this.tabTokens.Text = "Tokens";
          this.tabTokens.UseVisualStyleBackColor = true;
@@ -196,7 +213,7 @@
          this.tokenListView.HideSelection = false;
          this.tokenListView.Location = new System.Drawing.Point(3, 3);
          this.tokenListView.Name = "tokenListView";
-         this.tokenListView.Size = new System.Drawing.Size(624, 592);
+         this.tokenListView.Size = new System.Drawing.Size(624, 568);
          this.tokenListView.SortGroupItemsByPrimaryColumn = false;
          this.tokenListView.TabIndex = 0;
          this.tokenListView.UseCompatibleStateImageBehavior = false;
@@ -257,13 +274,75 @@
          this.colLength.Text = "Length";
          this.colLength.Width = 66;
          // 
-         // pnlGraph
+         // menuStrip1
          // 
-         this.pnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.pnlGraph.Location = new System.Drawing.Point(3, 3);
-         this.pnlGraph.Name = "pnlGraph";
-         this.pnlGraph.Size = new System.Drawing.Size(624, 592);
-         this.pnlGraph.TabIndex = 0;
+         this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.optionsToolStripMenuItem});
+         this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+         this.menuStrip1.Name = "menuStrip1";
+         this.menuStrip1.Size = new System.Drawing.Size(969, 24);
+         this.menuStrip1.TabIndex = 1;
+         this.menuStrip1.Text = "menuStrip1";
+         // 
+         // fileToolStripMenuItem
+         // 
+         this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadGrammarToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem});
+         this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+         this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+         this.fileToolStripMenuItem.Text = "&File";
+         // 
+         // loadGrammarToolStripMenuItem
+         // 
+         this.loadGrammarToolStripMenuItem.Name = "loadGrammarToolStripMenuItem";
+         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.loadGrammarToolStripMenuItem.Text = "&Load Grammar";
+         // 
+         // exitToolStripMenuItem
+         // 
+         this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+         this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.exitToolStripMenuItem.Text = "E&xit";
+         this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+         // 
+         // toolStripSeparator1
+         // 
+         this.toolStripSeparator1.Name = "toolStripSeparator1";
+         this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+         // 
+         // optionsToolStripMenuItem
+         // 
+         this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tracingToolStripMenuItem,
+            this.diagnosticsToolStripMenuItem,
+            this.simpleLLModeToolStripMenuItem});
+         this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+         this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+         this.optionsToolStripMenuItem.Text = "&Options";
+         // 
+         // tracingToolStripMenuItem
+         // 
+         this.tracingToolStripMenuItem.CheckOnClick = true;
+         this.tracingToolStripMenuItem.Name = "tracingToolStripMenuItem";
+         this.tracingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.tracingToolStripMenuItem.Text = "Tracing";
+         // 
+         // diagnosticsToolStripMenuItem
+         // 
+         this.diagnosticsToolStripMenuItem.CheckOnClick = true;
+         this.diagnosticsToolStripMenuItem.Name = "diagnosticsToolStripMenuItem";
+         this.diagnosticsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.diagnosticsToolStripMenuItem.Text = "Diagnostics";
+         // 
+         // simpleLLModeToolStripMenuItem
+         // 
+         this.simpleLLModeToolStripMenuItem.CheckOnClick = true;
+         this.simpleLLModeToolStripMenuItem.Name = "simpleLLModeToolStripMenuItem";
+         this.simpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.simpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
          // 
          // VisualAnalyzer
          // 
@@ -271,7 +350,9 @@
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(969, 633);
          this.Controls.Add(this.splitContainer1);
+         this.Controls.Add(this.menuStrip1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+         this.MainMenuStrip = this.menuStrip1;
          this.Name = "VisualAnalyzer";
          this.Text = "Analyzer";
          this.splitContainer1.Panel1.ResumeLayout(false);
@@ -284,7 +365,10 @@
          this.tabParseTree.ResumeLayout(false);
          this.tabTokens.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).EndInit();
+         this.menuStrip1.ResumeLayout(false);
+         this.menuStrip1.PerformLayout();
          this.ResumeLayout(false);
+         this.PerformLayout();
 
       }
 
@@ -307,6 +391,15 @@
       private BrightIdeasSoftware.OLVColumn colStop;
       private BrightIdeasSoftware.OLVColumn colLength;
       private System.Windows.Forms.Panel pnlGraph;
+      private System.Windows.Forms.MenuStrip menuStrip1;
+      private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem loadGrammarToolStripMenuItem;
+      private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+      private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem tracingToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem diagnosticsToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem simpleLLModeToolStripMenuItem;
    }
 }
 

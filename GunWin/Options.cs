@@ -43,25 +43,25 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
    /// </summary>
    public class Options
    {
-      [Value(0, MetaName = "Grammar Name", HelpText = "ANTLR grammar to load", Required = true)]
+      [Option("grammar", HelpText = "ANTLR grammar to load", Required = false)]
       public string GrammarName { get; set; }
 
-      [Value(1, MetaName = "Rule Name", HelpText = "ANTLR grammar rule to use", Required = false)]
+      [Option("rule", HelpText = "ANTLR grammar rule to use", Required = false)]
       public string RuleName { get; set; }
 
-      [Value(2, MetaName = "Input Filename", HelpText = "File name to parse", Required = false)]
+      [Option("input-file", HelpText = "File name to parse", Required = false)]
       public string FileName { get; set; }
 
-      [Option("trace", Required = false, HelpText = "Trace grammar parsing")]
+      [Option("trace", HelpText = "Trace grammar parsing", Required = false)]
       public bool Trace { get; set; }
 
-      [Option("diagnostics", Required = false, HelpText = "Parse with diagnostics")]
+      [Option("diagnostics", HelpText = "Parse with diagnostics", Required = false)]
       public bool Diagnostics { get; set; }
 
-      [Option("SLL", Required = false, HelpText = "Parse using SLL prediction mode")]
+      [Option("SLL", HelpText = "Parse using SLL prediction mode", Required = false)]
       public bool Sll { get; set; }
 
-      [Option("encoding", Required = false, HelpText = "Encoding type to use")]
+      [Option("encoding", HelpText = "Encoding type to use", Required = false)]
       public string EncodingName { get; set; }
    }
 }

@@ -167,5 +167,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          ParseSource();
       }
+
+      private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         Application.Exit();
+      }
    }
 }
