@@ -50,8 +50,8 @@
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.loadGrammarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+         this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.tracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.diagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -131,6 +131,7 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -165,7 +166,7 @@
          this.tabParseTree.Location = new System.Drawing.Point(4, 29);
          this.tabParseTree.Name = "tabParseTree";
          this.tabParseTree.Padding = new System.Windows.Forms.Padding(3);
-         this.tabParseTree.Size = new System.Drawing.Size(630, 598);
+         this.tabParseTree.Size = new System.Drawing.Size(630, 574);
          this.tabParseTree.TabIndex = 0;
          this.tabParseTree.Text = "Parse Tree";
          this.tabParseTree.UseVisualStyleBackColor = true;
@@ -175,7 +176,7 @@
          this.pnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
          this.pnlGraph.Location = new System.Drawing.Point(3, 3);
          this.pnlGraph.Name = "pnlGraph";
-         this.pnlGraph.Size = new System.Drawing.Size(624, 592);
+         this.pnlGraph.Size = new System.Drawing.Size(624, 568);
          this.pnlGraph.TabIndex = 0;
          // 
          // tabTokens
@@ -210,9 +211,12 @@
             this.colStop,
             this.colLength});
          this.tokenListView.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.tokenListView.FullRowSelect = true;
          this.tokenListView.HideSelection = false;
          this.tokenListView.Location = new System.Drawing.Point(3, 3);
+         this.tokenListView.MultiSelect = false;
          this.tokenListView.Name = "tokenListView";
+         this.tokenListView.ShowItemCountOnGroups = true;
          this.tokenListView.Size = new System.Drawing.Size(624, 568);
          this.tokenListView.SortGroupItemsByPrimaryColumn = false;
          this.tokenListView.TabIndex = 0;
@@ -298,20 +302,20 @@
          // loadGrammarToolStripMenuItem
          // 
          this.loadGrammarToolStripMenuItem.Name = "loadGrammarToolStripMenuItem";
-         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
          this.loadGrammarToolStripMenuItem.Text = "&Load Grammar";
-         // 
-         // exitToolStripMenuItem
-         // 
-         this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-         this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-         this.exitToolStripMenuItem.Text = "E&xit";
-         this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
          // 
          // toolStripSeparator1
          // 
          this.toolStripSeparator1.Name = "toolStripSeparator1";
-         this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+         this.toolStripSeparator1.Size = new System.Drawing.Size(150, 6);
+         // 
+         // exitToolStripMenuItem
+         // 
+         this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+         this.exitToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+         this.exitToolStripMenuItem.Text = "E&xit";
+         this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
          // 
          // optionsToolStripMenuItem
          // 
