@@ -184,5 +184,39 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          Application.Exit();
       }
+
+      private void loadGrammarToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         var pathToSearch = string.Empty;
+
+         if (GrammarfolderBrowserDialog.ShowDialog() == DialogResult.Cancel)
+            return;
+
+         pathToSearch = GrammarfolderBrowserDialog.SelectedPath;
+         var scanner = new Grammar.Scanner();
+         var grammars = scanner.LocateAllGrammars(pathToSearch);
+         var grammarCount = grammars.Count();
+         GrammarReference grammarToLoad = null;
+
+         if (grammarCount == 0)
+         {
+            // TODO: throw error message to user about no grammars found
+         }
+         else if (grammarCount == 1)
+         {
+            grammarToLoad = grammars.First();
+         }
+         else
+         {
+            var selector = new GrammarSelector();
+            selector.GrammarsToSelectFrom = grammars;
+            if (selector.ShowDialog() == DialogResult.Cancel)
+               return;
+
+            grammarToLoad = selector.SelectedGrammar;
+         }
+
+         SetGrammar(grammarToLoad);
+      }
    }
 }

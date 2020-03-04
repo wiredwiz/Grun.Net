@@ -56,6 +56,7 @@
          this.tracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.diagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.simpleLLModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.GrammarfolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -131,7 +132,6 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -302,8 +302,9 @@
          // loadGrammarToolStripMenuItem
          // 
          this.loadGrammarToolStripMenuItem.Name = "loadGrammarToolStripMenuItem";
-         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
          this.loadGrammarToolStripMenuItem.Text = "&Load Grammar";
+         this.loadGrammarToolStripMenuItem.Click += new System.EventHandler(this.loadGrammarToolStripMenuItem_Click);
          // 
          // toolStripSeparator1
          // 
@@ -331,21 +332,21 @@
          // 
          this.tracingToolStripMenuItem.CheckOnClick = true;
          this.tracingToolStripMenuItem.Name = "tracingToolStripMenuItem";
-         this.tracingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.tracingToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
          this.tracingToolStripMenuItem.Text = "Tracing";
          // 
          // diagnosticsToolStripMenuItem
          // 
          this.diagnosticsToolStripMenuItem.CheckOnClick = true;
          this.diagnosticsToolStripMenuItem.Name = "diagnosticsToolStripMenuItem";
-         this.diagnosticsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.diagnosticsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
          this.diagnosticsToolStripMenuItem.Text = "Diagnostics";
          // 
          // simpleLLModeToolStripMenuItem
          // 
          this.simpleLLModeToolStripMenuItem.CheckOnClick = true;
          this.simpleLLModeToolStripMenuItem.Name = "simpleLLModeToolStripMenuItem";
-         this.simpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.simpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
          this.simpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
          // 
          // VisualAnalyzer
@@ -404,6 +405,7 @@
       private System.Windows.Forms.ToolStripMenuItem tracingToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem diagnosticsToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem simpleLLModeToolStripMenuItem;
+      private System.Windows.Forms.FolderBrowserDialog GrammarfolderBrowserDialog;
    }
 }
 
