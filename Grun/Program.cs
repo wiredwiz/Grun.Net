@@ -123,8 +123,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                return;
                             }
 
+                            var analyzer = new Grammar.Analyzer(grammar, data);
+                            analyzer.Parse(o.RuleName, options);
+
                             if (showParseTree)
-                              DisplayParseTree(grammar, data, o.RuleName, options);
+                              Console.WriteLine(analyzer.StringSourceTree);
 
                             if (loadGui)
                                LoadGui(data, grammar, o.RuleName);
@@ -137,15 +140,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.StackTrace);
          }
-      }
-
-      // ReSharper disable once FlagArgument
-      private static void DisplayParseTree(GrammarReference grammar, string data, string ruleName, Grammar.ParseOption option)
-      {
-         var analyzer = new Grammar.Analyzer(grammar, data);
-         analyzer.Parse(ruleName, option);
-
-         Console.WriteLine(analyzer.StringSourceTree);
       }
 
       private static void DisplayTokens(GrammarReference grammar, string data)

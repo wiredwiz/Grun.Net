@@ -14,6 +14,7 @@ A breakdown of option statuses follows
 - --diagnostics [**Full Support**]
 - --trace [**Full Support**]
 - --encoding [**Full Support**]
+- --SLL [**Full Support**]
 - --ps [**Not Supported Yet**]
 - --tree [**Full Support**]
 
