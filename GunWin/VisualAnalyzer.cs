@@ -75,20 +75,32 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// </summary>
       /// <value><c>true</c> if diagnostic parsing is enabled; otherwise, <c>false</c>.</value>
       /// <remarks>If SLL is also enabled, SLL will supersede diagnostic mode.</remarks>
-      public bool ParseWithDiagnostics { get; set; }
+      public bool ParseWithDiagnostics
+      {
+         get => diagnosticsToolStripMenuItem.Checked;
+         set => diagnosticsToolStripMenuItem.Checked = value;
+      }
 
       /// <summary>
       /// Gets or sets a value indicating whether to parse with Simple LL mode.
       /// </summary>
       /// <value><c>true</c> if SLL parsing mode is enabled; otherwise, <c>false</c>.</value>
       /// <remarks>If Diagnostics are also enabled, SLL will supersede diagnostic mode.</remarks>
-      public bool ParseWithSllMode { get; set; }
+      public bool ParseWithSllMode
+      {
+         get => simpleLLModeToolStripMenuItem.Checked;
+         set => simpleLLModeToolStripMenuItem.Checked = value;
+      }
 
       /// <summary>
       /// Gets or sets a value indicating whether to parse with tracing enabled.
       /// </summary>
       /// <value><c>true</c> if tracing is enabled; otherwise, <c>false</c>.</value>
-      public bool ParseWithTracing { get; set; }
+      public bool ParseWithTracing
+      {
+         get => tracingToolStripMenuItem.Checked;
+         set => tracingToolStripMenuItem.Checked = value;
+      }
 
       private void LoadParserRules()
       {
