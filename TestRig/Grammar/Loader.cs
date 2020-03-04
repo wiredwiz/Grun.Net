@@ -35,6 +35,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Reflection;
 
 using Antlr4.Runtime;
@@ -64,7 +65,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          if (reference is null) throw new ArgumentNullException(nameof(reference));
          if (stream is null) throw new ArgumentNullException(nameof(stream));
 
-         Assembly.LoadFile(reference.AssemblyPath);
+         Assembly.Load(File.ReadAllBytes(reference.AssemblyPath));
          var lexer = Activator.CreateInstance(reference.Lexer, stream) as Lexer;
          return lexer;
       }
@@ -85,7 +86,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          if (reference is null) throw new ArgumentNullException(nameof(reference));
          if (stream is null) throw new ArgumentNullException(nameof(stream));
 
-         Assembly.LoadFile(reference.AssemblyPath);
+         Assembly.Load(File.ReadAllBytes(reference.AssemblyPath));
          var lexer = Activator.CreateInstance(reference.Parser, stream) as Parser;
          return lexer;
       }

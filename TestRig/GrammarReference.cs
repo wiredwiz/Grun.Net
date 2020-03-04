@@ -37,6 +37,7 @@
 #endregion
 
 using System;
+using System.IO;
 
 using JetBrains.Annotations;
 
@@ -52,12 +53,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// <summary>
       ///    Initializes a new instance of the <see cref="GrammarReference" /> class.
       /// </summary>
-      /// <param name="assemblyPath">The assembly path.</param>
+      /// <param name="assemblyInfo">The assembly path.</param>
       /// <param name="grammarName">Name of the grammar.</param>
       /// <param name="lexerType">Type of the lexer.</param>
       /// <param name="parserType">Type of the parser.</param>
       /// <exception cref="ArgumentNullException">
-      ///    assemblyPath
+      ///    assemblyInfo
       ///    or
       ///    grammarName
       ///    or
@@ -65,15 +66,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// </exception>
       // ReSharper disable once TooManyDependencies
       public GrammarReference(
-         [NotNull] string assemblyPath,
+         [NotNull] FileInfo assemblyInfo,
          [NotNull] string grammarName,
          [NotNull] Type lexerType,
          [CanBeNull] Type parserType)
       {
-         AssemblyPath = assemblyPath ?? throw new ArgumentNullException(nameof(assemblyPath));
+         if (assemblyInfo is null) throw new ArgumentNullException(nameof(assemblyInfo));
+         AssemblyPath = assemblyInfo.FullName;
          GrammarName = grammarName ?? throw new ArgumentNullException(nameof(grammarName));
          Lexer = lexerType ?? throw new ArgumentNullException(nameof(lexerType));
          Parser = parserType;
+         LoadTime = DateTime.Now;
+         AssemblyLastWrite = assemblyInfo.LastWriteTime;
+         AssemblySize = assemblyInfo.Length;
       }
 
       #endregion
@@ -107,5 +112,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// <see cref="Antlr4.Runtime.Parser" />
       [CanBeNull]
       public Type Parser { get; }
+
+      /// <summary>
+      /// Gets the load time for the grammar assembly.
+      /// </summary>
+      /// <value>The load time.</value>
+      public DateTime LoadTime { get; }
+
+      /// <summary>
+      /// Gets the last write time of the assembly file.
+      /// </summary>
+      /// <value>The assembly last write time.</value>
+      public DateTime AssemblyLastWrite { get; }
+
+      /// <summary>
+      /// Gets the size of the assembly file.
+      /// </summary>
+      /// <value>The size of the assembly.</value>
+      public long AssemblySize { get; }
    }
 }

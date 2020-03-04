@@ -188,7 +188,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
          foreach (var file in files)
          {
-            var assembly = Assembly.LoadFile(file.FullName);
+            var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
 
             // We make parsers an explicit list to avoid multiple enumerations
             var parsers = FindGrammarParsersInAssembly(assembly).ToList();
@@ -216,7 +216,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
                }
                
                var grammarRef = new GrammarReference(
-                                                     file.FullName,
+                                                     file,
                                                      lexer.GrammarName,
                                                      lexer.ActualType,
                                                      parser.ActualType);
