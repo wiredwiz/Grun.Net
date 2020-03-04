@@ -41,7 +41,7 @@ using Antlr4.Runtime;
 
 using JetBrains.Annotations;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
    /// <summary>
    /// Class that represents an ANTLR grammar loader.

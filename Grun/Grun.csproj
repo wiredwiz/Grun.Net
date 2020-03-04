@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B614368A-F4C9-409F-8896-CB1DA204AD6D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Org.Edgerunner.ANTLR.Tools.Testing</RootNamespace>
+    <RootNamespace>Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet</RootNamespace>
     <AssemblyName>Grun</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

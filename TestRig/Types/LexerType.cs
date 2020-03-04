@@ -35,13 +35,14 @@
 #endregion
 
 using System;
+
 using Antlr4.Runtime;
 
 using JetBrains.Annotations;
 
-using Org.Edgerunner.ANTLR.Tools.Testing.Exceptions;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing.Types
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Types
 {
    public struct LexerType
    {

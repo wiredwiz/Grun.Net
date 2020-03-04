@@ -36,7 +36,7 @@
 
 using CommandLine;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    /// <summary>
    /// Class that represents command line options.
@@ -46,7 +46,7 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
       [Value(0, MetaName = "Grammar Name", HelpText = "ANTLR grammar to load", Required = true)]
       public string GrammarName { get; set; }
 
-      [Value(1, MetaName = "Rule Name", HelpText = "ANTLR grammar rule to use", Required = true)]
+      [Value(1, MetaName = "Rule Name", HelpText = "ANTLR grammar rule to use", Required = false)]
       public string RuleName { get; set; }
 
       [Value(2, MetaName = "Input Filename", HelpText = "File name to parse", Required = false)]
@@ -57,6 +57,9 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
 
       [Option("diagnostics", Required = false, HelpText = "Parse with diagnostics")]
       public bool Diagnostics { get; set; }
+
+      [Option("SLL", Required = false, HelpText = "Parse using SLL prediction mode")]
+      public bool Sll { get; set; }
 
       [Option("encoding", Required = false, HelpText = "Encoding type to use")]
       public string EncodingName { get; set; }

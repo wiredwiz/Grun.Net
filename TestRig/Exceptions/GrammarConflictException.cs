@@ -39,7 +39,7 @@ using System.Runtime.Serialization;
 
 using JetBrains.Annotations;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing.Exceptions
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions
 {
    /// <summary>
    /// Class that represents a grammar conflict exception.

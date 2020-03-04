@@ -40,7 +40,7 @@ using System;
 
 using JetBrains.Annotations;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing
+namespace Org.Edgerunner.ANTLR4.Tools.Testing
 {
    /// <summary>
    ///    Class that represents a reference to an ANTLR grammar.

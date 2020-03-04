@@ -36,17 +36,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
 
 using JetBrains.Annotations;
 
-using Org.Edgerunner.ANTLR.Tools.Testing.Exceptions;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
    /// <summary>
    /// Class that represents an ANTLR grammar analyzer.
@@ -149,33 +146,30 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
          var commonTokenStream = new CommonTokenStream(lexer);
 
          commonTokenStream.Fill();
-         var tokens = commonTokenStream.GetTokens();
+         Tokens = commonTokenStream.GetTokens();
 
-         if ((option & ParseOption.Tokens) != 0)
-            Tokens = (option & ParseOption.Tokens) != 0 ? tokens : new List<IToken>();
-
-         if ((option & ParseOption.DisplayTokens) != 0)
-            foreach (var token in tokens)
+         if (option.HasFlag(ParseOption.Tokens))
+            foreach (var token in Tokens)
                Console.WriteLine(token.ToString());
 
          var parser = loader.LoadParser(Grammar, commonTokenStream);
 
          // Handle Tree parsing option
-         parser.BuildParseTree = (option & ParseOption.Tree) != 0;
+         parser.BuildParseTree = option.HasFlag(ParseOption.Tree);
 
          // Handle Diagnostics parsing option
-         if ((option & ParseOption.Diagnostics) != 0)
+         if (option.HasFlag(ParseOption.Diagnostics))
          {
             parser.AddErrorListener(new DiagnosticErrorListener());
             parser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.LlExactAmbigDetection;
          }
 
          // Handle Sll parsing option
-         if ((option & ParseOption.Sll) != 0)
+         if (option.HasFlag(ParseOption.Sll))
             parser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.Sll;
 
          // Handle Trace parsing option
-         parser.Trace = (option & ParseOption.Trace) != 0;
+         parser.Trace = option.HasFlag(ParseOption.Trace);
 
          var methodInfo = Grammar.Parser.GetMethod(ruleName);
          if (methodInfo == null)
@@ -183,7 +177,7 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
 
          ParseContext = methodInfo.Invoke(parser, null) as ParserRuleContext;
          DisplayTokens = ConvertTokensForDisplay(lexer, Tokens);
-         StringSourceTree = (option & ParseOption.Tree) != 0 ? ParseContext.ToStringTree(parser) : string.Empty;
+         StringSourceTree = option.HasFlag(ParseOption.Tree) ? ParseContext.ToStringTree(parser) : string.Empty;
          IsParsed = true;
       }
 

@@ -1,4 +1,4 @@
-﻿namespace Org.Edgerunner.ANTLR.Tools.Testing
+﻿namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    partial class VisualAnalyzer
    {

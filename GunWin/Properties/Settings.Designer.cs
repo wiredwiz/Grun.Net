@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing.Properties {
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

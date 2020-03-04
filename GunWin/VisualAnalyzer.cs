@@ -41,11 +41,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-using Antlr4.Runtime;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
-using Org.Edgerunner.ANTLR.Tools.Testing.Grammar;
-
-namespace Org.Edgerunner.ANTLR.Tools.Testing
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    /// <summary>
    /// Class that represents an ANTLR grammar test Analyzer.
@@ -72,6 +70,26 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
 
       #endregion
 
+      /// <summary>
+      /// Gets or sets a value indicating whether to parse with diagnostics enabled.
+      /// </summary>
+      /// <value><c>true</c> if diagnostic parsing is enabled; otherwise, <c>false</c>.</value>
+      /// <remarks>If SLL is also enabled, SLL will supersede diagnostic mode.</remarks>
+      public bool ParseWithDiagnostics { get; set; }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether to parse with Simple LL mode.
+      /// </summary>
+      /// <value><c>true</c> if SLL parsing mode is enabled; otherwise, <c>false</c>.</value>
+      /// <remarks>If Diagnostics are also enabled, SLL will supersede diagnostic mode.</remarks>
+      public bool ParseWithSllMode { get; set; }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether to parse with tracing enabled.
+      /// </summary>
+      /// <value><c>true</c> if tracing is enabled; otherwise, <c>false</c>.</value>
+      public bool ParseWithTracing { get; set; }
+
       private void LoadParserRules()
       {
          cmbRules.DataSource = _ParserRules;
@@ -86,8 +104,18 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
          if (_Grammar == null)
             return; 
 
+         if (_ParserRules.Count == 0)
+            return;
+
+         if (string.IsNullOrEmpty(cmbRules.SelectedItem.ToString()))
+            return;
+
          var analyzer = new Grammar.Analyzer(_Grammar, CodeEditor.Text);
-         analyzer.Parse(cmbRules.SelectedItem.ToString(), ParseOption.Tokens | ParseOption.Tree);
+         var options = ParseOption.Tree;
+         if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
+         if (ParseWithSllMode) options |= ParseOption.Sll;
+         if (ParseWithTracing) options |= ParseOption.Trace;
+         analyzer.Parse(cmbRules.SelectedItem.ToString(), options);
          PopulateTokens(analyzer.DisplayTokens);
       }
 
@@ -132,7 +160,6 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
             throw new ArgumentException($"The rule \"{rule}\" is invalid", nameof(rule));
 
          _DefaultRule = rule;
-         cmbRules.Refresh();
          cmbRules.SelectedIndex = cmbRules.FindStringExact(rule);
       }
 

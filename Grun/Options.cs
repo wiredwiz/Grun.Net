@@ -36,7 +36,7 @@
 
 using CommandLine;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
 {
    /// <summary>
    /// Class that represents command line options.
@@ -63,6 +63,9 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
 
       [Option("gui", Required = false, HelpText = "Display parse gui")]
       public bool Gui { get; set; }
+
+      [Option("SLL", Required = false, HelpText = "Parse using SLL prediction mode")]
+      public bool Sll { get; set; }
 
       [Option("diagnostics", Required = false, HelpText = "Parse with diagnostics")]
       public bool Diagnostics { get; set; }

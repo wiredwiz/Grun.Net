@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using CommandLine;
 
-using Org.Edgerunner.ANTLR.Tools.Testing;
-
-namespace GunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    static class Program
    {
@@ -19,19 +14,35 @@ namespace GunWin
       [STAThread]
       static void Main(string[] args)
       {
+         var grammarName = string.Empty;
+         var grammarRule = string.Empty;
          var encoding = string.Empty;
-         var runWithDiagnostics = false;
+         var visualAnalyzer = new VisualAnalyzer();
 
          Parser.Default.ParseArguments<Options>(args)
                    .WithParsed(o =>
                       {
+                         grammarName = o.GrammarName;
+
+                         if (!string.IsNullOrEmpty(o.RuleName))
+                            grammarRule = o.RuleName;
+
                          if (!string.IsNullOrEmpty(o.EncodingName))
                             encoding = o.EncodingName;
-                         if (o.Diagnostics) ;
+
+                         if (o.Diagnostics) visualAnalyzer.ParseWithDiagnostics = true;
+                         if (o.Trace) visualAnalyzer.ParseWithTracing = true;
+                         if (o.Sll) visualAnalyzer.ParseWithSllMode = true;
+
+                         grammarName = o.GrammarName;
+                         grammarRule = o.RuleName;
                       });
+
+
+
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         Application.Run(new VisualAnalyzer());
+         Application.Run(visualAnalyzer);
       }
    }
 }

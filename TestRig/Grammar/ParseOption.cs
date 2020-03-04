@@ -36,7 +36,7 @@
 
 using System;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
    /// <summary>
    /// Enumeration that defines parsing options
@@ -60,23 +60,18 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
       Diagnostics = 2,
 
       /// <summary>
-      /// Indicates parsing should preserve the list of lexer tokens.
+      /// Indicates that parsing should display the list of tokens in the standard output.
       /// </summary>
       Tokens = 4,
 
       /// <summary>
-      /// Indicates that parsing should display the list of tokens in the standard output.
-      /// </summary>
-      DisplayTokens = 8,
-
-      /// <summary>
       /// Indicates a parser tree should be constructed during parsing.
       /// </summary>
-      Tree = 16,
+      Tree = 8,
 
       /// <summary>
       /// Indicates parsing should be performed using "Left-to-right, Leftmost derivation with exact ambiguity detection" prediction mode.
       /// </summary>
-      Sll = 32
+      Sll = 16
    }
 }

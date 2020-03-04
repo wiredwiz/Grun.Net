@@ -7,8 +7,8 @@
     <ProjectGuid>{4E020F1D-27BF-4853-8573-474D7EDB4E72}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Org.Edgerunner.ANTLR.Tools.Testing</RootNamespace>
-    <AssemblyName>Edgerunner.ANTLR.Tools.Testing.TestRig</AssemblyName>
+    <RootNamespace>Org.Edgerunner.ANTLR4.Tools.Testing</RootNamespace>
+    <AssemblyName>Edgerunner.ANTLR4.Tools.Testing.TestRig</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

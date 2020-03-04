@@ -47,7 +47,9 @@ using Antlr4.Runtime.Misc;
 using CommandLine;
 using CommandLine.Text;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
+
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
 {
    /// <summary>
    /// Class that represents the entry point into the program.
@@ -70,18 +72,20 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
                             var options = Grammar.ParseOption.None;
                             var loadGui = false;
                             var showParseTree = false;
-                            var showTokens = false;
-                            var useDiagnostics = false;
-                            var useTracing = false;
 
-                            if (o.Tokens) options |= Grammar.ParseOption.Tokens | Grammar.ParseOption.DisplayTokens;
+                            if (o.Tokens) options |= Grammar.ParseOption.Tokens;
                             if (o.Diagnostics) options |= Grammar.ParseOption.Diagnostics;
                             if (o.Trace) options |= Grammar.ParseOption.Trace;
-                            if (o.Tree) options |= Grammar.ParseOption.Tree;
+                            if (o.Tree)
+                            {
+                               options |= Grammar.ParseOption.Tree;
+                               showParseTree = true;
+                            }
+
+                            if (o.Sll) options |= Grammar.ParseOption.Sll;
                             if (o.Gui)
                             {
                                loadGui = true;
-                               options |= Grammar.ParseOption.Tokens;
                                options |= Grammar.ParseOption.Tree;
                             }
 
@@ -113,13 +117,13 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing
                                   data += line + Environment.NewLine;
 
                             // If tokens are the only option we've received, we don't need to parse
-                            if ((options | Grammar.ParseOption.Tokens) == (Grammar.ParseOption.Tokens | Grammar.ParseOption.DisplayTokens))
+                            if (options == Grammar.ParseOption.Tokens)
                             {
                                DisplayTokens(grammar, data);
                                return;
                             }
 
-                            if (options != Grammar.ParseOption.None)
+                            if (showParseTree)
                               DisplayParseTree(grammar, data, o.RuleName, options);
 
                             if (loadGui)

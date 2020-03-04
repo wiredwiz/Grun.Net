@@ -46,10 +46,10 @@ using Antlr4.Runtime;
 
 using JetBrains.Annotations;
 
-using Org.Edgerunner.ANTLR.Tools.Testing.Exceptions;
-using Org.Edgerunner.ANTLR.Tools.Testing.Types;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Types;
 
-namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
    /// <summary>
    ///    Class that represents an ANTLR grammar scanner.
@@ -135,7 +135,7 @@ namespace Org.Edgerunner.ANTLR.Tools.Testing.Grammar
       /// <param name="path">The path to search.</param>
       /// <param name="name">The name of the grammar.</param>
       /// <returns>A new <see cref="GrammarReference" /> or <see langword="null" /> if not found.</returns>
-      /// <exception cref="T:Org.Edgerunner.ANTLR.Tools.Testing.Exceptions.GrammarConflictException">
+      /// <exception cref="T:Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions.GrammarConflictException">
       ///    More than one assembly defines the specified grammar.
       /// </exception>
       /// <exception cref="T:System.ArgumentNullException">

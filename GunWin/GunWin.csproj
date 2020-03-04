@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A3568FA3-D6B3-4165-AF95-CDB78D86F416}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Org.Edgerunner.ANTLR.Tools.Testing</RootNamespace>
+    <RootNamespace>Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin</RootNamespace>
     <AssemblyName>GunWin</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
