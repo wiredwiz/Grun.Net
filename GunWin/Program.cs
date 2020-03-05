@@ -63,8 +63,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (!string.IsNullOrEmpty(grammarRule))
             visualAnalyzer.SetDefaultParserRule(grammarRule);
 
-         visualAnalyzer.ParseSource();
-
          Application.Run(visualAnalyzer);
       }
    }

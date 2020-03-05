@@ -98,6 +98,7 @@
          this.cmbRules.Name = "cmbRules";
          this.cmbRules.Size = new System.Drawing.Size(203, 28);
          this.cmbRules.TabIndex = 0;
+         this.cmbRules.SelectedIndexChanged += new System.EventHandler(this.cmbRules_SelectedIndexChanged);
          // 
          // lblParserRule
          // 
@@ -132,6 +133,7 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -365,7 +367,8 @@
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MainMenuStrip = this.menuStrip1;
          this.Name = "VisualAnalyzer";
-         this.Text = "Analyzer";
+         this.Text = "GrunWin Visual Analyzer";
+         this.Load += new System.EventHandler(this.VisualAnalyzer_Load);
          this.splitContainer1.Panel1.ResumeLayout(false);
          this.splitContainer1.Panel1.PerformLayout();
          this.splitContainer1.Panel2.ResumeLayout(false);

@@ -162,7 +162,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
             visualAnalyzer.SetSourceCode(data);
             visualAnalyzer.SetGrammar(grammar);
             visualAnalyzer.SetDefaultParserRule(parserRule);
-            visualAnalyzer.ParseSource();
             Application.Run(visualAnalyzer);
          }
       }

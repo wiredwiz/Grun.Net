@@ -41,6 +41,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
+
+using FastColoredTextBoxNS;
+
+using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
+using Microsoft.Msagl.Layout.Layered;
+
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
@@ -55,6 +64,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private GrammarReference _Grammar;
 
       private List<string> _ParserRules;
+
+      private GViewer _Viewer;
 
       private string _DefaultRule;
 
@@ -116,8 +127,56 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void LoadParserRules()
       {
-         cmbRules.DataSource = _ParserRules;
+         cmbRules.DataSource = _ParserRules.OrderBy(x => x).Distinct().ToList();
          cmbRules.Refresh();
+      }
+
+      private void InitializeGraphCanvas()
+      {
+         SuspendLayout();
+         _Viewer = new GViewer();
+         pnlGraph.Controls.Add(_Viewer);
+         _Viewer.Dock = DockStyle.Fill;
+         ResumeLayout();
+         _Viewer.LayoutAlgorithmSettingsButtonVisible = false;
+         _Viewer.Click += _Viewer_Click;
+      }
+
+      private void ShowSourcePosition(ParserRuleContext context)
+      {
+         if (context == null)
+            return;
+
+         var startingPlace = new Place(context.Start.Column, context.start.Line - 1);
+         var stoppingPlace = new Place(context.Stop.Column + context.stop.Text.Length, context.stop.Line - 1);
+
+         CodeEditor.Selection = new Range(CodeEditor, startingPlace, stoppingPlace);
+         CodeEditor.DoCaretVisible();
+         CodeEditor.Focus();
+      }
+
+      private void ShowSourcePosition(TerminalNodeImpl node)
+      {
+         if (node == null)
+            return;
+
+         var startingPlace = new Place(node.Symbol.Column, node.Symbol.Line - 1);
+         var stoppingPlace = new Place(node.Symbol.Column + node.Symbol.Text.Length, node.Symbol.Line - 1);
+
+         CodeEditor.Selection = new Range(CodeEditor, startingPlace, stoppingPlace);
+         CodeEditor.DoCaretVisible();
+         CodeEditor.Focus();
+      }
+
+      private void _Viewer_Click(object sender, EventArgs e)
+      {
+         if (_Viewer.SelectedObject is Node node)
+         {
+            if (node.UserData is ParserRuleContext context)
+               ShowSourcePosition(context);
+            else if (node.UserData is TerminalNodeImpl terminal)
+               ShowSourcePosition(terminal);
+         }
       }
 
       /// <summary>
@@ -131,7 +190,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (_ParserRules.Count == 0)
             return;
 
-         if (string.IsNullOrEmpty(cmbRules.SelectedItem.ToString()))
+         if (string.IsNullOrEmpty(cmbRules.SelectedItem?.ToString()))
             return;
 
          var analyzer = new Grammar.Analyzer(_Grammar, CodeEditor.Text);
@@ -141,11 +200,29 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (ParseWithTracing) options |= ParseOption.Trace;
          analyzer.Parse(cmbRules.SelectedItem.ToString(), options);
          PopulateTokens(analyzer.DisplayTokens);
+         BuildParseTreeGraph(analyzer.ParseContext);
       }
 
       private void PopulateTokens(IList<TokenViewModel> tokens)
       {
          tokenListView.SetObjects(tokens);
+      }
+
+      private void BuildParseTreeGraph(ITree tree)
+      {
+         if (_Viewer == null)
+            return;
+
+         if (tree == null)
+            return;
+
+         var grapher = new Graphing.ParseTreeGrapher(tree, _ParserRules)
+                          {
+                             BackgroundColor = Color.LightBlue, BorderColor = Color.Black, TextColor = Color.Black
+                          };
+         var graph = grapher.CreateGraph();
+         graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
+         _Viewer.Graph = graph;
       }
 
       /// <summary>
@@ -166,7 +243,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var scanner = new Scanner();
          _Grammar = grammar;
          _ParserRules = scanner.GetParserRulesForGrammar(grammar).ToList();
-         _ParserRules.Sort();
          LoadParserRules();
       }
 
@@ -230,6 +306,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
 
          SetGrammar(grammarToLoad);
+      }
+
+      private void VisualAnalyzer_Load(object sender, EventArgs e)
+      {
+         InitializeGraphCanvas();
+         
+         if (!string.IsNullOrEmpty(CodeEditor.Text))
+            ParseSource();
+      }
+
+      private void cmbRules_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         if (cmbRules.Items.Count > 0)
+            ParseSource();
       }
    }
 }
