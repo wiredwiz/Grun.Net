@@ -42,6 +42,7 @@ using Antlr4.Runtime;
 using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
@@ -129,11 +130,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// </summary>
       /// <param name="ruleName">Name of the rule.</param>
       /// <param name="option">The parsing options to use.</param>
-      /// <exception cref="ArgumentNullException"><paramref name="ruleName"/> is <see langword="null"/> or empty.</exception>
-      /// <exception cref="GrammarException">No parser found for supplied grammar</exception>
-      /// <exception cref="GrammarException"><paramref name="ruleName"/> is not a valid parser rule.</exception>
-      /// <exception cref="T:System.ArgumentNullException">No parser found for the specified grammar.</exception>
-      public void Parse([NotNull] string ruleName, ParseOption option)
+      /// <param name="listener">The error listener.</param>
+      /// <exception cref="ArgumentNullException">ruleName</exception>
+      /// <exception cref="GrammarException">No parser found for grammar \"{Grammar.GrammarName}\"</exception>
+      /// <exception cref="GrammarException">No parser rule with name \"{ruleName}\" found.</exception>
+      /// <exception cref="GrammarException"><paramref name="ruleName" /> is <see langword="null" /> or empty.</exception>
+      /// <exception cref="T:System.ArgumentNullException">No parser found for supplied grammar</exception>
+      public void Parse([NotNull] string ruleName, ParseOption option, TestingErrorListener listener = null)
       {
          if (string.IsNullOrEmpty(ruleName))
             throw new ArgumentNullException(nameof(ruleName));
@@ -170,6 +173,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
          // Handle Trace parsing option
          parser.Trace = option.HasFlag(ParseOption.Trace);
+
+         if (listener != null)
+         {
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(listener);
+         }
 
          var methodInfo = Grammar.Parser.GetMethod(ruleName);
          if (methodInfo == null)
