@@ -78,7 +78,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public bool ParseWithDiagnostics
       {
          get => diagnosticsToolStripMenuItem.Checked;
-         set => diagnosticsToolStripMenuItem.Checked = value;
+         set
+         {
+            diagnosticsToolStripMenuItem.Checked = value;
+            ParseSource();
+         }
       }
 
       /// <summary>
@@ -89,7 +93,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public bool ParseWithSllMode
       {
          get => simpleLLModeToolStripMenuItem.Checked;
-         set => simpleLLModeToolStripMenuItem.Checked = value;
+         set
+         {
+            simpleLLModeToolStripMenuItem.Checked = value;
+            ParseSource();
+         }
       }
 
       /// <summary>
@@ -99,7 +107,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public bool ParseWithTracing
       {
          get => tracingToolStripMenuItem.Checked;
-         set => tracingToolStripMenuItem.Checked = value;
+         set
+         {
+            tracingToolStripMenuItem.Checked = value;
+            ParseSource();
+         }
       }
 
       private void LoadParserRules()
@@ -114,7 +126,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public void ParseSource()
       {
          if (_Grammar == null)
-            return; 
+            return;
 
          if (_ParserRules.Count == 0)
             return;
