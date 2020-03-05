@@ -62,7 +62,7 @@ is running.  GrunWin also supports a handful of optional command line parameters
   |--diagnostics     |         Parse with diagnostics.         |
   |--encoding        |         Encoding type to use.           |
 
-![alt text](https://github.com/wiredwiz/Grun.Net/tree/master/Images/GrunWinExample.gif)
+![Editor Sample](https://github.com/wiredwiz/Grun.Net/blob/master/Images/GrunWinExample.GIF?raw=true)
 
 I eventually plan to add syntax highlighting to the editor window.  The tool will attempt
 to build a color pallet heuristically, but an ISyntaxGuide can be implemented to help
