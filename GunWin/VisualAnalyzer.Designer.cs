@@ -56,7 +56,7 @@
          this.tracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.diagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.simpleLLModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.GrammarfolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+         this.openGrammarFileDialog = new System.Windows.Forms.OpenFileDialog();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -302,7 +302,7 @@
          // loadGrammarToolStripMenuItem
          // 
          this.loadGrammarToolStripMenuItem.Name = "loadGrammarToolStripMenuItem";
-         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
          this.loadGrammarToolStripMenuItem.Text = "&Load Grammar";
          this.loadGrammarToolStripMenuItem.Click += new System.EventHandler(this.loadGrammarToolStripMenuItem_Click);
          // 
@@ -348,6 +348,12 @@
          this.simpleLLModeToolStripMenuItem.Name = "simpleLLModeToolStripMenuItem";
          this.simpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
          this.simpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
+         // 
+         // openGrammarFileDialog
+         // 
+         this.openGrammarFileDialog.DefaultExt = "dll";
+         this.openGrammarFileDialog.Filter = "Assembly files|*.dll";
+         this.openGrammarFileDialog.ReadOnlyChecked = true;
          // 
          // VisualAnalyzer
          // 
@@ -405,7 +411,7 @@
       private System.Windows.Forms.ToolStripMenuItem tracingToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem diagnosticsToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem simpleLLModeToolStripMenuItem;
-      private System.Windows.Forms.FolderBrowserDialog GrammarfolderBrowserDialog;
+      private System.Windows.Forms.OpenFileDialog openGrammarFileDialog;
    }
 }
 

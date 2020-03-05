@@ -113,8 +113,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                   data = reader.ReadToEnd();
                             }
                             else
+                            {
+                               Console.WriteLine("Now reading from standard input.  Use Ctrl+Z to terminate input");
                                while ((line = Console.ReadLine()) != null)
                                   data += line + Environment.NewLine;
+                            }
 
                             // If tokens are the only option we've received, we don't need to parse
                             if (options == Grammar.ParseOption.Tokens)

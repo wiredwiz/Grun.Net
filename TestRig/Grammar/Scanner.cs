@@ -56,6 +56,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
    /// </summary>
    public class Scanner
    {
+      // TODO: Refactor scanner class to simplify code
+
       /// <summary>
       ///    Finds the ANTLR grammar lexers in the supplied assembly.
       /// </summary>
@@ -119,20 +121,35 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <summary>
       ///    Searches for all ANTLR grammars in the specified path and returns an enumeration of those found.
       /// </summary>
-      /// <param name="path">The path to search.</param>
+      /// <param name="path">The filePath to search.</param>
       /// <returns>A new <see cref="IEnumerable{GrammarReference}" />.</returns>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="path" /> is <see langword="null" /></exception>
       public IEnumerable<GrammarReference> LocateAllGrammars([NotNull] string path)
       {
          if (string.IsNullOrEmpty(path))
             throw new ArgumentNullException(nameof(path));
+
          return FindGrammars(path);
       }
 
       /// <summary>
-      ///    Searches for the named ANTLR grammar in the specified path and returns a reference if found.
+      ///    Searches for all ANTLR grammars in the specified file and returns an enumeration of those found.
       /// </summary>
-      /// <param name="path">The path to search.</param>
+      /// <param name="filePath">The file to search.</param>
+      /// <returns>A new <see cref="IEnumerable{GrammarReference}" />.</returns>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="filePath" /> is <see langword="null" /></exception>
+      public IEnumerable<GrammarReference> LocateAllGrammarsInFile([NotNull] string filePath)
+      {
+         if (string.IsNullOrEmpty(filePath))
+            throw new ArgumentNullException(nameof(filePath));
+
+         return FindGrammarsInFile(filePath);
+      }
+
+      /// <summary>
+      ///    Searches for the named ANTLR grammar in the specified filePath and returns a reference if found.
+      /// </summary>
+      /// <param name="path">The filePath to search.</param>
       /// <param name="name">The name of the grammar.</param>
       /// <returns>A new <see cref="GrammarReference" /> or <see langword="null" /> if not found.</returns>
       /// <exception cref="T:Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions.GrammarConflictException">
@@ -158,9 +175,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
                return grammars.First();
             default:
                throw new GrammarConflictException(
-                                                  $"More than one assembly in path \"{path}\" contains a definition for a grammar named \"{name}\"");
+                                                  $"More than one assembly in filePath \"{path}\" contains a definition for a grammar named \"{name}\"");
          }
       }
+
+
 
       /// <summary>
       /// Gets the parser rules for the specified grammar.
@@ -207,14 +226,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
                try
                {
                   parser = (from candidate in parsers
-                           where candidate.GrammarName == lexer.GrammarName
-                           select candidate).First();
+                            where candidate.GrammarName == lexer.GrammarName
+                            select candidate).First();
                }
                catch (InvalidOperationException ex)
                {
                   throw new GrammarException($"Cannot find a matching lexer for grammar \"{lexer.GrammarName}\"", ex);
                }
-               
+
                var grammarRef = new GrammarReference(
                                                      file,
                                                      lexer.GrammarName,
@@ -222,6 +241,49 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
                                                      parser.ActualType);
                results.Add(grammarRef);
             }
+         }
+
+         return results;
+      }
+
+      private List<GrammarReference> FindGrammarsInFile([NotNull] string filePath, string name = null)
+      {
+         var file = new FileInfo(filePath);
+         var results = new List<GrammarReference>();
+
+         var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
+
+         // We make parsers an explicit list to avoid multiple enumerations
+         var parsers = FindGrammarParsersInAssembly(assembly).ToList();
+         var lexers = FindGrammarLexersInAssembly(assembly);
+         IEnumerable<LexerType> matches;
+         if (!string.IsNullOrEmpty(name))
+            matches = from lexer in lexers
+                      where lexer.GrammarName == name
+                      select lexer;
+         else
+            matches = lexers;
+
+         foreach (var lexer in matches)
+         {
+            ParserType parser;
+            try
+            {
+               parser = (from candidate in parsers
+                         where candidate.GrammarName == lexer.GrammarName
+                         select candidate).First();
+            }
+            catch (InvalidOperationException ex)
+            {
+               throw new GrammarException($"Cannot find a matching lexer for grammar \"{lexer.GrammarName}\"", ex);
+            }
+
+            var grammarRef = new GrammarReference(
+                                                  file,
+                                                  lexer.GrammarName,
+                                                  lexer.ActualType,
+                                                  parser.ActualType);
+            results.Add(grammarRef);
          }
 
          return results;

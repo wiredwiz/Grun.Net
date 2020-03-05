@@ -187,14 +187,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void loadGrammarToolStripMenuItem_Click(object sender, EventArgs e)
       {
-         var pathToSearch = string.Empty;
+         var fileToSearch = string.Empty;
+         openGrammarFileDialog.InitialDirectory = Environment.CurrentDirectory;
 
-         if (GrammarfolderBrowserDialog.ShowDialog() == DialogResult.Cancel)
+         if (openGrammarFileDialog.ShowDialog() == DialogResult.Cancel)
             return;
 
-         pathToSearch = GrammarfolderBrowserDialog.SelectedPath;
+         fileToSearch = openGrammarFileDialog.FileName;
          var scanner = new Grammar.Scanner();
-         var grammars = scanner.LocateAllGrammars(pathToSearch);
+         var grammars = scanner.LocateAllGrammarsInFile(fileToSearch);
          var grammarCount = grammars.Count();
          GrammarReference grammarToLoad = null;
 
