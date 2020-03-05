@@ -62,6 +62,9 @@
          this.colLineNumber = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colPosition = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colMessage = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+         this.stripLabelGrammar = new System.Windows.Forms.ToolStripStatusLabel();
+         this.stripLabelGrammarName = new System.Windows.Forms.ToolStripStatusLabel();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -77,6 +80,7 @@
          this.splitContainer2.Panel2.SuspendLayout();
          this.splitContainer2.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.parseMessageListView)).BeginInit();
+         this.statusStrip1.SuspendLayout();
          this.SuspendLayout();
          // 
          // splitContainer1
@@ -96,7 +100,7 @@
          // splitContainer1.Panel2
          // 
          this.splitContainer1.Panel2.Controls.Add(this.tabControlParse);
-         this.splitContainer1.Size = new System.Drawing.Size(969, 460);
+         this.splitContainer1.Size = new System.Drawing.Size(969, 443);
          this.splitContainer1.SplitterDistance = 325;
          this.splitContainer1.TabIndex = 0;
          // 
@@ -143,6 +147,7 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -153,7 +158,7 @@
          this.CodeEditor.RightBracket2 = ']';
          this.CodeEditor.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
          this.CodeEditor.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("CodeEditor.ServiceColors")));
-         this.CodeEditor.Size = new System.Drawing.Size(317, 415);
+         this.CodeEditor.Size = new System.Drawing.Size(317, 398);
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
          this.CodeEditor.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChanged);
@@ -167,7 +172,7 @@
          this.tabControlParse.Location = new System.Drawing.Point(0, 0);
          this.tabControlParse.Name = "tabControlParse";
          this.tabControlParse.SelectedIndex = 0;
-         this.tabControlParse.Size = new System.Drawing.Size(638, 458);
+         this.tabControlParse.Size = new System.Drawing.Size(638, 441);
          this.tabControlParse.TabIndex = 0;
          // 
          // tabParseTree
@@ -177,7 +182,7 @@
          this.tabParseTree.Location = new System.Drawing.Point(4, 29);
          this.tabParseTree.Name = "tabParseTree";
          this.tabParseTree.Padding = new System.Windows.Forms.Padding(3);
-         this.tabParseTree.Size = new System.Drawing.Size(630, 425);
+         this.tabParseTree.Size = new System.Drawing.Size(630, 408);
          this.tabParseTree.TabIndex = 0;
          this.tabParseTree.Text = "Parse Tree";
          this.tabParseTree.UseVisualStyleBackColor = true;
@@ -187,7 +192,7 @@
          this.pnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
          this.pnlGraph.Location = new System.Drawing.Point(3, 3);
          this.pnlGraph.Name = "pnlGraph";
-         this.pnlGraph.Size = new System.Drawing.Size(624, 419);
+         this.pnlGraph.Size = new System.Drawing.Size(624, 402);
          this.pnlGraph.TabIndex = 0;
          // 
          // tabTokens
@@ -197,7 +202,7 @@
          this.tabTokens.Location = new System.Drawing.Point(4, 29);
          this.tabTokens.Name = "tabTokens";
          this.tabTokens.Padding = new System.Windows.Forms.Padding(3);
-         this.tabTokens.Size = new System.Drawing.Size(630, 574);
+         this.tabTokens.Size = new System.Drawing.Size(630, 425);
          this.tabTokens.TabIndex = 1;
          this.tabTokens.Text = "Tokens";
          this.tabTokens.UseVisualStyleBackColor = true;
@@ -228,7 +233,7 @@
          this.tokenListView.MultiSelect = false;
          this.tokenListView.Name = "tokenListView";
          this.tokenListView.ShowItemCountOnGroups = true;
-         this.tokenListView.Size = new System.Drawing.Size(624, 568);
+         this.tokenListView.Size = new System.Drawing.Size(624, 419);
          this.tokenListView.SortGroupItemsByPrimaryColumn = false;
          this.tokenListView.TabIndex = 0;
          this.tokenListView.UseCompatibleStateImageBehavior = false;
@@ -380,8 +385,8 @@
          // splitContainer2.Panel2
          // 
          this.splitContainer2.Panel2.Controls.Add(this.parseMessageListView);
-         this.splitContainer2.Size = new System.Drawing.Size(969, 609);
-         this.splitContainer2.SplitterDistance = 460;
+         this.splitContainer2.Size = new System.Drawing.Size(969, 587);
+         this.splitContainer2.SplitterDistance = 443;
          this.splitContainer2.TabIndex = 2;
          // 
          // parseMessageListView
@@ -397,7 +402,7 @@
          this.parseMessageListView.Location = new System.Drawing.Point(0, 0);
          this.parseMessageListView.Name = "parseMessageListView";
          this.parseMessageListView.ShowGroups = false;
-         this.parseMessageListView.Size = new System.Drawing.Size(969, 145);
+         this.parseMessageListView.Size = new System.Drawing.Size(969, 140);
          this.parseMessageListView.TabIndex = 0;
          this.parseMessageListView.UseCompatibleStateImageBehavior = false;
          this.parseMessageListView.View = System.Windows.Forms.View.Details;
@@ -421,6 +426,31 @@
          this.colMessage.Text = "Message";
          this.colMessage.Width = 842;
          // 
+         // statusStrip1
+         // 
+         this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stripLabelGrammar,
+            this.stripLabelGrammarName});
+         this.statusStrip1.Location = new System.Drawing.Point(0, 611);
+         this.statusStrip1.Name = "statusStrip1";
+         this.statusStrip1.Size = new System.Drawing.Size(969, 22);
+         this.statusStrip1.TabIndex = 3;
+         this.statusStrip1.Text = "statusStrip1";
+         // 
+         // stripLabelGrammar
+         // 
+         this.stripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.stripLabelGrammar.Name = "stripLabelGrammar";
+         this.stripLabelGrammar.Size = new System.Drawing.Size(70, 17);
+         this.stripLabelGrammar.Text = "Grammar:";
+         // 
+         // stripLabelGrammarName
+         // 
+         this.stripLabelGrammarName.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.stripLabelGrammarName.Name = "stripLabelGrammarName";
+         this.stripLabelGrammarName.Size = new System.Drawing.Size(131, 17);
+         this.stripLabelGrammarName.Text = "toolStripStatusLabel1";
+         // 
          // VisualAnalyzer
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -428,6 +458,7 @@
          this.ClientSize = new System.Drawing.Size(969, 633);
          this.Controls.Add(this.splitContainer2);
          this.Controls.Add(this.menuStrip1);
+         this.Controls.Add(this.statusStrip1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MainMenuStrip = this.menuStrip1;
          this.Name = "VisualAnalyzer";
@@ -450,6 +481,8 @@
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
          this.splitContainer2.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.parseMessageListView)).EndInit();
+         this.statusStrip1.ResumeLayout(false);
+         this.statusStrip1.PerformLayout();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -489,6 +522,9 @@
       private BrightIdeasSoftware.OLVColumn colLineNumber;
       private BrightIdeasSoftware.OLVColumn colPosition;
       private BrightIdeasSoftware.OLVColumn colMessage;
+      private System.Windows.Forms.StatusStrip statusStrip1;
+      private System.Windows.Forms.ToolStripStatusLabel stripLabelGrammar;
+      private System.Windows.Forms.ToolStripStatusLabel stripLabelGrammarName;
    }
 }
 

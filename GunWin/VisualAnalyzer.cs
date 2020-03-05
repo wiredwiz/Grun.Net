@@ -266,6 +266,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Grammar = grammar;
          _ParserRules = scanner.GetParserRulesForGrammar(grammar).ToList();
          LoadParserRules();
+         stripLabelGrammarName.Text = grammar.GrammarName;
       }
 
       /// <summary>
