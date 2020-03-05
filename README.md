@@ -18,8 +18,7 @@ A breakdown of option statuses follows
 - --ps [**Not Supported Yet**]
 - --tree [**Full Support**]
 
-The gui flag simply opens the GrunWin tool.  Eventually this tool will be able to be run
-separately with it's own command line flags.  
+The gui flag simply opens the GrunWin tool (which can also be executed stand-alone).  
 
 ### GrunWin.exe
 GrunWin is more than just a graphical parse tree viewer.  It also displays a tab with
