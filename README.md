@@ -9,9 +9,9 @@ These tools are meant to supplement the need to continually build java classes t
 ### Grun.exe
 
 Grun.exe is meant to be a mostly faithful port of existing functionality provided by the standard
-grun batch file that in turn invokes the ANTLR test rig.  All but one of the same options are
+grun batch file that in turn invokes the ANTLR test rig.  All options except the 'ps' flag are
 supported. The option flags are slightly different in format due to the command line option
-parser that is being used.  The parameters and option flags are detailed below
+parser that is being used (you'll notice you need to use '--' and not '-').  The parameters and option flags are detailed below
 
 **Grun.exe \<Grammar Name> \<Rule Name> [\<Input Filename>] [options]**
 
