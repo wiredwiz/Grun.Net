@@ -51,6 +51,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
@@ -168,12 +169,26 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          CodeEditor.Focus();
       }
 
+      private void ShowSourcePosition(ErrorNodeImpl node)
+      {
+         if (node == null)
+            return;
+
+         var startingPlace = new Place(node.Symbol.Column, node.Symbol.Line - 1);
+
+         CodeEditor.Selection = new Range(CodeEditor, startingPlace, startingPlace);
+         CodeEditor.DoCaretVisible();
+         CodeEditor.Focus();
+      }
+
       private void _Viewer_Click(object sender, EventArgs e)
       {
          if (_Viewer.SelectedObject is Node node)
          {
             if (node.UserData is ParserRuleContext context)
                ShowSourcePosition(context);
+            else if (node.UserData is ErrorNodeImpl errorTerminal)
+               ShowSourcePosition(errorTerminal);
             else if (node.UserData is TerminalNodeImpl terminal)
                ShowSourcePosition(terminal);
          }
@@ -193,14 +208,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (string.IsNullOrEmpty(cmbRules.SelectedItem?.ToString()))
             return;
 
+         var listener = new TestingErrorListener();
          var analyzer = new Grammar.Analyzer(_Grammar, CodeEditor.Text);
          var options = ParseOption.Tree;
          if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
          if (ParseWithSllMode) options |= ParseOption.Sll;
          if (ParseWithTracing) options |= ParseOption.Trace;
-         analyzer.Parse(cmbRules.SelectedItem.ToString(), options);
+         analyzer.Parse(cmbRules.SelectedItem.ToString(), options, listener);
          PopulateTokens(analyzer.DisplayTokens);
+         PopulateParserErrors(listener.Errors);
          BuildParseTreeGraph(analyzer.ParseContext);
+      }
+
+      private void PopulateParserErrors(List<ParseError> listenerErrors)
+      {
+         parseMessageListView.SetObjects(listenerErrors);
       }
 
       private void PopulateTokens(IList<TokenViewModel> tokens)

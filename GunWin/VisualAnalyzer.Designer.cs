@@ -57,6 +57,11 @@
          this.diagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.simpleLLModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.openGrammarFileDialog = new System.Windows.Forms.OpenFileDialog();
+         this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+         this.parseMessageListView = new BrightIdeasSoftware.ObjectListView();
+         this.colLineNumber = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colPosition = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colMessage = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -67,13 +72,18 @@
          this.tabTokens.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).BeginInit();
          this.menuStrip1.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+         this.splitContainer2.Panel1.SuspendLayout();
+         this.splitContainer2.Panel2.SuspendLayout();
+         this.splitContainer2.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.parseMessageListView)).BeginInit();
          this.SuspendLayout();
          // 
          // splitContainer1
          // 
          this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
          this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+         this.splitContainer1.Location = new System.Drawing.Point(0, 0);
          this.splitContainer1.Name = "splitContainer1";
          // 
          // splitContainer1.Panel1
@@ -86,7 +96,7 @@
          // splitContainer1.Panel2
          // 
          this.splitContainer1.Panel2.Controls.Add(this.tabControlParse);
-         this.splitContainer1.Size = new System.Drawing.Size(969, 609);
+         this.splitContainer1.Size = new System.Drawing.Size(969, 460);
          this.splitContainer1.SplitterDistance = 325;
          this.splitContainer1.TabIndex = 0;
          // 
@@ -133,7 +143,6 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -144,7 +153,7 @@
          this.CodeEditor.RightBracket2 = ']';
          this.CodeEditor.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
          this.CodeEditor.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("CodeEditor.ServiceColors")));
-         this.CodeEditor.Size = new System.Drawing.Size(317, 564);
+         this.CodeEditor.Size = new System.Drawing.Size(317, 415);
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
          this.CodeEditor.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChanged);
@@ -158,7 +167,7 @@
          this.tabControlParse.Location = new System.Drawing.Point(0, 0);
          this.tabControlParse.Name = "tabControlParse";
          this.tabControlParse.SelectedIndex = 0;
-         this.tabControlParse.Size = new System.Drawing.Size(638, 607);
+         this.tabControlParse.Size = new System.Drawing.Size(638, 458);
          this.tabControlParse.TabIndex = 0;
          // 
          // tabParseTree
@@ -168,7 +177,7 @@
          this.tabParseTree.Location = new System.Drawing.Point(4, 29);
          this.tabParseTree.Name = "tabParseTree";
          this.tabParseTree.Padding = new System.Windows.Forms.Padding(3);
-         this.tabParseTree.Size = new System.Drawing.Size(630, 574);
+         this.tabParseTree.Size = new System.Drawing.Size(630, 425);
          this.tabParseTree.TabIndex = 0;
          this.tabParseTree.Text = "Parse Tree";
          this.tabParseTree.UseVisualStyleBackColor = true;
@@ -178,7 +187,7 @@
          this.pnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
          this.pnlGraph.Location = new System.Drawing.Point(3, 3);
          this.pnlGraph.Name = "pnlGraph";
-         this.pnlGraph.Size = new System.Drawing.Size(624, 568);
+         this.pnlGraph.Size = new System.Drawing.Size(624, 419);
          this.pnlGraph.TabIndex = 0;
          // 
          // tabTokens
@@ -357,12 +366,67 @@
          this.openGrammarFileDialog.Filter = "Assembly files|*.dll";
          this.openGrammarFileDialog.ReadOnlyChecked = true;
          // 
+         // splitContainer2
+         // 
+         this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.splitContainer2.Location = new System.Drawing.Point(0, 24);
+         this.splitContainer2.Name = "splitContainer2";
+         this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+         // 
+         // splitContainer2.Panel1
+         // 
+         this.splitContainer2.Panel1.Controls.Add(this.splitContainer1);
+         // 
+         // splitContainer2.Panel2
+         // 
+         this.splitContainer2.Panel2.Controls.Add(this.parseMessageListView);
+         this.splitContainer2.Size = new System.Drawing.Size(969, 609);
+         this.splitContainer2.SplitterDistance = 460;
+         this.splitContainer2.TabIndex = 2;
+         // 
+         // parseMessageListView
+         // 
+         this.parseMessageListView.AllColumns.Add(this.colLineNumber);
+         this.parseMessageListView.AllColumns.Add(this.colPosition);
+         this.parseMessageListView.AllColumns.Add(this.colMessage);
+         this.parseMessageListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colLineNumber,
+            this.colPosition,
+            this.colMessage});
+         this.parseMessageListView.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.parseMessageListView.Location = new System.Drawing.Point(0, 0);
+         this.parseMessageListView.Name = "parseMessageListView";
+         this.parseMessageListView.ShowGroups = false;
+         this.parseMessageListView.Size = new System.Drawing.Size(969, 145);
+         this.parseMessageListView.TabIndex = 0;
+         this.parseMessageListView.UseCompatibleStateImageBehavior = false;
+         this.parseMessageListView.View = System.Windows.Forms.View.Details;
+         // 
+         // colLineNumber
+         // 
+         this.colLineNumber.AspectName = "LineNumber";
+         this.colLineNumber.CellPadding = null;
+         this.colLineNumber.Text = "Line";
+         // 
+         // colPosition
+         // 
+         this.colPosition.AspectName = "Column";
+         this.colPosition.CellPadding = null;
+         this.colPosition.Text = "Position";
+         // 
+         // colMessage
+         // 
+         this.colMessage.AspectName = "Message";
+         this.colMessage.CellPadding = null;
+         this.colMessage.Text = "Message";
+         this.colMessage.Width = 842;
+         // 
          // VisualAnalyzer
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(969, 633);
-         this.Controls.Add(this.splitContainer1);
+         this.Controls.Add(this.splitContainer2);
          this.Controls.Add(this.menuStrip1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MainMenuStrip = this.menuStrip1;
@@ -381,6 +445,11 @@
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).EndInit();
          this.menuStrip1.ResumeLayout(false);
          this.menuStrip1.PerformLayout();
+         this.splitContainer2.Panel1.ResumeLayout(false);
+         this.splitContainer2.Panel2.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+         this.splitContainer2.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.parseMessageListView)).EndInit();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -415,6 +484,11 @@
       private System.Windows.Forms.ToolStripMenuItem diagnosticsToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem simpleLLModeToolStripMenuItem;
       private System.Windows.Forms.OpenFileDialog openGrammarFileDialog;
+      private System.Windows.Forms.SplitContainer splitContainer2;
+      private BrightIdeasSoftware.ObjectListView parseMessageListView;
+      private BrightIdeasSoftware.OLVColumn colLineNumber;
+      private BrightIdeasSoftware.OLVColumn colPosition;
+      private BrightIdeasSoftware.OLVColumn colMessage;
    }
 }
 
