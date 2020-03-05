@@ -22,19 +22,19 @@ parser that is being used.  The parameters and option flags are detailed below
    : Required. ANTLR grammar rule to use  
 
   Input Filename (pos. 2)
-   : File name to parse
+   : File name to parse (if an encoding is supplied it will be used when reading this file)
 
-  | Option Name      | Description  |
-  |---               |---       |
-  |--tokens          |         Display list of grammar tokens. |  
-  |--tree            |         Display a Lisp-style parse tree.|
-  |--trace           |         Trace grammar parsing.          |
-  |--gui             |         Opens GrunWin.exe gui tool.     |
-  |--SLL             |         Parse using SLL prediction mode.|
-  |--diagnostics     |         Parse with diagnostics.         |
-  |--encoding        |         Encoding type to use.           |
-  |--help            |         Display this help screen.       |
-  |--version         |         Display version information.    |
+  | Option Name       | Description  |
+  |---                |---       |
+  |--tokens           |         Display list of grammar tokens. |  
+  |--tree             |         Display a Lisp-style parse tree.|
+  |--trace            |         Trace grammar parsing.          |
+  |--gui              |         Opens GrunWin.exe gui tool.     |
+  |--SLL              |         Parse using SLL prediction mode.|
+  |--diagnostics      |         Parse with diagnostics.         |
+  |--encoding \<name> |         Encoding type to use.           |
+  |--help             |         Display this help screen.       |
+  |--version          |         Display version information.    |
 
 The gui flag simply opens the GrunWin tool (which can also be executed stand-alone).  
 
@@ -53,14 +53,14 @@ is running.  GrunWin also supports a handful of optional command line parameters
 
 **GrunWin.exe [options]**
 
-  | Option Name      | Description  |
-  |---               |---       |
-  |--grammar         |         Attempts to load the specified grammar.   |
-  |--rule            |         Attempts to load the specified rule name. |  
-  |--trace           |         Trace grammar parsing.          |
-  |--SLL             |         Parse using SLL prediction mode.|
-  |--diagnostics     |         Parse with diagnostics.         |
-  |--encoding        |         Encoding type to use.           |
+  | Option Name       | Description  |
+  |---                |---       |
+  |--grammar \<name>  |         Attempts to load the specified grammar.   |
+  |--rule \<name>     |         Attempts to load the specified rule name. |  
+  |--trace            |         Trace grammar parsing.          |
+  |--SLL              |         Parse using SLL prediction mode.|
+  |--diagnostics      |         Parse with diagnostics.         |
+  |--encoding \<name> |         Encoding type to use.           |
 
 ![Editor Sample](https://github.com/wiredwiz/Grun.Net/blob/master/Images/GrunWinExample.GIF?raw=true)
 
