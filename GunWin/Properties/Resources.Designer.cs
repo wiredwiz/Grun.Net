@@ -59,5 +59,32 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All files|*.*.
+        /// </summary>
+        internal static string AllFilesFilter {
+            get {
+                return ResourceManager.GetString("AllFilesFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assembly files|*.dll.
+        /// </summary>
+        internal static string AssemblyFileFilter {
+            get {
+                return ResourceManager.GetString("AssemblyFileFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The rule &quot;{0}&quot; is invalid.
+        /// </summary>
+        internal static string InvalidParserRule {
+            get {
+                return ResourceManager.GetString("InvalidParserRule", resourceCulture);
+            }
+        }
     }
 }

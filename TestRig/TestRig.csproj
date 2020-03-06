@@ -51,7 +51,7 @@
     <Compile Include="Exceptions\GrammarException.cs" />
     <Compile Include="GrammarReference.cs" />
     <Compile Include="Grammar\Analyzer.cs" />
-    <Compile Include="Grammar\Errors\ParseError.cs" />
+    <Compile Include="Grammar\Errors\ParseMessage.cs" />
     <Compile Include="Grammar\Loader.cs" />
     <Compile Include="Grammar\ParseOption.cs" />
     <Compile Include="Grammar\Scanner.cs" />

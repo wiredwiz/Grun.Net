@@ -39,6 +39,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -47,6 +48,12 @@ using Antlr4.Runtime.Misc;
 using CommandLine;
 using CommandLine.Text;
 
+using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
+using Microsoft.Msagl.Layout.Layered;
+
+using Org.Edgerunner.ANTLR4.Tools.Graphing;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
@@ -89,9 +96,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                options |= Grammar.ParseOption.Tree;
                             }
 
-                            if (!string.IsNullOrEmpty(o.PostScript))
-                               Console.WriteLine("Option --ps is not yet supported.");
-
                             var workingDirectory = Environment.CurrentDirectory;
                             var scanner = new Grammar.Scanner();
 
@@ -131,6 +135,24 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
 
                             if (showParseTree)
                               Console.WriteLine(analyzer.StringSourceTree);
+
+                            if (!string.IsNullOrEmpty(o.SvgFileName))
+                            {
+                               Console.WriteLine("--svg option is not yet supported.");
+
+                               //var rules = scanner.GetParserRulesForGrammar(grammar);
+                               //var grapher = new ParseTreeGrapher(analyzer.ParseContext, rules.ToList())
+                               //{
+                               //   BackgroundColor = Color.LightBlue,
+                               //   BorderColor = Color.Black,
+                               //   TextColor = Color.Black
+                               //};
+                               //var graph = grapher.CreateGraph();
+                               //graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
+                               //GraphRenderer renderer = new GraphRenderer(graph);
+                               //renderer.CalculateLayout();
+                               //SvgGraphWriter.Write(graph, o.SvgFileName, null, null, 4);
+                            }
 
                             if (loadGui)
                                LoadGui(data, grammar, o.RuleName);

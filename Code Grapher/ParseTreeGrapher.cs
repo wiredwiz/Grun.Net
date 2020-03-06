@@ -107,7 +107,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
          var graph = new Graph();
          if (Subject != null)
          {
-            GraphEdges(graph, Subject);
+            if (Subject.ChildCount == 0)
+               graph.AddNode(Subject.GetHashCode().ToString());
+            else
+               GraphEdges(graph, Subject);
             FormatNodes(graph, Subject);
          }
 

@@ -31,12 +31,15 @@
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisualAnalyzer));
          this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-         this.cmbRules = new System.Windows.Forms.ComboBox();
+         this.CmbRules = new System.Windows.Forms.ComboBox();
          this.lblParserRule = new System.Windows.Forms.Label();
          this.CodeEditor = new FastColoredTextBoxNS.FastColoredTextBox();
          this.tabControlParse = new System.Windows.Forms.TabControl();
          this.tabParseTree = new System.Windows.Forms.TabPage();
-         this.pnlGraph = new System.Windows.Forms.Panel();
+         this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+         this.ParseTreeView = new System.Windows.Forms.TreeView();
+         this.PnlGraph = new System.Windows.Forms.Panel();
+         this.GraphZoomTrackBar = new System.Windows.Forms.TrackBar();
          this.tabTokens = new System.Windows.Forms.TabPage();
          this.tokenListView = new BrightIdeasSoftware.ObjectListView();
          this.colText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -50,20 +53,21 @@
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.loadGrammarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.loadSourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
          this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.tracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.diagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.simpleLLModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.openGrammarFileDialog = new System.Windows.Forms.OpenFileDialog();
+         this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
          this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-         this.parseMessageListView = new BrightIdeasSoftware.ObjectListView();
+         this.ParseMessageListView = new BrightIdeasSoftware.ObjectListView();
          this.colLineNumber = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colPosition = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colMessage = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-         this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-         this.stripLabelGrammar = new System.Windows.Forms.ToolStripStatusLabel();
+         this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
+         this.StripLabelGrammar = new System.Windows.Forms.ToolStripStatusLabel();
          this.stripLabelGrammarName = new System.Windows.Forms.ToolStripStatusLabel();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
@@ -72,6 +76,11 @@
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).BeginInit();
          this.tabControlParse.SuspendLayout();
          this.tabParseTree.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+         this.splitContainer3.Panel1.SuspendLayout();
+         this.splitContainer3.Panel2.SuspendLayout();
+         this.splitContainer3.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.GraphZoomTrackBar)).BeginInit();
          this.tabTokens.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).BeginInit();
          this.menuStrip1.SuspendLayout();
@@ -79,8 +88,8 @@
          this.splitContainer2.Panel1.SuspendLayout();
          this.splitContainer2.Panel2.SuspendLayout();
          this.splitContainer2.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.parseMessageListView)).BeginInit();
-         this.statusStrip1.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.ParseMessageListView)).BeginInit();
+         this.StatusStrip1.SuspendLayout();
          this.SuspendLayout();
          // 
          // splitContainer1
@@ -92,7 +101,7 @@
          // 
          // splitContainer1.Panel1
          // 
-         this.splitContainer1.Panel1.Controls.Add(this.cmbRules);
+         this.splitContainer1.Panel1.Controls.Add(this.CmbRules);
          this.splitContainer1.Panel1.Controls.Add(this.lblParserRule);
          this.splitContainer1.Panel1.Controls.Add(this.CodeEditor);
          this.splitContainer1.Panel1MinSize = 325;
@@ -104,15 +113,15 @@
          this.splitContainer1.SplitterDistance = 325;
          this.splitContainer1.TabIndex = 0;
          // 
-         // cmbRules
+         // CmbRules
          // 
-         this.cmbRules.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.cmbRules.FormattingEnabled = true;
-         this.cmbRules.Location = new System.Drawing.Point(110, 6);
-         this.cmbRules.Name = "cmbRules";
-         this.cmbRules.Size = new System.Drawing.Size(203, 28);
-         this.cmbRules.TabIndex = 0;
-         this.cmbRules.SelectedIndexChanged += new System.EventHandler(this.cmbRules_SelectedIndexChanged);
+         this.CmbRules.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.CmbRules.FormattingEnabled = true;
+         this.CmbRules.Location = new System.Drawing.Point(110, 6);
+         this.CmbRules.Name = "CmbRules";
+         this.CmbRules.Size = new System.Drawing.Size(203, 28);
+         this.CmbRules.TabIndex = 0;
+         this.CmbRules.SelectedIndexChanged += new System.EventHandler(this.ParserRulesCombo_SelectedIndexChanged);
          // 
          // lblParserRule
          // 
@@ -177,7 +186,8 @@
          // 
          // tabParseTree
          // 
-         this.tabParseTree.Controls.Add(this.pnlGraph);
+         this.tabParseTree.Controls.Add(this.splitContainer3);
+         this.tabParseTree.Controls.Add(this.GraphZoomTrackBar);
          this.tabParseTree.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.tabParseTree.Location = new System.Drawing.Point(4, 29);
          this.tabParseTree.Name = "tabParseTree";
@@ -187,13 +197,51 @@
          this.tabParseTree.Text = "Parse Tree";
          this.tabParseTree.UseVisualStyleBackColor = true;
          // 
-         // pnlGraph
+         // splitContainer3
          // 
-         this.pnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.pnlGraph.Location = new System.Drawing.Point(3, 3);
-         this.pnlGraph.Name = "pnlGraph";
-         this.pnlGraph.Size = new System.Drawing.Size(624, 402);
-         this.pnlGraph.TabIndex = 0;
+         this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.splitContainer3.Location = new System.Drawing.Point(3, 3);
+         this.splitContainer3.Name = "splitContainer3";
+         // 
+         // splitContainer3.Panel1
+         // 
+         this.splitContainer3.Panel1.Controls.Add(this.ParseTreeView);
+         // 
+         // splitContainer3.Panel2
+         // 
+         this.splitContainer3.Panel2.Controls.Add(this.PnlGraph);
+         this.splitContainer3.Size = new System.Drawing.Size(624, 357);
+         this.splitContainer3.SplitterDistance = 140;
+         this.splitContainer3.TabIndex = 1;
+         // 
+         // ParseTreeView
+         // 
+         this.ParseTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.ParseTreeView.Location = new System.Drawing.Point(0, 0);
+         this.ParseTreeView.Name = "ParseTreeView";
+         this.ParseTreeView.Size = new System.Drawing.Size(140, 357);
+         this.ParseTreeView.TabIndex = 0;
+         this.ParseTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ParseTreeView_AfterSelect);
+         // 
+         // PnlGraph
+         // 
+         this.PnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.PnlGraph.Location = new System.Drawing.Point(0, 0);
+         this.PnlGraph.Name = "PnlGraph";
+         this.PnlGraph.Size = new System.Drawing.Size(480, 357);
+         this.PnlGraph.TabIndex = 0;
+         // 
+         // GraphZoomTrackBar
+         // 
+         this.GraphZoomTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+         this.GraphZoomTrackBar.Location = new System.Drawing.Point(3, 360);
+         this.GraphZoomTrackBar.Maximum = 50;
+         this.GraphZoomTrackBar.Minimum = 1;
+         this.GraphZoomTrackBar.Name = "GraphZoomTrackBar";
+         this.GraphZoomTrackBar.Size = new System.Drawing.Size(624, 45);
+         this.GraphZoomTrackBar.TabIndex = 2;
+         this.GraphZoomTrackBar.Value = 1;
+         this.GraphZoomTrackBar.ValueChanged += new System.EventHandler(this.GraphZoomTrackBar_ValueChanged);
          // 
          // tabTokens
          // 
@@ -202,7 +250,7 @@
          this.tabTokens.Location = new System.Drawing.Point(4, 29);
          this.tabTokens.Name = "tabTokens";
          this.tabTokens.Padding = new System.Windows.Forms.Padding(3);
-         this.tabTokens.Size = new System.Drawing.Size(630, 425);
+         this.tabTokens.Size = new System.Drawing.Size(630, 408);
          this.tabTokens.TabIndex = 1;
          this.tabTokens.Text = "Tokens";
          this.tabTokens.UseVisualStyleBackColor = true;
@@ -233,11 +281,12 @@
          this.tokenListView.MultiSelect = false;
          this.tokenListView.Name = "tokenListView";
          this.tokenListView.ShowItemCountOnGroups = true;
-         this.tokenListView.Size = new System.Drawing.Size(624, 419);
+         this.tokenListView.Size = new System.Drawing.Size(624, 402);
          this.tokenListView.SortGroupItemsByPrimaryColumn = false;
          this.tokenListView.TabIndex = 0;
          this.tokenListView.UseCompatibleStateImageBehavior = false;
          this.tokenListView.View = System.Windows.Forms.View.Details;
+         this.tokenListView.Click += new System.EventHandler(this.TokenListView_Click);
          // 
          // colText
          // 
@@ -309,6 +358,7 @@
          // 
          this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadGrammarToolStripMenuItem,
+            this.loadSourceToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
          this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -318,21 +368,28 @@
          // loadGrammarToolStripMenuItem
          // 
          this.loadGrammarToolStripMenuItem.Name = "loadGrammarToolStripMenuItem";
-         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
          this.loadGrammarToolStripMenuItem.Text = "&Load Grammar";
-         this.loadGrammarToolStripMenuItem.Click += new System.EventHandler(this.loadGrammarToolStripMenuItem_Click);
+         this.loadGrammarToolStripMenuItem.Click += new System.EventHandler(this.LoadGrammarToolStripMenuItem_Click);
+         // 
+         // loadSourceToolStripMenuItem
+         // 
+         this.loadSourceToolStripMenuItem.Name = "loadSourceToolStripMenuItem";
+         this.loadSourceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.loadSourceToolStripMenuItem.Text = "Load Source &File";
+         this.loadSourceToolStripMenuItem.Click += new System.EventHandler(this.LoadSourceToolStripMenuItem_Click);
          // 
          // toolStripSeparator1
          // 
          this.toolStripSeparator1.Name = "toolStripSeparator1";
-         this.toolStripSeparator1.Size = new System.Drawing.Size(150, 6);
+         this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
          // 
          // exitToolStripMenuItem
          // 
          this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-         this.exitToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+         this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
          this.exitToolStripMenuItem.Text = "E&xit";
-         this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+         this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
          // 
          // optionsToolStripMenuItem
          // 
@@ -365,11 +422,9 @@
          this.simpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
          this.simpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
          // 
-         // openGrammarFileDialog
+         // openFileDialog
          // 
-         this.openGrammarFileDialog.DefaultExt = "dll";
-         this.openGrammarFileDialog.Filter = "Assembly files|*.dll";
-         this.openGrammarFileDialog.ReadOnlyChecked = true;
+         this.openFileDialog.ReadOnlyChecked = true;
          // 
          // splitContainer2
          // 
@@ -384,28 +439,30 @@
          // 
          // splitContainer2.Panel2
          // 
-         this.splitContainer2.Panel2.Controls.Add(this.parseMessageListView);
+         this.splitContainer2.Panel2.Controls.Add(this.ParseMessageListView);
          this.splitContainer2.Size = new System.Drawing.Size(969, 587);
          this.splitContainer2.SplitterDistance = 443;
          this.splitContainer2.TabIndex = 2;
          // 
-         // parseMessageListView
+         // ParseMessageListView
          // 
-         this.parseMessageListView.AllColumns.Add(this.colLineNumber);
-         this.parseMessageListView.AllColumns.Add(this.colPosition);
-         this.parseMessageListView.AllColumns.Add(this.colMessage);
-         this.parseMessageListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+         this.ParseMessageListView.AllColumns.Add(this.colLineNumber);
+         this.ParseMessageListView.AllColumns.Add(this.colPosition);
+         this.ParseMessageListView.AllColumns.Add(this.colMessage);
+         this.ParseMessageListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colLineNumber,
             this.colPosition,
             this.colMessage});
-         this.parseMessageListView.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.parseMessageListView.Location = new System.Drawing.Point(0, 0);
-         this.parseMessageListView.Name = "parseMessageListView";
-         this.parseMessageListView.ShowGroups = false;
-         this.parseMessageListView.Size = new System.Drawing.Size(969, 140);
-         this.parseMessageListView.TabIndex = 0;
-         this.parseMessageListView.UseCompatibleStateImageBehavior = false;
-         this.parseMessageListView.View = System.Windows.Forms.View.Details;
+         this.ParseMessageListView.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.ParseMessageListView.FullRowSelect = true;
+         this.ParseMessageListView.Location = new System.Drawing.Point(0, 0);
+         this.ParseMessageListView.Name = "ParseMessageListView";
+         this.ParseMessageListView.ShowGroups = false;
+         this.ParseMessageListView.Size = new System.Drawing.Size(969, 140);
+         this.ParseMessageListView.TabIndex = 0;
+         this.ParseMessageListView.UseCompatibleStateImageBehavior = false;
+         this.ParseMessageListView.View = System.Windows.Forms.View.Details;
+         this.ParseMessageListView.Click += new System.EventHandler(this.ParseMessageListView_Click);
          // 
          // colLineNumber
          // 
@@ -426,30 +483,29 @@
          this.colMessage.Text = "Message";
          this.colMessage.Width = 842;
          // 
-         // statusStrip1
+         // StatusStrip1
          // 
-         this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.stripLabelGrammar,
+         this.StatusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StripLabelGrammar,
             this.stripLabelGrammarName});
-         this.statusStrip1.Location = new System.Drawing.Point(0, 611);
-         this.statusStrip1.Name = "statusStrip1";
-         this.statusStrip1.Size = new System.Drawing.Size(969, 22);
-         this.statusStrip1.TabIndex = 3;
-         this.statusStrip1.Text = "statusStrip1";
+         this.StatusStrip1.Location = new System.Drawing.Point(0, 611);
+         this.StatusStrip1.Name = "StatusStrip1";
+         this.StatusStrip1.Size = new System.Drawing.Size(969, 22);
+         this.StatusStrip1.TabIndex = 3;
+         this.StatusStrip1.Text = "statusStrip1";
          // 
-         // stripLabelGrammar
+         // StripLabelGrammar
          // 
-         this.stripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.stripLabelGrammar.Name = "stripLabelGrammar";
-         this.stripLabelGrammar.Size = new System.Drawing.Size(70, 17);
-         this.stripLabelGrammar.Text = "Grammar:";
+         this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.StripLabelGrammar.Name = "StripLabelGrammar";
+         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
+         this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName
          // 
          this.stripLabelGrammarName.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.stripLabelGrammarName.Name = "stripLabelGrammarName";
-         this.stripLabelGrammarName.Size = new System.Drawing.Size(131, 17);
-         this.stripLabelGrammarName.Text = "toolStripStatusLabel1";
+         this.stripLabelGrammarName.Size = new System.Drawing.Size(0, 17);
          // 
          // VisualAnalyzer
          // 
@@ -458,7 +514,7 @@
          this.ClientSize = new System.Drawing.Size(969, 633);
          this.Controls.Add(this.splitContainer2);
          this.Controls.Add(this.menuStrip1);
-         this.Controls.Add(this.statusStrip1);
+         this.Controls.Add(this.StatusStrip1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MainMenuStrip = this.menuStrip1;
          this.Name = "VisualAnalyzer";
@@ -472,6 +528,12 @@
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).EndInit();
          this.tabControlParse.ResumeLayout(false);
          this.tabParseTree.ResumeLayout(false);
+         this.tabParseTree.PerformLayout();
+         this.splitContainer3.Panel1.ResumeLayout(false);
+         this.splitContainer3.Panel2.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+         this.splitContainer3.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.GraphZoomTrackBar)).EndInit();
          this.tabTokens.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).EndInit();
          this.menuStrip1.ResumeLayout(false);
@@ -480,9 +542,9 @@
          this.splitContainer2.Panel2.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
          this.splitContainer2.ResumeLayout(false);
-         ((System.ComponentModel.ISupportInitialize)(this.parseMessageListView)).EndInit();
-         this.statusStrip1.ResumeLayout(false);
-         this.statusStrip1.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.ParseMessageListView)).EndInit();
+         this.StatusStrip1.ResumeLayout(false);
+         this.StatusStrip1.PerformLayout();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -493,7 +555,7 @@
       private System.Windows.Forms.SplitContainer splitContainer1;
       private System.Windows.Forms.Label lblParserRule;
       private FastColoredTextBoxNS.FastColoredTextBox CodeEditor;
-      private System.Windows.Forms.ComboBox cmbRules;
+      private System.Windows.Forms.ComboBox CmbRules;
       private System.Windows.Forms.TabControl tabControlParse;
       private System.Windows.Forms.TabPage tabParseTree;
       private System.Windows.Forms.TabPage tabTokens;
@@ -506,7 +568,7 @@
       private BrightIdeasSoftware.OLVColumn colStart;
       private BrightIdeasSoftware.OLVColumn colStop;
       private BrightIdeasSoftware.OLVColumn colLength;
-      private System.Windows.Forms.Panel pnlGraph;
+      private System.Windows.Forms.Panel PnlGraph;
       private System.Windows.Forms.MenuStrip menuStrip1;
       private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem loadGrammarToolStripMenuItem;
@@ -516,15 +578,19 @@
       private System.Windows.Forms.ToolStripMenuItem tracingToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem diagnosticsToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem simpleLLModeToolStripMenuItem;
-      private System.Windows.Forms.OpenFileDialog openGrammarFileDialog;
+      private System.Windows.Forms.OpenFileDialog openFileDialog;
       private System.Windows.Forms.SplitContainer splitContainer2;
-      private BrightIdeasSoftware.ObjectListView parseMessageListView;
+      private BrightIdeasSoftware.ObjectListView ParseMessageListView;
       private BrightIdeasSoftware.OLVColumn colLineNumber;
       private BrightIdeasSoftware.OLVColumn colPosition;
       private BrightIdeasSoftware.OLVColumn colMessage;
-      private System.Windows.Forms.StatusStrip statusStrip1;
-      private System.Windows.Forms.ToolStripStatusLabel stripLabelGrammar;
+      private System.Windows.Forms.StatusStrip StatusStrip1;
+      private System.Windows.Forms.ToolStripStatusLabel StripLabelGrammar;
       private System.Windows.Forms.ToolStripStatusLabel stripLabelGrammarName;
+      private System.Windows.Forms.ToolStripMenuItem loadSourceToolStripMenuItem;
+      private System.Windows.Forms.SplitContainer splitContainer3;
+      private System.Windows.Forms.TreeView ParseTreeView;
+      private System.Windows.Forms.TrackBar GraphZoomTrackBar;
    }
 }
 

@@ -73,8 +73,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
       [Option("encoding", Required = false, HelpText = "Encoding type to use")]
       public string EncodingName { get; set; }
 
-      [Option("ps", Required = false, HelpText = "File to output postscript parse tree too")]
-      public string PostScript { get; set; }
-
+      [Option("svg", Required = false, HelpText = "File to output parse tree graph to in svg format")]
+      public string SvgFileName { get; set; }
    }
 }

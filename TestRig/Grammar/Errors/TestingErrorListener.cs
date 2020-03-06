@@ -52,14 +52,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// </summary>
       public TestingErrorListener()
       {
-         Errors = new List<ParseError>();
+         Errors = new List<ParseMessage>();
       }
 
       /// <summary>
       /// Gets the parsing errors.
       /// </summary>
       /// <value>The parsing errors.</value>
-      public List<ParseError> Errors { get; }
+      public List<ParseMessage> Errors { get; }
 
       /// <summary>
       /// Upon syntax error, notify any interested parties.
@@ -101,7 +101,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
          string msg,
          RecognitionException e)
       {
-         Errors.Add(new ParseError(line, charPositionInLine, msg));
+         Errors.Add(new ParseMessage(line, charPositionInLine, msg, offendingSymbol));
       }
    }
 }

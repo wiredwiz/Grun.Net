@@ -51,6 +51,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="token">The token.</param>
       public TokenViewModel(Lexer lexer, IToken token)
       {
+         ActualToken = token;
          Text = FormatTokenText(token);
          Type = token.Type > -1 ? lexer.Vocabulary.GetDisplayName(token.Type) : string.Empty;
          LineNumber = token.Line;
@@ -108,6 +109,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// </summary>
       /// <value>The channel id.</value>
       public int ChannelId { get; }
+
+      /// <summary>
+      /// Gets the actual token.
+      /// </summary>
+      /// <value>The actual token.</value>
+      public IToken ActualToken { get; }
 
       private static string FormatTokenText(IToken token)
       {

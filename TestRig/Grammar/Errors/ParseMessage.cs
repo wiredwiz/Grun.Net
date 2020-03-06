@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="ParseError.cs" company="Edgerunner.org">
+// <copyright file="ParseMessage.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
@@ -34,30 +34,53 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using Antlr4.Runtime;
+
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
 {
    /// <summary>
    /// Struct that represents a parsing error.
    /// </summary>
-   public struct ParseError
+   public struct ParseMessage
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="ParseError"/> struct.
+      /// Initializes a new instance of the <see cref="ParseMessage" /> struct.
       /// </summary>
       /// <param name="lineNumber">The line number.</param>
       /// <param name="column">The column.</param>
       /// <param name="message">The message.</param>
-      public ParseError(int lineNumber, int column, string message)
+      /// <param name="token">The token.</param>
+      // ReSharper disable once TooManyDependencies
+      public ParseMessage(int lineNumber, int column, string message, IToken token)
       {
          LineNumber = lineNumber;
          Column = column;
          Message = message;
+         Token = token;
       }
 
+      /// <summary>
+      /// Gets or sets the line number.
+      /// </summary>
+      /// <value>The line number.</value>
       public int LineNumber { get; set; }
 
+      /// <summary>
+      /// Gets or sets the column position.
+      /// </summary>
+      /// <value>The column position.</value>
       public int Column { get; set; }
 
+      /// <summary>
+      /// Gets or sets the message.
+      /// </summary>
+      /// <value>The message.</value>
       public string Message { get; set; }
+
+      /// <summary>
+      /// Gets or sets the related token.
+      /// </summary>
+      /// <value>The related token.</value>
+      public IToken Token { get; set; }
    }
 }

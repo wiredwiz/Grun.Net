@@ -131,10 +131,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="ruleName">Name of the rule.</param>
       /// <param name="option">The parsing options to use.</param>
       /// <param name="listener">The error listener.</param>
-      /// <exception cref="ArgumentNullException">ruleName</exception>
+      /// <exception cref="ArgumentNullException"><paramref name="ruleName"/> is <see langword="null"/> or empty.</exception>
       /// <exception cref="GrammarException">No parser found for grammar \"{Grammar.GrammarName}\"</exception>
       /// <exception cref="GrammarException">No parser rule with name \"{ruleName}\" found.</exception>
-      /// <exception cref="GrammarException"><paramref name="ruleName" /> is <see langword="null" /> or empty.</exception>
       /// <exception cref="T:System.ArgumentNullException">No parser found for supplied grammar</exception>
       public void Parse([NotNull] string ruleName, ParseOption option, TestingErrorListener listener = null)
       {
