@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="Options.cs" company="Edgerunner.org">
+// <copyright file="EditorGuideReference.cs" company="Edgerunner.org">
 // Copyright 2020 
 // </copyright>
 // 
@@ -34,34 +34,35 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using CommandLine;
+using System;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+using JetBrains.Annotations;
+
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
-   /// <summary>
-   /// Class that represents command line options.
-   /// </summary>
-   public class Options
+   public class EditorGuideReference
    {
-      [Option("grammar", HelpText = "ANTLR grammar to load", Required = false)]
-      public string GrammarName { get; set; }
+      /// <summary>
+      /// Initializes a new instance of the <see cref="EditorGuideReference"/> class.
+      /// </summary>
+      /// <param name="guideType">Type of the guide.</param>
+      /// <param name="assemblyPath">The assembly.</param>
+      /// <exception cref="ArgumentNullException">
+      /// guideType
+      /// or
+      /// assembly are null.
+      /// </exception>
+      public EditorGuideReference([NotNull] Type guideType, [NotNull] string assemblyPath)
+      {
+         if (string.IsNullOrEmpty(assemblyPath)) 
+            throw new ArgumentNullException(nameof(assemblyPath));
 
-      [Option("rule", HelpText = "ANTLR grammar rule to use", Required = false)]
-      public string RuleName { get; set; }
+         GuideType = guideType ?? throw new ArgumentNullException(nameof(guideType));
+         AssemblyPath = assemblyPath;
+      }
 
-      [Option("file", HelpText = "File name to parse", Required = false)]
-      public string FileName { get; set; }
+      public Type GuideType { get; }
 
-      [Option("trace", HelpText = "Trace grammar parsing", Required = false)]
-      public bool Trace { get; set; }
-
-      [Option("diagnostics", HelpText = "Parse with diagnostics", Required = false)]
-      public bool Diagnostics { get; set; }
-
-      [Option("SLL", HelpText = "Parse using SLL prediction mode", Required = false)]
-      public bool Sll { get; set; }
-
-      [Option("encoding", HelpText = "Encoding type to use", Required = false)]
-      public string EncodingName { get; set; }
+      public string AssemblyPath { get; }
    }
 }

@@ -46,6 +46,7 @@ using Antlr4.Runtime;
 
 using JetBrains.Annotations;
 
+using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Types;
 
@@ -114,6 +115,35 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             if (type.Name.EndsWith("Parser"))
                // ReSharper disable once ExceptionNotDocumented
                result.Add(new ParserType(type));
+
+         return result;
+      }
+
+      /// <summary>
+      ///    Finds all ISyntaxGuide implementations in the supplied assembly.
+      /// </summary>
+      /// <param name="assembly">The assembly to search.</param>
+      /// <returns>An instance of <see cref="IEnumerable{Type}" />.</returns>
+      /// <exception cref="ArgumentNullException">Assembly is null</exception>
+      /// <exception cref="T:System.Reflection.ReflectionTypeLoadException">
+      ///    The assembly contains one or more types that cannot
+      ///    be loaded. The array returned by the <see cref="P:System.Reflection.ReflectionTypeLoadException.Types" /> property
+      ///    of this exception contains a <see cref="T:System.Type" /> object for each type that was loaded and null for each
+      ///    type that could not be loaded, while the
+      ///    <see cref="P:System.Reflection.ReflectionTypeLoadException.LoaderExceptions" /> property contains an exception for
+      ///    each type that could not be loaded.
+      /// </exception>
+      public IEnumerable<Type> FindEditorGuidesInAssembly([NotNull] Assembly assembly)
+      {
+         if (assembly is null)
+            throw new ArgumentNullException(nameof(assembly));
+
+         var result = new List<Type>();
+         var types = assembly.GetTypes().Where(t => typeof(IEditorGuide).IsAssignableFrom(t));
+
+         foreach (var type in types)
+            // ReSharper disable once ExceptionNotDocumented
+            result.Add(type);
 
          return result;
       }
@@ -284,6 +314,31 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
                                                   lexer.ActualType,
                                                   parser.ActualType);
             results.Add(grammarRef);
+         }
+
+         return results;
+      }
+
+      /// <summary>
+      /// Locates all syntax guides in the path.
+      /// </summary>
+      /// <param name="path">The path to search.</param>
+      /// <returns>A new <see cref="List{SyntaxGuideReference}"/>.</returns>
+      /// <exception cref="ArgumentNullException">path is null or empty.</exception>
+      public List<EditorGuideReference> LocateAllEditorGuides([NotNull] string path)
+      {
+         if (string.IsNullOrEmpty(path))
+            throw new ArgumentNullException(nameof(path));
+
+         var di = new DirectoryInfo(path);
+         var files = di.GetFiles("*.dll");
+         var results = new List<EditorGuideReference>();
+
+         foreach (var file in files)
+         {
+            var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
+            foreach (var guide in FindEditorGuidesInAssembly(assembly).ToList())
+               results.Add(new EditorGuideReference(guide, file.FullName));
          }
 
          return results;

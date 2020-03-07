@@ -35,12 +35,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
 using Antlr4.Runtime;
 
 using JetBrains.Annotations;
+
+using Org.Edgerunner.ANTLR4.Tools.Common;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
@@ -89,6 +92,47 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          Assembly.Load(File.ReadAllBytes(reference.AssemblyPath));
          var lexer = Activator.CreateInstance(reference.Parser, stream) as Parser;
          return lexer;
+      }
+
+      /// <summary>
+      /// Loads an <see cref="IEditorGuide"/> instance for the referenced grammar.
+      /// </summary>
+      /// <param name="reference">The editor guide reference.</param>
+      /// <returns>A new <see cref="IEditorGuide" />.</returns>
+      /// <exception cref="ArgumentNullException"><paramref name="reference"/> is <see langword="null"/></exception>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="reference" /> is <see langword="null" /></exception>
+      /// <exception cref="T:System.IO.FileLoadException">A file that was found could not be loaded.</exception>
+      /// <exception cref="T:System.IO.FileNotFoundException">The assembly path is an empty string ("") or does not exist.</exception>
+      /// <exception cref="T:System.BadImageFormatException">The assembly path is not a valid assembly.</exception>
+      public IEditorGuide LoadEditorGuide([NotNull] EditorGuideReference reference)
+      {
+         if (reference is null) throw new ArgumentNullException(nameof(reference));
+
+         Assembly.Load(File.ReadAllBytes(reference.AssemblyPath));
+         var guide = Activator.CreateInstance(reference.GuideType) as IEditorGuide;
+         return guide;
+      }
+
+      /// <summary>
+      /// Loads all editor guides.
+      /// </summary>
+      /// <param name="references">The references to load.</param>
+      /// <returns>An <see cref="IEnumerable{IEditorGuide}"/> instance.</returns>
+      /// <exception cref="ArgumentNullException">references is null.</exception>
+      /// <exception cref="T:System.IO.FileLoadException">A file that was found could not be loaded.</exception>
+      /// <exception cref="T:System.IO.FileNotFoundException">The assembly path is an empty string ("") or does not exist.</exception>
+      /// <exception cref="T:System.BadImageFormatException">The assembly path is not a valid assembly.</exception>
+      public IEnumerable<IEditorGuide> LoadAllEditorGuides([NotNull] IEnumerable<EditorGuideReference> references)
+      {
+         if (references == null)
+            throw new ArgumentNullException(nameof(references));
+
+         var results = new List<IEditorGuide>();
+
+         foreach (var guideReference in references)
+            results.Add(LoadEditorGuide(guideReference));
+
+         return results;
       }
    }
 }

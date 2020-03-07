@@ -40,6 +40,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 using Antlr4.Runtime;
@@ -55,10 +56,13 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
+using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
+
+using Style = FastColoredTextBoxNS.Style;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
@@ -73,9 +77,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private GrammarReference _Grammar;
 
+      private IEditorGuide _EditorGuide;
+
+      private Dictionary<string, FastColoredTextBoxNS.Style> _TokenStyles;
+
+      private Style _ErrorStyle;
+
       private List<string> _ParserRules;
 
       private GViewer _Viewer;
+
+      private IList<TokenViewModel> _Tokens;
+
+      private List<ParseMessage> _ParseErrors;
 
       #region Constructors And Finalizers
 
@@ -85,6 +99,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public VisualAnalyzer()
       {
          InitializeComponent();
+
+         _TokenStyles = new Dictionary<string, FastColoredTextBoxNS.Style>();
       }
 
       #endregion
@@ -160,8 +176,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (ParseWithSllMode) options |= ParseOption.Sll;
          if (ParseWithTracing) options |= ParseOption.Trace;
          analyzer.Parse(CmbRules.SelectedItem.ToString(), options, listener);
+         _Tokens = analyzer.DisplayTokens;
          PopulateTokens(analyzer.DisplayTokens);
-         PopulateParserMessages(listener.Errors);
+         _ParseErrors = listener.Errors;
+         PopulateParserMessages(_ParseErrors);
          BuildParseTreeTreeViewGuide(analyzer.ParseContext);
          BuildParseTreeGraph(analyzer.ParseContext);
       }
@@ -194,6 +212,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _ParserRules = scanner.GetParserRulesForGrammar(grammar).ToList();
          LoadParserRules();
          stripLabelGrammarName.Text = grammar.GrammarName;
+
+         // Now try to load an IEditorGuide instance for the specified Grammar
+         _TokenStyles.Clear();
+         LoadEditorGuide(grammar);
       }
 
       /// <summary>
@@ -267,6 +289,45 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseTreeView.ResumeLayout();
       }
 
+      private void LoadEditorGuide([NotNull] GrammarReference grammar)
+      {
+         if (grammar == null)
+            throw new ArgumentNullException(nameof(grammar));
+
+         _EditorGuide = null;
+         _ErrorStyle = null;
+
+         var scanner = new Scanner();
+         var loader = new Loader();
+
+         // First try loading a guide from the target assembly's directory
+         var pathRoot = Path.GetDirectoryName(grammar.AssemblyPath);
+         if (LoadGuideFromPath(grammar, scanner, loader, pathRoot))
+            return;
+
+         // Now try loading a guide from the Grun.Net Guides folder
+         pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+         pathRoot = Path.Combine(pathRoot, "Guides");
+         if (Directory.Exists(pathRoot))
+            LoadGuideFromPath(grammar, scanner, loader, pathRoot);
+      }
+
+      private bool LoadGuideFromPath(GrammarReference grammar, Scanner scanner, Loader loader, string pathRoot)
+      {
+         var guideReferences = scanner.LocateAllEditorGuides(pathRoot ?? throw new InvalidOperationException());
+         foreach (var reference in guideReferences)
+         {
+            var guide = loader.LoadEditorGuide(reference);
+            if (guide != null && guide.GrammarName == grammar.GrammarName)
+            {
+               _EditorGuide = guide;
+               return true;
+            }
+         }
+
+         return false;
+      }
+
       private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
       {
          if (CmbRules.Items.Count > 0)
@@ -276,6 +337,66 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
       {
          ParseSource();
+         //CodeEditor.ClearStylesBuffer();
+         ColorizeTokens();
+         ColorizeErrors();
+      }
+
+      private void ColorizeErrors()
+      {
+         if (_EditorGuide == null)
+            return;
+
+         foreach (var error in _ParseErrors)
+         {
+            var token = error.Token;
+            var startingPlace = new Place(token.Column, token.Line - 1);
+            var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
+            var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
+            tokenRange.SetStyle(GetParseErrorStyle());
+         }
+      }
+
+      private void ColorizeTokens()
+      {
+         if (_EditorGuide == null)
+            return;
+
+         CodeEditor.BeginUpdate();
+         try
+         {
+            foreach (var token in _Tokens)
+            {
+               var startingPlace = new Place(token.ActualToken.Column, token.ActualToken.Line - 1);
+               var stoppingPlace = new Place(token.ActualToken.Column + token.Text.Length, token.ActualToken.Line - 1);
+               var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
+               tokenRange.ClearStyle(StyleIndex.All);
+               var style = GetTokenStyle(token);
+               tokenRange.SetStyle(style);
+            }
+         }
+         finally
+         {
+            CodeEditor.EndUpdate();
+         }
+      }
+
+      private Style GetTokenStyle(TokenViewModel token)
+      {
+         if (_TokenStyles.TryGetValue(token.Type, out var style))
+            return style;
+
+         var foregroundBrush = _EditorGuide.GetTokenForegroundBrush(token.Type);
+         var backgroundBrush = _EditorGuide.GetTokenBackgroundBrush(token.Type);
+         var fontStyle = _EditorGuide.GetTokenFontStyle(token.Type);
+         style = new TextStyle(foregroundBrush, backgroundBrush, fontStyle);
+         _TokenStyles[token.Type] = style;
+         return style;
+      }
+
+      private Style GetParseErrorStyle()
+      {
+         return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, _EditorGuide.ErrorColor));
       }
 
       private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
