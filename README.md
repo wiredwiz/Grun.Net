@@ -57,6 +57,7 @@ is running.  GrunWin also supports a handful of optional command line parameters
   |---                |---       |
   |--grammar \<name>  |         Attempts to load the specified grammar.   |
   |--rule \<name>     |         Attempts to load the specified rule name. |  
+  |--file \<file name>|         Attempts to load the specified file name into the editor window.|
   |--trace            |         Trace grammar parsing.          |
   |--SLL              |         Parse using SLL prediction mode.|
   |--diagnostics      |         Parse with diagnostics.         |
