@@ -79,9 +79,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private IEditorGuide _EditorGuide;
 
-      private Dictionary<string, FastColoredTextBoxNS.Style> _TokenStyles;
+      private StyleRegistry _Registry;
 
-      private Style _ErrorStyle;
+      private EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
 
       private List<string> _ParserRules;
 
@@ -91,6 +91,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private List<ParseMessage> _ParseErrors;
 
+      private DateTime _IdleSince = DateTime.Now;
+
+      private int _MaxRealtimeRenderNodes;
+
       #region Constructors And Finalizers
 
       /// <summary>
@@ -99,8 +103,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public VisualAnalyzer()
       {
          InitializeComponent();
-
-         _TokenStyles = new Dictionary<string, FastColoredTextBoxNS.Style>();
       }
 
       #endregion
@@ -214,8 +216,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          stripLabelGrammarName.Text = grammar.GrammarName;
 
          // Now try to load an IEditorGuide instance for the specified Grammar
-         _TokenStyles.Clear();
          LoadEditorGuide(grammar);
+         if (_EditorGuide != null)
+            _Registry = new StyleRegistry(_EditorGuide);
       }
 
       /// <summary>
@@ -295,8 +298,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             throw new ArgumentNullException(nameof(grammar));
 
          _EditorGuide = null;
-         _ErrorStyle = null;
-
+         
          var scanner = new Scanner();
          var loader = new Loader();
 
@@ -336,43 +338,28 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
       {
+         _IdleSince = DateTime.Now;
          ParseSource();
-         //CodeEditor.ClearStylesBuffer();
-         ColorizeTokens();
-         ColorizeErrors();
+         CodeEditor.ClearStylesBuffer();
+         ColorizeTokens(e.ChangedRange);
+         ColorizeErrors(e.ChangedRange);
       }
 
-      private void ColorizeErrors()
+      private void ColorizeErrors(Range range)
       {
-         if (_EditorGuide == null)
-            return;
-
-         foreach (var error in _ParseErrors)
-         {
-            var token = error.Token;
-            var startingPlace = new Place(token.Column, token.Line - 1);
-            var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
-            var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
-            tokenRange.SetStyle(GetParseErrorStyle());
-         }
-      }
-
-      private void ColorizeTokens()
-      {
-         if (_EditorGuide == null)
+         if (_Registry == null)
             return;
 
          CodeEditor.BeginUpdate();
          try
          {
-            foreach (var token in _Tokens)
+            foreach (var error in _ParseErrors)
             {
-               var startingPlace = new Place(token.ActualToken.Column, token.ActualToken.Line - 1);
-               var stoppingPlace = new Place(token.ActualToken.Column + token.Text.Length, token.ActualToken.Line - 1);
+               var token = error.Token;
+               var startingPlace = new Place(token.Column, token.Line - 1);
+               var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
                var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
-               tokenRange.ClearStyle(StyleIndex.All);
-               var style = GetTokenStyle(token);
-               tokenRange.SetStyle(style);
+               tokenRange.SetStyle(_Registry.GetParseErrorStyle());
             }
          }
          finally
@@ -381,22 +368,32 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
-      private Style GetTokenStyle(TokenViewModel token)
+      private void ColorizeTokens(Range range)
       {
-         if (_TokenStyles.TryGetValue(token.Type, out var style))
-            return style;
+         if (_Registry == null)
+            return;
 
-         var foregroundBrush = _EditorGuide.GetTokenForegroundBrush(token.Type);
-         var backgroundBrush = _EditorGuide.GetTokenBackgroundBrush(token.Type);
-         var fontStyle = _EditorGuide.GetTokenFontStyle(token.Type);
-         style = new TextStyle(foregroundBrush, backgroundBrush, fontStyle);
-         _TokenStyles[token.Type] = style;
-         return style;
+         //var tokensToColor = FindTokensInRange(_Tokens, range);
+         var tokensToColor = _Tokens;
+
+         _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor);
       }
 
-      private Style GetParseErrorStyle()
+      private IList<TokenViewModel> FindTokensInRange(IList<TokenViewModel> tokens, Range range)
       {
-         return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, _EditorGuide.ErrorColor));
+         var results = new List<TokenViewModel>();
+         var startLine = range.FromLine;
+         var stopLine = range.ToLine + 2;
+
+         foreach (var token in tokens)
+         {
+            if (token.LineNumber < startLine || token.LineNumber > stopLine)
+               continue;
+            
+            results.Add(token);
+         }
+
+         return results;
       }
 
       private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -616,8 +613,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          InitializeGraphCanvas();
 
+         LoadApplicationSettings();
+
          if (!string.IsNullOrEmpty(CodeEditor.Text))
             ParseSource();
+      }
+
+      private void LoadApplicationSettings()
+      {
+         var appSettings = System.Configuration.ConfigurationManager.AppSettings;
+
+         string result = appSettings["MaximumRealtimeRenderNodes"] ?? string.Empty;
+         if (!int.TryParse(result, out _MaxRealtimeRenderNodes))
+            _MaxRealtimeRenderNodes = 50;
       }
    }
 }

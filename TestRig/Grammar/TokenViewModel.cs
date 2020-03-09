@@ -55,7 +55,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          Text = FormatTokenText(token);
          Type = token.Type > -1 ? lexer.Vocabulary.GetDisplayName(token.Type) : string.Empty;
          LineNumber = token.Line;
-         ColumnPosition = token.Column;
+         ColumnPosition = token.Column + 1;
          ChannelId = token.Channel;
          Length = token.StopIndex - token.StartIndex + 1;
          StartPosition = token.StartIndex;

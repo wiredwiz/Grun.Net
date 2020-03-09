@@ -64,6 +64,7 @@
       <HintPath>..\packages\ObjectListView.2.7.1.5\lib\SparkleLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -76,6 +77,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditorSyntaxHighlighter.cs" />
     <Compile Include="GrammarSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,6 +85,7 @@
       <DependentUpon>GrammarSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Options.cs" />
+    <Compile Include="StyleRegistry.cs" />
     <Compile Include="VisualAnalyzer.cs">
       <SubType>Form</SubType>
     </Compile>
