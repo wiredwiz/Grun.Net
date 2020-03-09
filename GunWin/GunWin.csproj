@@ -84,7 +84,15 @@
     <Compile Include="GrammarSelector.Designer.cs">
       <DependentUpon>GrammarSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="GraphingResult.cs" />
+    <Compile Include="GraphingWorkItem.cs" />
+    <Compile Include="GraphWorker.cs" />
+    <Compile Include="IGraphWorker.cs" />
+    <Compile Include="IParseWorker.cs" />
     <Compile Include="Options.cs" />
+    <Compile Include="ParserResult.cs" />
+    <Compile Include="ParseWorker.cs" />
+    <Compile Include="ParserWorkItem.cs" />
     <Compile Include="StyleRegistry.cs" />
     <Compile Include="VisualAnalyzer.cs">
       <SubType>Form</SubType>

@@ -1,12 +1,12 @@
 ﻿#region BSD 3-Clause License
 
-// <copyright file="IParseTreeGrapher.cs" company="Edgerunner.org">
-// Copyright  Thaddeus Ryker
+// <copyright file="GraphingWorkItem.cs" company="Edgerunner.org">
+// Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) , Thaddeus Ryker
+// Copyright (c) 2020, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -36,43 +36,64 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
-
 using Antlr4.Runtime.Tree;
 
-using Microsoft.Msagl.Drawing;
+using Org.Edgerunner.ANTLR4.Tools.Graphing;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Graphing
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    /// <summary>
-   /// Interface that represents a parse tree graphing tool
+   ///    Struct that represents an item of work for the parser.
    /// </summary>
-   public interface IParseTreeGrapher
+   public struct GraphingWorkItem
    {
-      /// <summary>
-      /// Gets or sets the color of the background.
-      /// </summary>
-      /// <value>The color of the background.</value>
-      Color? BackgroundColor { get; set; }
+      #region Constructors And Finalizers
 
       /// <summary>
-      /// Gets or sets the color of the text.
-      /// </summary>
-      /// <value>The color of the text.</value>
-      Color? TextColor { get; set; }
-
-      /// <summary>
-      /// Gets or sets the color of the border.
-      /// </summary>
-      /// <value>The color of the border.</value>
-      Color? BorderColor { get; set; }
-
-      /// <summary>
-      /// Creates the parse tree graph.
+      /// Initializes a new instance of the <see cref="GraphingWorkItem" /> struct.
       /// </summary>
       /// <param name="tree">The parse tree to graph.</param>
       /// <param name="parserRules">The parser rules.</param>
-      /// <returns>A new <see cref="Graph" />.</returns>
-      Graph CreateGraph(ITree tree, IList<string> parserRules);
+      /// <param name="grapher">The parse tree grapher to use.</param>
+      /// <param name="graphWhen">The DateTime indicating when to parse.</param>
+      public GraphingWorkItem(
+         ITree tree,
+         IList<string> parserRules,
+         IParseTreeGrapher grapher,
+         DateTime graphWhen)
+      {
+         ParseTree = tree;
+         ParserRules = parserRules;
+         GraphWhen = graphWhen;
+         TreeGrapher = grapher;
+      }
+
+      #endregion
+
+      /// <summary>
+      /// Gets the parse tree to graph.
+      /// </summary>
+      /// <value>The parse tree.</value>
+      public ITree ParseTree { get; }
+
+      /// <summary>
+      ///    Gets the parse tree grapher to use.
+      /// </summary>
+      /// <value>The parse tree grapher.</value>
+      public IParseTreeGrapher TreeGrapher { get; }
+
+      /// <summary>
+      /// Gets the parser rules.
+      /// </summary>
+      /// <value>The parser rules.</value>
+      public IList<string> ParserRules { get; }
+
+      /// <summary>
+      /// Gets the date/time of when to parse.
+      /// </summary>
+      /// <value>The <see cref="DateTime"/>.</value>
+      public DateTime GraphWhen { get; }
    }
 }

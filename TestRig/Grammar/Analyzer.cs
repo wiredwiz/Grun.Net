@@ -64,17 +64,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       }
 
       /// <summary>
-      /// Gets or sets the text to analyze.
+      /// Gets the text to analyze.
       /// </summary>
       /// <value>The text.</value>
-      protected string Text { get; set; }
+      protected string Text { get; private set; }
 
       /// <summary>
-      /// Gets or sets the grammar to use.
+      /// Gets the grammar to use.
       /// </summary>
       /// <value>The grammar.</value>
       /// <seealso cref="GrammarReference"/>
-      protected GrammarReference Grammar { get; set; }
+      protected GrammarReference Grammar { get; private set; }
 
       /// <summary>
       /// Gets the tokens.

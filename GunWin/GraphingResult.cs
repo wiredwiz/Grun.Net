@@ -1,12 +1,11 @@
 ﻿#region BSD 3-Clause License
-
-// <copyright file="IParseTreeGrapher.cs" company="Edgerunner.org">
-// Copyright  Thaddeus Ryker
+// <copyright file="GraphingResult.cs" company="Edgerunner.org">
+// Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) , Thaddeus Ryker
+// Copyright (c) 2020, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -33,46 +32,40 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
-
-using System.Collections.Generic;
 
 using Antlr4.Runtime.Tree;
 
 using Microsoft.Msagl.Drawing;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Graphing
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    /// <summary>
-   /// Interface that represents a parse tree graphing tool
+   /// Struct that represents a graphing result.
    /// </summary>
-   public interface IParseTreeGrapher
+   public struct GraphingResult
    {
       /// <summary>
-      /// Gets or sets the color of the background.
+      /// Initializes a new instance of the <see cref="GraphingResult"/> struct.
       /// </summary>
-      /// <value>The color of the background.</value>
-      Color? BackgroundColor { get; set; }
+      /// <param name="graph">The graph.</param>
+      /// <param name="parseTree">The parse tree.</param>
+      public GraphingResult(Graph graph, ITree parseTree)
+      {
+         Graph = graph;
+         ParseTree = parseTree;
+      }
 
       /// <summary>
-      /// Gets or sets the color of the text.
+      /// Gets the graph.
       /// </summary>
-      /// <value>The color of the text.</value>
-      Color? TextColor { get; set; }
+      /// <value>The graph.</value>
+      public Graph Graph { get; }
 
       /// <summary>
-      /// Gets or sets the color of the border.
+      /// Gets the parse tree.
       /// </summary>
-      /// <value>The color of the border.</value>
-      Color? BorderColor { get; set; }
-
-      /// <summary>
-      /// Creates the parse tree graph.
-      /// </summary>
-      /// <param name="tree">The parse tree to graph.</param>
-      /// <param name="parserRules">The parser rules.</param>
-      /// <returns>A new <see cref="Graph" />.</returns>
-      Graph CreateGraph(ITree tree, IList<string> parserRules);
+      /// <value>The parse tree.</value>
+      public ITree ParseTree { get; }
    }
 }

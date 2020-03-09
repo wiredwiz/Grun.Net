@@ -1,12 +1,11 @@
 ﻿#region BSD 3-Clause License
-
-// <copyright file="IParseTreeGrapher.cs" company="Edgerunner.org">
-// Copyright  Thaddeus Ryker
+// <copyright file="IGraphWorker.cs" company="Edgerunner.org">
+// Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) , Thaddeus Ryker
+// Copyright (c) 2020, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -33,46 +32,44 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
 
+using System;
 using System.Collections.Generic;
 
 using Antlr4.Runtime.Tree;
 
+using JetBrains.Annotations;
+
 using Microsoft.Msagl.Drawing;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Graphing
+using Org.Edgerunner.ANTLR4.Tools.Graphing;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
+
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    /// <summary>
-   /// Interface that represents a parse tree graphing tool
+   /// Interface representing an instance that does the work building parse tree graphs.
    /// </summary>
-   public interface IParseTreeGrapher
+   public interface IGraphWorker
    {
       /// <summary>
-      /// Gets or sets the color of the background.
+      /// Occurs when graphing is finished.
       /// </summary>
-      /// <value>The color of the background.</value>
-      Color? BackgroundColor { get; set; }
+      event EventHandler<GraphingResult> GraphingFinished;
 
       /// <summary>
-      /// Gets or sets the color of the text.
+      /// Queues the specified parse tree for graphing.
       /// </summary>
-      /// <value>The color of the text.</value>
-      Color? TextColor { get; set; }
-
-      /// <summary>
-      /// Gets or sets the color of the border.
-      /// </summary>
-      /// <value>The color of the border.</value>
-      Color? BorderColor { get; set; }
-
-      /// <summary>
-      /// Creates the parse tree graph.
-      /// </summary>
-      /// <param name="tree">The parse tree to graph.</param>
+      /// <param name="grapher">The parse tree grapher.</param>
+      /// <param name="tree">The parse tree.</param>
       /// <param name="parserRules">The parser rules.</param>
-      /// <returns>A new <see cref="Graph" />.</returns>
-      Graph CreateGraph(ITree tree, IList<string> parserRules);
+      void Graph([NotNull] IParseTreeGrapher grapher, ITree tree, IList<string> parserRules);
+
+      /// <summary>
+      /// Cancels all queued work.
+      /// </summary>
+      /// <returns><c>true</c> if there was existing work to cancel, <c>false</c> otherwise.</returns>
+      bool CancelWork();
    }
 }

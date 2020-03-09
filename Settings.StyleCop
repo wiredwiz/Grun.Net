@@ -4,6 +4,7 @@
     <CollectionProperty Name="RecognizedWords">
       <Value>Edgerunner</Value>
       <Value>enum</Value>
+      <Value>grapher</Value>
       <Value>guid</Value>
       <Value>ip</Value>
       <Value>keyguard</Value>

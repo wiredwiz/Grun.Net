@@ -41,6 +41,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Antlr4.Runtime;
@@ -82,6 +84,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private StyleRegistry _Registry;
 
       private EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
+
+      private IGraphWorker _GraphWorker;
+
+      private IParseTreeGrapher _Grapher;
 
       private List<string> _ParserRules;
 
@@ -154,13 +160,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// <summary>
       ///    Parses the source code.
       /// </summary>
+      /// <returns>A <see cref="Task"/>.</returns>
       /// <exception cref="T:Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions.GrammarException">
       /// No parser found for the current grammar
       /// OR
       /// Selected parser rule does not exist for the current grammar.
       /// </exception>
       /// <exception cref="T:System.ArgumentNullException">Selected parser rule is null or empty.</exception>
-      public void ParseSource()
+      public async Task ParseSource()
       {
          if (_Grammar == null)
             return;
@@ -178,12 +185,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (ParseWithSllMode) options |= ParseOption.Sll;
          if (ParseWithTracing) options |= ParseOption.Trace;
          analyzer.Parse(CmbRules.SelectedItem.ToString(), options, listener);
+
+         _GraphWorker?.Graph(_Grapher, analyzer.ParseContext, _ParserRules);
+
          _Tokens = analyzer.DisplayTokens;
-         PopulateTokens(analyzer.DisplayTokens);
          _ParseErrors = listener.Errors;
+         await PopulateTokens(analyzer.DisplayTokens).ConfigureAwait(true);
          PopulateParserMessages(_ParseErrors);
-         BuildParseTreeTreeViewGuide(analyzer.ParseContext);
-         BuildParseTreeGraph(analyzer.ParseContext);
       }
 
       /// <summary>
@@ -251,7 +259,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
-      private void BuildParseTreeGraph(ITree tree, int? zoomFactor = null)
+      private void RenderParseTreeGraph(ITree tree, int? zoomFactor = null)
       {
          if (_Viewer == null)
             return;
@@ -259,12 +267,30 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (tree == null)
             return;
 
-         var grapher = new ParseTreeGrapher(tree, _ParserRules)
-                          {
-                             BackgroundColor = Color.LightBlue, BorderColor = Color.Black, TextColor = Color.Black
-                          };
-         var graph = grapher.CreateGraph();
+         if (_Grapher == null)
+            return;
+
+         var graph = _Grapher.CreateGraph(tree, _ParserRules);
          graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
+         _Viewer.SuspendLayout();
+         _Viewer.Graph = graph;
+         if (zoomFactor.HasValue)
+            GraphZoomTrackBar.Value = zoomFactor.Value;
+         _Viewer.ZoomF = GraphZoomTrackBar.Value;
+         _Viewer.ResumeLayout();
+      }
+
+      private void RenderParseTreeGraph(Graph graph, int? zoomFactor = null)
+      {
+         if (_Viewer == null)
+            return;
+
+         if (graph == null)
+            return;
+
+         if (_Grapher == null)
+            return;
+
          _Viewer.SuspendLayout();
          _Viewer.Graph = graph;
          if (zoomFactor.HasValue)
@@ -330,16 +356,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          return false;
       }
 
-      private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
+      private async void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
       {
          if (CmbRules.Items.Count > 0)
-            ParseSource();
+            await ParseSource().ConfigureAwait(true);
       }
 
-      private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
+      private async void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
       {
          _IdleSince = DateTime.Now;
-         ParseSource();
+         await ParseSource().ConfigureAwait(true);
          CodeEditor.ClearStylesBuffer();
          ColorizeTokens(e.ChangedRange);
          ColorizeErrors(e.ChangedRange);
@@ -488,7 +514,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             {
                var workingNode = treeNodes.First();
                ParseTreeView.SelectedNode = workingNode;
-               BuildParseTreeGraph(workingNode.Tag as ITree, 1);
+               RenderParseTreeGraph(workingNode.Tag as ITree, 1);
                ParseTreeView.Focus();
             }
          }
@@ -510,7 +536,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // Now we graph and display just the selected branch
          if (e.Node.Tag is ITree selected)
          {
-            BuildParseTreeGraph(selected);
+            RenderParseTreeGraph(selected);
             ShowSourceForTreeNode(selected);
          }
       }
@@ -520,10 +546,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseMessageListView.SetObjects(listenerErrors);
       }
 
-      private void PopulateTokens(IList<TokenViewModel> tokens)
-      {
-         tokenListView.SetObjects(tokens);
-      }
+      private async Task PopulateTokens(IList<TokenViewModel> tokens) => await Task.Run(() => { tokenListView.SetObjects(tokens); }).ConfigureAwait(true);
 
       private void ShowSourceForTreeNode([NotNull] ITree tree)
       {
@@ -609,14 +632,29 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             }
       }
 
-      private void VisualAnalyzer_Load(object sender, EventArgs e)
+      private async void VisualAnalyzer_Load(object sender, EventArgs e)
       {
-         InitializeGraphCanvas();
-
          LoadApplicationSettings();
 
+         InitializeGraphCanvas();
+
+         _GraphWorker = new GraphWorker(SynchronizationContext.Current);
+         _GraphWorker.GraphingFinished += _GraphWorker_GraphingFinished;
+         _Grapher = new ParseTreeGrapher
+         {
+            BackgroundColor = Color.LightBlue,
+            BorderColor = Color.Black,
+            TextColor = Color.Black
+         };
+
          if (!string.IsNullOrEmpty(CodeEditor.Text))
-            ParseSource();
+            await ParseSource().ConfigureAwait(true);
+      }
+
+      private void _GraphWorker_GraphingFinished(object sender, GraphingResult e)
+      {
+         BuildParseTreeTreeViewGuide(e.ParseTree);
+         RenderParseTreeGraph(e.Graph);
       }
 
       private void LoadApplicationSettings()

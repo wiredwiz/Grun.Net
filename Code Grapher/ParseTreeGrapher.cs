@@ -36,7 +36,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 
 using Antlr4.Runtime;
@@ -52,66 +51,26 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
    /// <remarks>This class uses Microsoft's Automatic Graph Layout Library to do the actual dirty work.</remarks>
    public class ParseTreeGrapher : IParseTreeGrapher
    {
-      #region Constructors And Finalizers
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="ParseTreeGrapher" /> class.
-      /// </summary>
-      /// <param name="tree">The tree to graph.</param>
-      /// <param name="rules">The parser rules.</param>
-      /// <seealso cref="Antlr4.Runtime.Tree.ITree" />
-      public ParseTreeGrapher(ITree tree, IList<string> rules)
-      {
-         Subject = tree;
-         ParserRules = rules ?? new List<string>();
-      }
-
-      #endregion
-
-      /// <summary>
-      ///    Gets the subject parse tree to graph.
-      /// </summary>
-      /// <value>The subject tree.</value>
-      public ITree Subject { get; }
-
-      /// <summary>
-      /// Gets the parser rules.
-      /// </summary>
-      /// <value>The parser rules.</value>
-      public IList<string> ParserRules { get; }
-
-      /// <summary>
-      /// Gets or sets the color of the background.
-      /// </summary>
-      /// <value>The color of the background.</value>
+      /// <inheritdoc/>
       public Color? BackgroundColor { get; set; }
 
-      /// <summary>
-      /// Gets or sets the color of the text.
-      /// </summary>
-      /// <value>The color of the text.</value>
+      /// <inheritdoc/>
       public Color? TextColor { get; set; }
 
-      /// <summary>
-      /// Gets or sets the color of the border.
-      /// </summary>
-      /// <value>The color of the border.</value>
+      /// <inheritdoc/>
       public Color? BorderColor { get; set; }
 
-      /// <summary>
-      /// Creates the parse tree graph.
-      /// </summary>
-      /// <returns>A new <see cref="Graph"/>.</returns>
-      public Graph CreateGraph()
+      /// <inheritdoc/>
+      public Graph CreateGraph(ITree tree, IList<string> parserRules)
       {
          var graph = new Graph();
-         if (Subject != null)
+         if (tree != null)
          {
-            if (Subject.ChildCount == 0)
-               graph.AddNode(Subject.GetHashCode().ToString());
+            if (tree.ChildCount == 0)
+               graph.AddNode(tree.GetHashCode().ToString());
             else
-               GraphEdges(graph, Subject);
-            FormatNodes(graph, Subject);
+               GraphEdges(graph, tree);
+            FormatNodes(graph, tree, parserRules);
          }
 
          return graph;
@@ -128,12 +87,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
          }
       }
 
-      private void FormatNodes(Graph graph, ITree tree)
+      private void FormatNodes(Graph graph, ITree tree, IList<string> parserRules)
       {
          var node = graph.FindNode(tree.GetHashCode().ToString());
          if (node != null)
          {
-            node.LabelText = Trees.GetNodeText(tree, ParserRules);
+            node.LabelText = Trees.GetNodeText(tree, parserRules);
 
             var ruleFailedAndMatchedNothing = false;
 
@@ -160,7 +119,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
          }
 
          for (int i = 0; i < tree.ChildCount; i++)
-            FormatNodes(graph, tree.GetChild(i));
+            FormatNodes(graph, tree.GetChild(i), parserRules);
       }
    }
 }
