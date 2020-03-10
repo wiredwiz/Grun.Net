@@ -622,7 +622,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          };
 
          if (!string.IsNullOrEmpty(CodeEditor.Text))
+         {
             ParseSource();
+            ColorizeTokens(null);
+            ColorizeErrors(null);
+         }
       }
 
       private void _GraphWorker_GraphingFinished(object sender, GraphingResult e)
