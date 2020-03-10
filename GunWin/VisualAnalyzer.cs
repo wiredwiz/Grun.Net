@@ -38,6 +38,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -446,7 +447,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void GraphZoomTrackBar_ValueChanged(object sender, EventArgs e)
       {
          if (_Viewer != null)
-            _Viewer.ZoomF = GraphZoomTrackBar.Value;
+            _Viewer.ZoomF = GraphZoomTrackBar.Value * 0.1 + 1.0;
       }
 
       private void InitializeGraphCanvas()
@@ -458,10 +459,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ResumeLayout();
          _Viewer.LayoutAlgorithmSettingsButtonVisible = false;
          _Viewer.Click += _Viewer_Click;
+         _Viewer.MouseWheel += _Viewer_MouseWheel;
          var viewerContextMenu = new ContextMenu();
          var menuItem = viewerContextMenu.MenuItems.Add("Graph from here");
          menuItem.Click += Menu_GraphFromHere_Click;
          _Viewer.ContextMenu = viewerContextMenu;
+      }
+
+      private void _Viewer_MouseWheel(object sender, MouseEventArgs e)
+      {
+         var factor = Math.Max(Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / 0.1), GraphZoomTrackBar.Maximum), GraphZoomTrackBar.Minimum);
+         GraphZoomTrackBar.Value = factor;
       }
 
       private void LoadGrammarToolStripMenuItem_Click(object sender, EventArgs e)
