@@ -77,6 +77,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditorSettings.cs" />
     <Compile Include="EditorSyntaxHighlighter.cs" />
     <Compile Include="GrammarSelector.cs">
       <SubType>Form</SubType>

@@ -41,7 +41,7 @@
          this.PnlGraph = new System.Windows.Forms.Panel();
          this.GraphZoomTrackBar = new System.Windows.Forms.TrackBar();
          this.tabTokens = new System.Windows.Forms.TabPage();
-         this.tokenListView = new BrightIdeasSoftware.ObjectListView();
+         this.tokenListView = new BrightIdeasSoftware.FastObjectListView();
          this.colText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colType = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colLine = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -156,7 +156,6 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -282,10 +281,10 @@
          this.tokenListView.Name = "tokenListView";
          this.tokenListView.ShowItemCountOnGroups = true;
          this.tokenListView.Size = new System.Drawing.Size(624, 402);
-         this.tokenListView.SortGroupItemsByPrimaryColumn = false;
          this.tokenListView.TabIndex = 0;
          this.tokenListView.UseCompatibleStateImageBehavior = false;
          this.tokenListView.View = System.Windows.Forms.View.Details;
+         this.tokenListView.VirtualMode = true;
          this.tokenListView.Click += new System.EventHandler(this.TokenListView_Click);
          // 
          // colText
@@ -368,26 +367,26 @@
          // loadGrammarToolStripMenuItem
          // 
          this.loadGrammarToolStripMenuItem.Name = "loadGrammarToolStripMenuItem";
-         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
          this.loadGrammarToolStripMenuItem.Text = "&Load Grammar";
          this.loadGrammarToolStripMenuItem.Click += new System.EventHandler(this.LoadGrammarToolStripMenuItem_Click);
          // 
          // loadSourceToolStripMenuItem
          // 
          this.loadSourceToolStripMenuItem.Name = "loadSourceToolStripMenuItem";
-         this.loadSourceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.loadSourceToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
          this.loadSourceToolStripMenuItem.Text = "Load Source &File";
          this.loadSourceToolStripMenuItem.Click += new System.EventHandler(this.LoadSourceToolStripMenuItem_Click);
          // 
          // toolStripSeparator1
          // 
          this.toolStripSeparator1.Name = "toolStripSeparator1";
-         this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+         this.toolStripSeparator1.Size = new System.Drawing.Size(157, 6);
          // 
          // exitToolStripMenuItem
          // 
          this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-         this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.exitToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
          this.exitToolStripMenuItem.Text = "E&xit";
          this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
          // 
@@ -455,6 +454,7 @@
             this.colMessage});
          this.ParseMessageListView.Dock = System.Windows.Forms.DockStyle.Fill;
          this.ParseMessageListView.FullRowSelect = true;
+         this.ParseMessageListView.HideSelection = false;
          this.ParseMessageListView.Location = new System.Drawing.Point(0, 0);
          this.ParseMessageListView.Name = "ParseMessageListView";
          this.ParseMessageListView.ShowGroups = false;
@@ -498,7 +498,7 @@
          // 
          this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.StripLabelGrammar.Name = "StripLabelGrammar";
-         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
+         this.StripLabelGrammar.Size = new System.Drawing.Size(69, 17);
          this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName
@@ -559,7 +559,7 @@
       private System.Windows.Forms.TabControl tabControlParse;
       private System.Windows.Forms.TabPage tabParseTree;
       private System.Windows.Forms.TabPage tabTokens;
-      private BrightIdeasSoftware.ObjectListView tokenListView;
+      private BrightIdeasSoftware.FastObjectListView tokenListView;
       private BrightIdeasSoftware.OLVColumn colText;
       private BrightIdeasSoftware.OLVColumn colLine;
       private BrightIdeasSoftware.OLVColumn colColumn;

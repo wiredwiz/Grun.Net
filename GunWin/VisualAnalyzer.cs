@@ -42,7 +42,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Antlr4.Runtime;
@@ -64,8 +63,6 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 
-using Style = FastColoredTextBoxNS.Style;
-
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    /// <summary>
@@ -75,8 +72,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
    /// <seealso cref="System.Windows.Forms.Form" />
    public partial class VisualAnalyzer : Form
    {
-      private string _DefaultRule;
-
       private GrammarReference _Grammar;
 
       private IEditorGuide _EditorGuide;
@@ -97,9 +92,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private List<ParseMessage> _ParseErrors;
 
-      private DateTime _IdleSince = DateTime.Now;
-
-      private int _MaxRealtimeRenderNodes;
+      private EditorSettings _Settings;
 
       #region Constructors And Finalizers
 
@@ -160,14 +153,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// <summary>
       ///    Parses the source code.
       /// </summary>
-      /// <returns>A <see cref="Task"/>.</returns>
       /// <exception cref="T:Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions.GrammarException">
       /// No parser found for the current grammar
       /// OR
       /// Selected parser rule does not exist for the current grammar.
       /// </exception>
       /// <exception cref="T:System.ArgumentNullException">Selected parser rule is null or empty.</exception>
-      public async Task ParseSource()
+      public void ParseSource()
       {
          if (_Grammar == null)
             return;
@@ -190,7 +182,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          _Tokens = analyzer.DisplayTokens;
          _ParseErrors = listener.Errors;
-         await PopulateTokens(analyzer.DisplayTokens).ConfigureAwait(true);
+         PopulateTokens(analyzer.DisplayTokens);
          PopulateParserMessages(_ParseErrors);
       }
 
@@ -207,7 +199,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (!_ParserRules.Contains(rule))
             throw new ArgumentException(string.Format(Resources.InvalidParserRule, rule), nameof(rule));
 
-         _DefaultRule = rule;
          CmbRules.SelectedIndex = CmbRules.FindStringExact(rule);
       }
 
@@ -251,9 +242,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             var child = tree.GetChild(i);
             var newNode =
                new TreeNode(Trees.GetNodeText(child, _ParserRules))
-                  {
-                     Tag = child, Name = child.GetHashCode().ToString()
-                  };
+               {
+                  Tag = child,
+                  Name = child.GetHashCode().ToString()
+               };
             treeNode.Nodes.Add(newNode);
             AddTreeBranchesAndLeaves(newNode, child);
          }
@@ -324,7 +316,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             throw new ArgumentNullException(nameof(grammar));
 
          _EditorGuide = null;
-         
+
          var scanner = new Scanner();
          var loader = new Loader();
 
@@ -356,16 +348,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          return false;
       }
 
-      private async void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
+      private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
       {
          if (CmbRules.Items.Count > 0)
-            await ParseSource().ConfigureAwait(true);
+            ParseSource();
       }
 
-      private async void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
+      private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
       {
-         _IdleSince = DateTime.Now;
-         await ParseSource().ConfigureAwait(true);
+         ParseSource();
          CodeEditor.ClearStylesBuffer();
          ColorizeTokens(e.ChangedRange);
          ColorizeErrors(e.ChangedRange);
@@ -415,7 +406,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             if (token.LineNumber < startLine || token.LineNumber > stopLine)
                continue;
-            
+
             results.Add(token);
          }
 
@@ -546,7 +537,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseMessageListView.SetObjects(listenerErrors);
       }
 
-      private async Task PopulateTokens(IList<TokenViewModel> tokens) => await Task.Run(() => { tokenListView.SetObjects(tokens); }).ConfigureAwait(true);
+      private void PopulateTokens(IList<TokenViewModel> tokens)
+      {
+         tokenListView.SetObjects(tokens);
+      }
 
       private void ShowSourceForTreeNode([NotNull] ITree tree)
       {
@@ -632,13 +626,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             }
       }
 
-      private async void VisualAnalyzer_Load(object sender, EventArgs e)
+      private void VisualAnalyzer_Load(object sender, EventArgs e)
       {
          LoadApplicationSettings();
 
          InitializeGraphCanvas();
 
-         _GraphWorker = new GraphWorker(SynchronizationContext.Current);
+         _GraphWorker = new GraphWorker(SynchronizationContext.Current, _Settings);
          _GraphWorker.GraphingFinished += _GraphWorker_GraphingFinished;
          _Grapher = new ParseTreeGrapher
          {
@@ -648,7 +642,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          };
 
          if (!string.IsNullOrEmpty(CodeEditor.Text))
-            await ParseSource().ConfigureAwait(true);
+            ParseSource();
       }
 
       private void _GraphWorker_GraphingFinished(object sender, GraphingResult e)
@@ -661,9 +655,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          var appSettings = System.Configuration.ConfigurationManager.AppSettings;
 
-         string result = appSettings["MaximumRealtimeRenderNodes"] ?? string.Empty;
-         if (!int.TryParse(result, out _MaxRealtimeRenderNodes))
-            _MaxRealtimeRenderNodes = 50;
+         _Settings = new EditorSettings();
+         // Fetch NodeThresholdCountForThrottling setting
+         string result = appSettings["NodeThresholdCountForThrottling"] ?? string.Empty;
+         _Settings.NodeThresholdCountForThrottling = !int.TryParse(result, out var settingValue) ? 50 : settingValue;
+         // Fetch MillisecondsToDelayPerNodeWhenThrottling setting
+         result = appSettings["MillisecondsToDelayPerNodeWhenThrottling"] ?? string.Empty;
+         _Settings.MillisecondsToDelayPerNodeWhenThrottling = !int.TryParse(result, out settingValue) ? 5 : settingValue;
+         // Fetch MaximumRenderShortDelay setting
+         result = appSettings["MaximumRenderShortDelay"] ?? string.Empty;
+         _Settings.MaximumRenderShortDelay = !int.TryParse(result, out settingValue) ? 1000 : settingValue;
+         // Fetch MinimumRenderCountToTriggerLongDelay setting
+         result = appSettings["MinimumRenderCountToTriggerLongDelay"] ?? string.Empty;
+         _Settings.MinimumRenderCountToTriggerLongDelay = !int.TryParse(result, out settingValue) ? 10 : settingValue;
       }
    }
 }

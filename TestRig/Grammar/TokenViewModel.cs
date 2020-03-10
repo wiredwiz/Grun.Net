@@ -60,6 +60,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          Length = token.StopIndex - token.StartIndex + 1;
          StartPosition = token.StartIndex;
          StopPosition = token.StopIndex;
+         EndingLineNumber = LineNumber;
+         EndingColumnPosition = ColumnPosition;
+         CalculateEndLineAndPosition();
       }
 
       /// <summary>
@@ -90,7 +93,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// Gets the token length.
       /// </summary>
       /// <value>The token length.</value>
-      public int Length { get;  }
+      public int Length { get; }
+
+      /// <summary>
+      /// Gets the line number for the end of token.
+      /// </summary>
+      /// <value>The ending line number.</value>
+      public int EndingLineNumber { get; private set; }
+
+      /// <summary>
+      /// Gets the column position for the end of the token.
+      /// </summary>
+      /// <value>The ending column position.</value>
+      public int EndingColumnPosition { get; private set; }
 
       /// <summary>
       /// Gets the start position of the token within the source.
@@ -126,6 +141,36 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          }
 
          return token.Text;
+      }
+
+      private void CalculateEndLineAndPosition()
+      {
+         var positionShift = 0;
+         var lineShift = 0;
+         var lineTerminationMode = false;
+
+         foreach (char item in Text)
+         {
+            if (item == '\r' || item == '\n')
+            {
+               lineTerminationMode = true;
+               positionShift++;
+            }
+            else
+            {
+               if (lineTerminationMode)
+               {
+                  lineShift++;
+                  positionShift = 1;
+                  lineTerminationMode = false;
+               }
+               else
+                  positionShift++;
+            }
+         }
+
+         EndingLineNumber = LineNumber + lineShift;
+         EndingColumnPosition = (LineNumber == EndingLineNumber) ? ColumnPosition + positionShift : positionShift;
       }
    }
 }

@@ -1,6 +1,5 @@
 ﻿#region BSD 3-Clause License
-
-// <copyright file="EditorSyntaxHighlighter.cs" company="Edgerunner.org">
+// <copyright file="EditorSettings.cs" company="Edgerunner.org">
 // Copyright 2020 
 // </copyright>
 // 
@@ -33,56 +32,37 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
-
-using System.Collections.Generic;
-using System.Threading;
-using System.Windows.Forms;
-
-using FastColoredTextBoxNS;
-
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    /// <summary>
-   /// Class used to handle syntax highlighting of a FastColoredTextBox editor.
+   /// Class that represents various code editor settings.
    /// </summary>
-   public class EditorSyntaxHighlighter
+   public class EditorSettings
    {
-      private int _TokenColoringInProgress;
+      /// <summary>
+      /// Gets or sets the node threshold count for throttling.
+      /// </summary>
+      /// <value>The node threshold count for throttling.</value>
+      public int NodeThresholdCountForThrottling { get; set; }
 
-      public void ColorizeTokens(FastColoredTextBox editor, StyleRegistry registry, IList<TokenViewModel> tokens)
-      {
-         int coloring = Interlocked.Exchange(ref _TokenColoringInProgress, 1);
-         if (coloring != 0) 
-            return;
+      /// <summary>
+      /// Gets or sets the milliseconds to delay per node when throttling.
+      /// </summary>
+      /// <value>The milliseconds to delay per node when throttling.</value>
+      public int MillisecondsToDelayPerNodeWhenThrottling { get; set; }
 
-         editor.BeginInvoke(
-             new MethodInvoker(() => 
-                {
-                   editor.BeginUpdate();
+      /// <summary>
+      /// Gets or sets the maximum render short delay.
+      /// </summary>
+      /// <value>The maximum render short delay.</value>
+      public int MaximumRenderShortDelay { get; set; }
 
-                   try
-                   {
-                      foreach (var token in tokens)
-                      {
-                         var startingPlace = new Place(token.ActualToken.Column, token.ActualToken.Line - 1);
-                         var stoppingPlace = new Place(token.EndingColumnPosition - 1, token.EndingLineNumber - 1);
-                         var tokenRange = editor.GetRange(startingPlace, stoppingPlace);
-                         tokenRange.ClearStyle(StyleIndex.All);
-                         var style = registry.GetTokenStyle(token);
-                         tokenRange.SetStyle(style);
-                      }
-                   }
-                   finally
-                   {
-                      editor.EndUpdate();
-                   }
-
-                   _TokenColoringInProgress = 0;
-                }));
-      }
+      /// <summary>
+      /// Gets or sets the minimum render count to trigger a long delay.
+      /// </summary>
+      /// <value>The minimum render count to trigger a long delay.</value>
+      public int MinimumRenderCountToTriggerLongDelay { get; set; }
    }
 }

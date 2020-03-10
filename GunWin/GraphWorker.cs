@@ -1,11 +1,12 @@
 ﻿#region BSD 3-Clause License
+
 // <copyright file="GraphWorker.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// Copyright 2020 
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2020, 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -32,6 +33,7 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
 using System;
@@ -50,53 +52,118 @@ using Org.Edgerunner.ANTLR4.Tools.Graphing;
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    /// <summary>
-   /// Class that handles the work of text in the background.
-   /// Implements the <see cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.IGraphWorker" />
+   ///    Class that handles the work of text in the background.
+   ///    Implements the <see cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.IGraphWorker" />
    /// </summary>
    /// <remarks>This class is thread safe.</remarks>
    /// <seealso cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.IGraphWorker" />
    public class GraphWorker : IGraphWorker
    {
-      private readonly SynchronizationContext _SynchronizationContext;
-
       private readonly object _Padlock;
 
-      private int _PreviousNodeQty;
+      private readonly EditorSettings _Settings;
+
+      private readonly SynchronizationContext _SynchronizationContext;
 
       private DateTime _LastQueuedTime;
 
+      private int _PreviousNodeQty;
+
+      #region Constructors And Finalizers
+
       /// <summary>
-      /// Initializes a new instance of the <see cref="GraphWorker" /> class.
+      ///    Initializes a new instance of the <see cref="GraphWorker" /> class.
       /// </summary>
       /// <param name="synchronizationContext">The synchronization context.</param>
-      public GraphWorker([NotNull] SynchronizationContext synchronizationContext)
+      /// <param name="settings">The settings.</param>
+      /// <exception cref="ArgumentNullException">
+      ///    synchronizationContext
+      ///    or
+      ///    settings are null
+      /// </exception>
+      public GraphWorker([NotNull] SynchronizationContext synchronizationContext, [NotNull] EditorSettings settings)
       {
          _SynchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
+         _Settings = settings ?? throw new ArgumentNullException(nameof(settings));
          _PreviousNodeQty = 0;
          _Padlock = new object();
          QueuedWork = new Queue<GraphingWorkItem>();
          GraphingTask = new Task(GraphingWorkLoop);
       }
 
-      /// <inheritdoc/>
-      public event EventHandler<GraphingResult> GraphingFinished;
+      #endregion
 
       /// <summary>
-      /// Gets or sets the graphing task.
+      ///    Gets or sets the graphing task.
       /// </summary>
       /// <value>The graphing task.</value>
       private Task GraphingTask { get; set; }
 
       private Queue<GraphingWorkItem> QueuedWork { get; }
 
-      private void PostGraphingFinishedEvent(object state)
+      #region IGraphWorker Members
+
+      /// <inheritdoc />
+      public bool CancelWork()
       {
-         GraphingFinished?.Invoke(this, (GraphingResult)state);
+         lock (_Padlock)
+         {
+            var hadWork = QueuedWork.Count != 0;
+            QueuedWork.Clear();
+            return hadWork;
+         }
       }
 
-      private void OnGraphingFinished(GraphingResult result)
+      /// <inheritdoc />
+      public void Graph(IParseTreeGrapher grapher, ITree tree, IList<string> parserRules)
       {
-         _SynchronizationContext.Post(PostGraphingFinishedEvent, result);
+         lock (_Padlock)
+         {
+            var nextRun = 
+               CalculateNextRunTime(
+                                    _PreviousNodeQty, 
+                                    _Settings.NodeThresholdCountForThrottling, 
+                                    _Settings.MillisecondsToDelayPerNodeWhenThrottling, 
+                                    _Settings.MaximumRenderShortDelay);
+            var work = new GraphingWorkItem(tree, parserRules, grapher, nextRun);
+            QueuedWork.Enqueue(work);
+            _LastQueuedTime = DateTime.Now;
+            if (GraphingTask.IsCompleted)
+               GraphingTask = new Task(GraphingWorkLoop);
+            if (GraphingTask.Status != TaskStatus.Running)
+               GraphingTask.Start();
+         }
+      }
+
+      /// <inheritdoc />
+      public event EventHandler<GraphingResult> GraphingFinished;
+
+      #endregion
+
+      private DateTime CalculateNextRunTime(
+         int previousNodes,
+         int minimumNodeThresholdToDelay,
+         int millisecondsPerNodeToDelay,
+         int maximumDelay)
+      {
+         // We use reactive throttling to avoid overwhelming the client with repeated parsing of large samples
+         if (previousNodes < minimumNodeThresholdToDelay)
+            return DateTime.Now;
+
+         var delay = Math.Min(maximumDelay, previousNodes * millisecondsPerNodeToDelay);
+         return DateTime.Now + TimeSpan.FromMilliseconds(delay);
+      }
+
+      private int CalculateTotalTreeNodes(ITree tree)
+      {
+         if (tree == null)
+            return 0;
+
+         var result = 1;
+         for (var i = 0; i < tree.ChildCount; i++)
+            result += CalculateTotalTreeNodes(tree.GetChild(i));
+
+         return result;
       }
 
       private void GraphingWorkLoop()
@@ -114,7 +181,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                lastQueued = _LastQueuedTime;
             }
 
-            if (workCount > 4 && (DateTime.Now - lastQueued) < TimeSpan.FromMilliseconds(1000))
+            if (workCount > _Settings.MinimumRenderCountToTriggerLongDelay && (DateTime.Now - lastQueued) < TimeSpan.FromMilliseconds(500))
             {
                Thread.Sleep(500);
                continue;
@@ -126,14 +193,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                if (QueuedWork.Count == 0)
                   return;
 
-               var work = new GraphingWorkItem();
-
                // We really only care about the last work item, so that's all we are keeping
+               // However, we use the "ParseWhen" target date/time for the first entry for our check
+               var work = QueuedWork.Dequeue();
+               var graphWhen = work.GraphWhen;
                while (QueuedWork.Count != 0)
                   work = QueuedWork.Dequeue();
 
                // If we should delay longer, we enqueue the last item again for later evaluation
-               if (DateTime.Now < work.GraphWhen)
+               if (DateTime.Now < graphWhen)
                {
                   QueuedWork.Enqueue(work);
                   continue;
@@ -146,33 +214,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
-      private int CalculateTotalTreeNodes(ITree tree)
-      {
-         if (tree == null)
-            return 0;
-
-         var result = 1;
-         for (int i = 0; i < tree.ChildCount; i++)
-            result += CalculateTotalTreeNodes(tree.GetChild(i));
-
-         return result;
-      }
-
-      private DateTime CalculateNextRunTime(int previousNodes, int minimumNodeThresholdToDelay, int millisecondsPerNodeToDelay, int maximumDelay)
-      {
-         // We use reactive throttling to avoid overwhelming the client with repeated parsing of large samples
-         if (previousNodes < minimumNodeThresholdToDelay)
-            return DateTime.Now;
-
-         var delay = Math.Min(maximumDelay, previousNodes * millisecondsPerNodeToDelay);
-         return DateTime.Now + TimeSpan.FromMilliseconds(delay);
-      }
-
       /// <summary>
-      /// Handles the actual graphing.
+      ///    Handles the actual graphing.
       /// </summary>
       /// <param name="work">The work item to graph.</param>
-      /// <returns>A new <see cref="Graph"/>.</returns>
+      /// <returns>A new <see cref="Graph" />.</returns>
       private GraphingResult HandleGraphing(GraphingWorkItem work)
       {
          if (work.TreeGrapher == null || work.ParseTree == null)
@@ -184,31 +230,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          return new GraphingResult(graph, work.ParseTree);
       }
 
-      /// <inheritdoc/>
-      public void Graph(IParseTreeGrapher grapher, ITree tree, IList<string> parserRules)
+      private void OnGraphingFinished(GraphingResult result)
       {
-         lock (_Padlock)
-         {
-            var nextRun = CalculateNextRunTime(_PreviousNodeQty, 50, 5, 2000);
-            var work = new GraphingWorkItem(tree, parserRules, grapher, nextRun);
-            QueuedWork.Enqueue(work);
-            _LastQueuedTime = DateTime.Now;
-            if (GraphingTask.IsCompleted)
-               GraphingTask = new Task(GraphingWorkLoop);
-            if (GraphingTask.Status != TaskStatus.Running)
-               GraphingTask.Start();
-         }
+         _SynchronizationContext.Post(PostGraphingFinishedEvent, result);
       }
 
-      /// <inheritdoc/>
-      public bool CancelWork()
+      private void PostGraphingFinishedEvent(object state)
       {
-         lock (_Padlock)
-         {
-            var hadWork = QueuedWork.Count != 0;
-            QueuedWork.Clear();
-            return hadWork;
-         }
+         GraphingFinished?.Invoke(this, (GraphingResult)state);
       }
    }
 }
