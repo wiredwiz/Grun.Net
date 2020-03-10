@@ -98,6 +98,9 @@
     <Compile Include="Parsing\ParseWorker.cs" />
     <Compile Include="Parsing\ParserWorkItem.cs" />
     <Compile Include="Editor\SyntaxHighlighting\StyleRegistry.cs" />
+    <Compile Include="Tracing\GuiTraceListener.cs" />
+    <Compile Include="Tracing\TraceEvent.cs" />
+    <Compile Include="Tracing\TraceEventType.cs" />
     <Compile Include="VisualAnalyzer.cs">
       <SubType>Form</SubType>
     </Compile>

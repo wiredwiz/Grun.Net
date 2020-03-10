@@ -67,6 +67,7 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;
 
 using Place = FastColoredTextBoxNS.Place;
 
@@ -191,20 +192,38 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (string.IsNullOrEmpty(CmbRules.SelectedItem?.ToString()))
             return;
 
-         var listener = new TestingErrorListener();
-         var analyzer = new Analyzer(_Grammar, CodeEditor.Text);
+         var errorListener = new TestingErrorListener();
+         var analyzer = new Analyzer();
          var options = ParseOption.Tree;
          if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
          if (ParseWithSllMode) options |= ParseOption.Sll;
-         if (ParseWithTracing) options |= ParseOption.Trace;
-         analyzer.Parse(CmbRules.SelectedItem.ToString(), options, listener);
+         var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options);
+         GuiTraceListener parseTreeListener = null;
+         if (ParseWithTracing)
+         {
+            parseTreeListener = new GuiTraceListener(parser);
+            parser.AddParseListener(parseTreeListener);
+         }
+
+         parser.RemoveErrorListeners();
+         parser.AddErrorListener(errorListener);
+         analyzer.ExecuteParsing(parser, CmbRules.SelectedItem.ToString());
 
          _GraphWorker?.Graph(_Grapher, analyzer.ParseContext, _ParserRules);
 
          _Tokens = analyzer.DisplayTokens;
-         _ParseErrors = listener.Errors;
+         _ParseErrors = errorListener.Errors;
          PopulateTokens(analyzer.DisplayTokens);
          PopulateParserMessages(_ParseErrors);
+         PopulateTraceEvents(parseTreeListener);
+      }
+
+      private void PopulateTraceEvents(GuiTraceListener parseTreeListener)
+      {
+         if (parseTreeListener == null)
+            TraceListView.SetObjects(null);
+         else
+            TraceListView.SetObjects(parseTreeListener.Events);
       }
 
       /// <summary>
@@ -656,6 +675,39 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void SimpleLLModeToolStripMenuItem_Click(object sender, EventArgs e)
       {
          ParseSource();
+      }
+
+      private void TraceListView_BeforeSorting(object sender, BeforeSortingEventArgs e)
+      {
+         e.Canceled = true;
+      }
+
+      private void SelectTokenToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         OLVListItem selected;
+         if ((selected = TraceListView.SelectedItem) != null)
+            if (selected.RowObject != null)
+            {
+               var traceEvent = (TraceEvent)selected.RowObject;
+               CodeEditor.SelectSource(traceEvent.Token);
+               var model = (from token in _Tokens where token.ActualToken == traceEvent.Token select token).First();
+               tokenListView.SelectObject(model);
+            }
+      }
+
+      private void SelectParserRuleToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         var graph = _Viewer?.Graph;
+         if (graph != null)
+         {
+            OLVListItem selected;
+            if ((selected = TraceListView.SelectedItem) != null)
+               if (selected.RowObject != null)
+               {
+                  var traceEvent = (TraceEvent)selected.RowObject;
+                  CodeEditor.SelectSource(traceEvent.ParserRuleContext);
+               }
+         }
       }
    }
 }

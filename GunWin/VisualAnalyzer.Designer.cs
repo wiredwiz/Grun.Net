@@ -50,6 +50,14 @@
          this.colStart = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colStop = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colLength = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.tabTrace = new System.Windows.Forms.TabPage();
+         this.TraceListView = new BrightIdeasSoftware.FastObjectListView();
+         this.colTraceType = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colTraceTokenText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colTraceRule = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.TracingContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+         this.selectTokenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.selectParserRuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.loadGrammarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +93,9 @@
          ((System.ComponentModel.ISupportInitialize)(this.GraphZoomTrackBar)).BeginInit();
          this.tabTokens.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).BeginInit();
+         this.tabTrace.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.TraceListView)).BeginInit();
+         this.TracingContextMenuStrip.SuspendLayout();
          this.menuStrip1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
          this.splitContainer2.Panel1.SuspendLayout();
@@ -158,6 +169,7 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -177,6 +189,7 @@
          // 
          this.tabControlParse.Controls.Add(this.tabParseTree);
          this.tabControlParse.Controls.Add(this.tabTokens);
+         this.tabControlParse.Controls.Add(this.tabTrace);
          this.tabControlParse.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tabControlParse.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.tabControlParse.Location = new System.Drawing.Point(0, 0);
@@ -342,6 +355,87 @@
          this.colLength.CellPadding = null;
          this.colLength.Text = "Length";
          this.colLength.Width = 66;
+         // 
+         // tabTrace
+         // 
+         this.tabTrace.Controls.Add(this.TraceListView);
+         this.tabTrace.Location = new System.Drawing.Point(4, 29);
+         this.tabTrace.Name = "tabTrace";
+         this.tabTrace.Size = new System.Drawing.Size(630, 408);
+         this.tabTrace.TabIndex = 2;
+         this.tabTrace.Text = "Trace";
+         this.tabTrace.UseVisualStyleBackColor = true;
+         // 
+         // TraceListView
+         // 
+         this.TraceListView.AllColumns.Add(this.colTraceType);
+         this.TraceListView.AllColumns.Add(this.colTraceTokenText);
+         this.TraceListView.AllColumns.Add(this.colTraceRule);
+         this.TraceListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colTraceType,
+            this.colTraceTokenText,
+            this.colTraceRule});
+         this.TraceListView.ContextMenuStrip = this.TracingContextMenuStrip;
+         this.TraceListView.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.TraceListView.FullRowSelect = true;
+         this.TraceListView.HeaderUsesThemes = false;
+         this.TraceListView.Location = new System.Drawing.Point(0, 0);
+         this.TraceListView.MultiSelect = false;
+         this.TraceListView.Name = "TraceListView";
+         this.TraceListView.ShowGroups = false;
+         this.TraceListView.ShowSortIndicators = false;
+         this.TraceListView.Size = new System.Drawing.Size(630, 408);
+         this.TraceListView.SortGroupItemsByPrimaryColumn = false;
+         this.TraceListView.TabIndex = 0;
+         this.TraceListView.UseCompatibleStateImageBehavior = false;
+         this.TraceListView.UseFilterIndicator = true;
+         this.TraceListView.UseFiltering = true;
+         this.TraceListView.View = System.Windows.Forms.View.Details;
+         this.TraceListView.VirtualMode = true;
+         this.TraceListView.BeforeSorting += new System.EventHandler<BrightIdeasSoftware.BeforeSortingEventArgs>(this.TraceListView_BeforeSorting);
+         // 
+         // colTraceType
+         // 
+         this.colTraceType.AspectName = "Type";
+         this.colTraceType.CellPadding = null;
+         this.colTraceType.Text = "Event Type";
+         this.colTraceType.Width = 134;
+         // 
+         // colTraceTokenText
+         // 
+         this.colTraceTokenText.AspectName = "TokenText";
+         this.colTraceTokenText.CellPadding = null;
+         this.colTraceTokenText.Text = "Token";
+         this.colTraceTokenText.Width = 292;
+         // 
+         // colTraceRule
+         // 
+         this.colTraceRule.AspectName = "ParserRule";
+         this.colTraceRule.CellPadding = null;
+         this.colTraceRule.Text = "Parser Rule";
+         this.colTraceRule.Width = 195;
+         // 
+         // TracingContextMenuStrip
+         // 
+         this.TracingContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectTokenToolStripMenuItem,
+            this.selectParserRuleToolStripMenuItem});
+         this.TracingContextMenuStrip.Name = "TracingContextMenuStrip";
+         this.TracingContextMenuStrip.Size = new System.Drawing.Size(181, 70);
+         // 
+         // selectTokenToolStripMenuItem
+         // 
+         this.selectTokenToolStripMenuItem.Name = "selectTokenToolStripMenuItem";
+         this.selectTokenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.selectTokenToolStripMenuItem.Text = "Select Token";
+         this.selectTokenToolStripMenuItem.Click += new System.EventHandler(this.SelectTokenToolStripMenuItem_Click);
+         // 
+         // selectParserRuleToolStripMenuItem
+         // 
+         this.selectParserRuleToolStripMenuItem.Name = "selectParserRuleToolStripMenuItem";
+         this.selectParserRuleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.selectParserRuleToolStripMenuItem.Text = "Select Parser Rule";
+         this.selectParserRuleToolStripMenuItem.Click += new System.EventHandler(this.SelectParserRuleToolStripMenuItem_Click);
          // 
          // menuStrip1
          // 
@@ -557,6 +651,9 @@
          ((System.ComponentModel.ISupportInitialize)(this.GraphZoomTrackBar)).EndInit();
          this.tabTokens.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.tokenListView)).EndInit();
+         this.tabTrace.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.TraceListView)).EndInit();
+         this.TracingContextMenuStrip.ResumeLayout(false);
          this.menuStrip1.ResumeLayout(false);
          this.menuStrip1.PerformLayout();
          this.splitContainer2.Panel1.ResumeLayout(false);
@@ -614,6 +711,14 @@
       private System.Windows.Forms.TrackBar GraphZoomTrackBar;
       private System.Windows.Forms.ToolStripMenuItem HeuristicHighlightingtToolStripMenuItem;
       private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+      private System.Windows.Forms.TabPage tabTrace;
+      private BrightIdeasSoftware.FastObjectListView TraceListView;
+      private BrightIdeasSoftware.OLVColumn colTraceType;
+      private BrightIdeasSoftware.OLVColumn colTraceTokenText;
+      private BrightIdeasSoftware.OLVColumn colTraceRule;
+      private System.Windows.Forms.ContextMenuStrip TracingContextMenuStrip;
+      private System.Windows.Forms.ToolStripMenuItem selectTokenToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem selectParserRuleToolStripMenuItem;
    }
 }
 

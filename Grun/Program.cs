@@ -118,7 +118,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                             }
                             else
                             {
-                               Console.WriteLine("Now reading from standard input.  Use Ctrl+Z to terminate input");
+                               Console.WriteLine("Now reading from standard input.  Use Ctrl+Z to terminate input.");
                                while ((line = Console.ReadLine()) != null)
                                   data += line + Environment.NewLine;
                             }
@@ -130,11 +130,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                return;
                             }
 
-                            var analyzer = new Grammar.Analyzer(grammar, data);
-                            analyzer.Parse(o.RuleName, options);
+                            var analyzer = new Grammar.Analyzer();
+                            var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options);
+                            analyzer.ExecuteParsing(grammarParser, o.RuleName);
 
                             if (showParseTree)
-                              Console.WriteLine(analyzer.StringSourceTree);
+                              Console.WriteLine(analyzer.ParseContext.ToStringTree(grammarParser));
 
                             if (!string.IsNullOrEmpty(o.SvgFileName))
                             {
@@ -169,8 +170,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
 
       private static void DisplayTokens(GrammarReference grammar, string data)
       {
-         var analyzer = new Grammar.Analyzer(grammar, data);
-         var tokens = analyzer.Tokenize();
+         var analyzer = new Grammar.Analyzer();
+         var tokens = analyzer.Tokenize(grammar, data);
          foreach (var token in tokens)
             Console.WriteLine(token.ToString());
       }

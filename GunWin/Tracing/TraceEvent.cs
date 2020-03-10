@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="ParserResult.cs" company="Edgerunner.org">
+// <copyright file="TraceEvent.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
@@ -34,67 +34,58 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using System.Collections.Generic;
-
 using Antlr4.Runtime;
 
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
-using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;
-
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing
 {
    /// <summary>
-   /// Struct that represents a given result of parsing
+   /// Struct that represents a parser trace event.
    /// </summary>
-   public struct ParserResult
+   public struct TraceEvent
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="ParserResult"/> struct.
+      /// Initializes a new instance of the <see cref="TraceEvent"/> struct.
       /// </summary>
-      /// <param name="tokens">The tokens.</param>
-      /// <param name="ruleContext">The rule context.</param>
-      /// <param name="ruleName">Name of the rule.</param>
-      /// <param name="errors">The errors.</param>
-      /// <param name="traceEvents">The trace events.</param>
-      // ReSharper disable once TooManyDependencies
-      public ParserResult(IList<TokenViewModel> tokens, ParserRuleContext ruleContext, string ruleName, IList<ParseMessage> errors, IList<TraceEvent> traceEvents)
+      /// <param name="type">The type.</param>
+      /// <param name="token">The token.</param>
+      /// <param name="context">The parser rule context.</param>
+      /// <param name="parserRule">The parser rule.</param>
+      public TraceEvent(TraceEventType type, IToken token, ParserRuleContext context, string parserRule)
       {
-         Tokens = tokens;
-         RuleContext = ruleContext;
-         RuleName = ruleName;
-         Errors = errors;
-         TraceEvents = traceEvents;
+         Type = type;
+         Token = token;
+         ParserRuleContext = context;
+         ParserRule = parserRule;
       }
 
       /// <summary>
-      /// Gets the parse tokens.
+      /// Gets the type.
       /// </summary>
-      /// <value>The parse tokens.</value>
-      public IList<TokenViewModel> Tokens { get; }
+      /// <value>The type.</value>
+      public TraceEventType Type { get; }
+
+      /// <summary>
+      /// Gets the token.
+      /// </summary>
+      /// <value>The token.</value>
+      public IToken Token { get; }
+
+      /// <summary>
+      /// Gets the token text.
+      /// </summary>
+      /// <value>The token text.</value>
+      public string TokenText => (Token != null) ? Token.Text : string.Empty;
 
       /// <summary>
       /// Gets the parser rule context.
       /// </summary>
       /// <value>The parser rule context.</value>
-      public ParserRuleContext RuleContext { get; }
+      public ParserRuleContext ParserRuleContext { get; }
 
       /// <summary>
-      /// Gets the name of the rule that was parsed.
+      /// Gets the parser rule.
       /// </summary>
-      /// <value>The name of the parser rule.</value>
-      public string RuleName { get; }
-
-      /// <summary>
-      /// Gets the errors that resulted from parsing.
-      /// </summary>
-      /// <value>The errors.</value>
-      public IList<ParseMessage> Errors { get; }
-
-      /// <summary>
-      /// Gets the trace events.
-      /// </summary>
-      /// <value>The trace events.</value>
-      public IList<TraceEvent> TraceEvents { get; }
+      /// <value>The parser rule.</value>
+      public string ParserRule { get; }
    }
 }

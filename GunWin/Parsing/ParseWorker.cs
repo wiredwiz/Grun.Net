@@ -47,6 +47,7 @@ using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
 {
@@ -159,11 +160,25 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
       /// <returns>A new <see cref="ParserResult" />.</returns>
       private ParserResult HandleParsing(ParserWorkItem work)
       {
-         var listener = new TestingErrorListener();
-         var analyzer = new Analyzer(work.Grammar, work.Text);
-         analyzer.Parse(work.ParserRuleName, work.Options, listener);
+         var errorListener = new TestingErrorListener();
+         var analyzer = new Analyzer();
+         var options = work.Options;
+         var trace = options.HasFlag(ParseOption.Trace);
+         if (trace) options ^= ParseOption.Trace;
+         var parser = analyzer.BuildParserWithOptions(work.Grammar, work.Text, options);
 
-         return new ParserResult(analyzer.DisplayTokens, analyzer.ParseContext, work.ParserRuleName, listener.Errors);
+         GuiTraceListener parseTreeListener = null;
+         if (trace)
+         {
+            parseTreeListener = new GuiTraceListener(parser);
+            parser.AddParseListener(parseTreeListener);
+         }
+
+         parser.RemoveErrorListeners();
+         parser.AddErrorListener(errorListener);
+         analyzer.ExecuteParsing(parser, work.ParserRuleName);
+
+         return new ParserResult(analyzer.DisplayTokens, analyzer.ParseContext, work.ParserRuleName, errorListener.Errors, trace ? parseTreeListener.Events : new List<TraceEvent>());
       }
 
       private void OnParsingFinished(ParserResult result)

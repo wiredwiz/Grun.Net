@@ -38,6 +38,7 @@ using System;
 using System.Collections.Generic;
 
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 
 using JetBrains.Annotations;
 
@@ -51,31 +52,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
    /// </summary>
    public class Analyzer
    {
-      /// <summary>
-      /// Initializes a new instance of the <see cref="Analyzer"/> class.
-      /// </summary>
-      /// <param name="grammar">The grammar to use.</param>
-      /// <param name="text">The text to analyze.</param>
-      /// <exception cref="T:System.ArgumentNullException">Grammar or text is <see langword="null"/>.</exception>
-      public Analyzer([NotNull] GrammarReference grammar, [NotNull] string text)
-      {
-         Grammar = grammar ?? throw new ArgumentNullException(nameof(grammar));
-         Text = text ?? throw new ArgumentNullException(nameof(text));
-      }
-
-      /// <summary>
-      /// Gets the text to analyze.
-      /// </summary>
-      /// <value>The text.</value>
-      protected string Text { get; private set; }
-
-      /// <summary>
-      /// Gets the grammar to use.
-      /// </summary>
-      /// <value>The grammar.</value>
-      /// <seealso cref="GrammarReference"/>
-      protected GrammarReference Grammar { get; private set; }
-
       /// <summary>
       /// Gets the tokens.
       /// </summary>
@@ -109,15 +85,24 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <summary>
       /// Tokenizes the grammar text and returns the tokens.
       /// </summary>
+      /// <param name="grammar">The grammar.</param>
+      /// <param name="inputText">The input text.</param>
       /// <returns>A new <see cref="IList{IToken}" />.</returns>
+      /// <exception cref="ArgumentNullException"><paramref name="grammar"/> is <see langword="null"/>.</exception>
+      /// <exception cref="ArgumentNullException"><paramref name="inputText"/> is <see langword="null"/> or empty.</exception>
       /// <exception cref="T:System.IO.FileLoadException">Grammar assembly could not be loaded.</exception>
       /// <exception cref="T:System.IO.FileNotFoundException">The grammar assembly path is an empty string ("") or does not exist.</exception>
       /// <exception cref="T:System.BadImageFormatException">The grammar assembly path is not a valid assembly.</exception>
-      public IList<IToken> Tokenize()
+      public IList<IToken> Tokenize([NotNull] GrammarReference grammar, [NotNull] string inputText)
       {
+         if (grammar is null)
+            throw new ArgumentNullException(nameof(grammar));
+         if (inputText is null)
+            throw new ArgumentNullException(nameof(inputText));
+
          var loader = new Grammar.Loader();
-         var inputStream = new AntlrInputStream(Text);
-         var lexer = loader.LoadLexer(Grammar, inputStream);
+         var inputStream = new AntlrInputStream(inputText);
+         var lexer = loader.LoadLexer(grammar, inputStream);
          var commonTokenStream = new CommonTokenStream(lexer);
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
@@ -126,35 +111,38 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       }
 
       /// <summary>
-      /// Parses the text for the specified rule name.
+      /// Builds a new parser for the specified grammar and input using the supplied rules.
       /// </summary>
-      /// <param name="ruleName">Name of the rule.</param>
+      /// <param name="grammar">The grammar to use.</param>
+      /// <param name="inputText">The input text to use.</param>
       /// <param name="option">The parsing options to use.</param>
-      /// <param name="listener">The error listener.</param>
-      /// <exception cref="ArgumentNullException"><paramref name="ruleName"/> is <see langword="null"/> or empty.</exception>
-      /// <exception cref="GrammarException">No parser found for grammar \"{Grammar.GrammarName}\"</exception>
-      /// <exception cref="GrammarException">No parser rule with name \"{ruleName}\" found.</exception>
-      /// <exception cref="T:System.ArgumentNullException">No parser found for supplied grammar</exception>
-      public void Parse([NotNull] string ruleName, ParseOption option, TestingErrorListener listener = null)
+      /// <returns>A new <see cref="Parser"/> instance.</returns>
+      /// <exception cref="GrammarException">No parser found for specified grammar.</exception>
+      /// <exception cref="ArgumentNullException"><paramref name="grammar"/> is <see langword="null" />.</exception>
+      /// <exception cref="ArgumentNullException"><paramref name="inputText"/> is <see langword="null" />.</exception>
+      public Parser BuildParserWithOptions([NotNull] GrammarReference grammar, [NotNull] string inputText, ParseOption option)
       {
-         if (string.IsNullOrEmpty(ruleName))
-            throw new ArgumentNullException(nameof(ruleName));
-         if (Grammar.Parser == null)
-            throw new GrammarException($"No parser found for grammar \"{Grammar.GrammarName}\"");
+         if (grammar is null)
+            throw new ArgumentNullException(nameof(grammar));
+         if (inputText is null)
+            throw new ArgumentNullException(nameof(inputText));
+         if (grammar.Parser == null)
+            throw new GrammarException($"No parser found for grammar \"{grammar.GrammarName}\"");
 
          var loader = new Grammar.Loader();
-         var inputStream = new AntlrInputStream(Text);
-         var lexer = loader.LoadLexer(Grammar, inputStream);
+         var inputStream = new AntlrInputStream(inputText);
+         var lexer = loader.LoadLexer(grammar, inputStream);
          var commonTokenStream = new CommonTokenStream(lexer);
 
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
+         DisplayTokens = ConvertTokensForDisplay(lexer, Tokens);
 
          if (option.HasFlag(ParseOption.Tokens))
             foreach (var token in Tokens)
                Console.WriteLine(token.ToString());
 
-         var parser = loader.LoadParser(Grammar, commonTokenStream);
+         var parser = loader.LoadParser(grammar, commonTokenStream);
 
          // Handle Tree parsing option
          parser.BuildParseTree = option.HasFlag(ParseOption.Tree);
@@ -173,19 +161,29 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          // Handle Trace parsing option
          parser.Trace = option.HasFlag(ParseOption.Trace);
 
-         if (listener != null)
-         {
-            parser.RemoveErrorListeners();
-            parser.AddErrorListener(listener);
-         }
+         return parser;
+      }
 
-         var methodInfo = Grammar.Parser.GetMethod(ruleName);
+      /// <summary>
+      /// Executes parsing with the supplied parser and parser rule.
+      /// </summary>
+      /// <param name="parser">The parser.</param>
+      /// <param name="parserRule">The parser rule.</param>
+      /// <exception cref="ArgumentNullException"><paramref name="parser"/> is <see langword="null" />.</exception>
+      /// <exception cref="ArgumentNullException"><paramref name="parserRule"/> is <see langword="null" /> or empty.</exception>
+      /// <exception cref="GrammarException">Specified parser rule not found.</exception>
+      public void ExecuteParsing([NotNull] Parser parser, [NotNull] string parserRule)
+      {
+         if (parser is null)
+            throw new ArgumentNullException(nameof(parser));
+         if (parserRule is null)
+            throw new ArgumentNullException(nameof(parserRule));
+
+         var methodInfo = parser.GetType().GetMethod(parserRule);
          if (methodInfo == null)
-            throw new GrammarException($"No parser rule with name \"{ruleName}\" found.");
+            throw new GrammarException($"No parser rule with name \"{parserRule}\" found.");
 
          ParseContext = methodInfo.Invoke(parser, null) as ParserRuleContext;
-         DisplayTokens = ConvertTokensForDisplay(lexer, Tokens);
-         StringSourceTree = option.HasFlag(ParseOption.Tree) ? ParseContext.ToStringTree(parser) : string.Empty;
          IsParsed = true;
       }
 

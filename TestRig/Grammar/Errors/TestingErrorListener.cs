@@ -101,7 +101,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
          string msg,
          RecognitionException e)
       {
-         Errors.Add(new ParseMessage(line, charPositionInLine, msg, offendingSymbol));
+         Errors.Add(new ParseMessage(line, charPositionInLine + 1, msg, offendingSymbol));
       }
    }
 }
