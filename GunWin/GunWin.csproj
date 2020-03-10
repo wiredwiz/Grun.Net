@@ -88,8 +88,10 @@
     <Compile Include="GraphingResult.cs" />
     <Compile Include="GraphingWorkItem.cs" />
     <Compile Include="GraphWorker.cs" />
+    <Compile Include="HeuristicStyleRegistry.cs" />
     <Compile Include="IGraphWorker.cs" />
     <Compile Include="IParseWorker.cs" />
+    <Compile Include="IStyleRegistry.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="ParserResult.cs" />
     <Compile Include="ParseWorker.cs" />

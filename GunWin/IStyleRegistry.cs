@@ -1,11 +1,12 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="StyleRegistry.cs" company="Edgerunner.org">
-// Copyright 2020 
+
+// <copyright file="IStyleRegistry.cs" company="Edgerunner.org">
+// Copyright  
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, 
+// Copyright (c) , 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -32,73 +33,28 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#endregion
 
-using System;
-using System.Collections.Generic;
+#endregion
 
 using FastColoredTextBoxNS;
 
-using JetBrains.Annotations;
-
-using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
-   /// <summary>
-   /// Class for managing the various Style configurations of different tokens and errors.
-   /// </summary>
-   public class StyleRegistry : IStyleRegistry
+   public interface IStyleRegistry
    {
-      private readonly IEditorGuide _EditorGuide;
-
-      private readonly Dictionary<string, Style> _TokenStyles;
-
-      private readonly Dictionary<string, Style> _UniqueStyles;
-
-      private Style _ErrorStyle;
-
-      public StyleRegistry([NotNull] IEditorGuide editorGuide)
-      {
-         _EditorGuide = editorGuide ?? throw new ArgumentNullException(nameof(editorGuide));
-         _TokenStyles = new Dictionary<string, Style>();
-         _UniqueStyles = new Dictionary<string, Style>();
-      }
-
       /// <summary>
       /// Gets the style for a given token.
       /// </summary>
       /// <param name="token">The token.</param>
       /// <returns>A <see cref="Style"/> instance.</returns>
-      public Style GetTokenStyle(TokenViewModel token)
-      {
-         if (_TokenStyles.TryGetValue(token.Type, out var style))
-            return style;
-
-         var foregroundBrush = _EditorGuide.GetTokenForegroundBrush(token.Type);
-         var backgroundBrush = _EditorGuide.GetTokenBackgroundBrush(token.Type);
-         var fontStyle = _EditorGuide.GetTokenFontStyle(token.Type);
-         var key = foregroundBrush.GetHashCode().ToString() + backgroundBrush.GetHashCode() + fontStyle;
-         if (_UniqueStyles.TryGetValue(key, out style))
-         {
-            _TokenStyles[token.Type] = style;
-            return style;
-         }
-
-         style = new TextStyle(foregroundBrush, backgroundBrush, fontStyle);
-         _UniqueStyles[key] = style;
-         _TokenStyles[token.Type] = style;
-         return style;
-      }
+      Style GetTokenStyle(TokenViewModel token);
 
       /// <summary>
       /// Gets the style for a parse error .
       /// </summary>
       /// <returns>A <see cref="Style"/> instance.</returns>
-      public Style GetParseErrorStyle()
-      {
-         return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, _EditorGuide.ErrorColor));
-      }
+      Style GetParseErrorStyle();
    }
 }

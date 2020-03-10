@@ -76,7 +76,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private IEditorGuide _EditorGuide;
 
-      private StyleRegistry _Registry;
+      private IStyleRegistry _Registry;
 
       private EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
 
@@ -218,6 +218,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          LoadEditorGuide(grammar);
          if (_EditorGuide != null)
             _Registry = new StyleRegistry(_EditorGuide);
+         else
+            _Registry = new HeuristicStyleRegistry();
       }
 
       /// <summary>

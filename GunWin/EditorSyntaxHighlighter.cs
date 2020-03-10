@@ -53,7 +53,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
    {
       private int _TokenColoringInProgress;
 
-      public void ColorizeTokens(FastColoredTextBox editor, StyleRegistry registry, IList<TokenViewModel> tokens)
+      public void ColorizeTokens(FastColoredTextBox editor, IStyleRegistry registry, IList<TokenViewModel> tokens)
       {
          int coloring = Interlocked.Exchange(ref _TokenColoringInProgress, 1);
          if (coloring != 0) 
