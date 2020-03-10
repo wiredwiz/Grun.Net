@@ -1,4 +1,4 @@
-﻿namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+﻿namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs
 {
    partial class GrammarSelector
    {

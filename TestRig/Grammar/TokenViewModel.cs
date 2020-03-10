@@ -60,9 +60,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          Length = token.StopIndex - token.StartIndex + 1;
          StartPosition = token.StartIndex;
          StopPosition = token.StopIndex;
-         EndingLineNumber = LineNumber;
-         EndingColumnPosition = ColumnPosition;
-         CalculateEndLineAndPosition();
+
+         var spot = token.GetEndPlace();
+         EndingLineNumber = spot.Line;
+         EndingColumnPosition = spot.Position + 1;
       }
 
       /// <summary>
@@ -141,36 +142,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          }
 
          return token.Text;
-      }
-
-      private void CalculateEndLineAndPosition()
-      {
-         var positionShift = 0;
-         var lineShift = 0;
-         var lineTerminationMode = false;
-
-         foreach (char item in Text)
-         {
-            if (item == '\r' || item == '\n')
-            {
-               lineTerminationMode = true;
-               positionShift++;
-            }
-            else
-            {
-               if (lineTerminationMode)
-               {
-                  lineShift++;
-                  positionShift = 1;
-                  lineTerminationMode = false;
-               }
-               else
-                  positionShift++;
-            }
-         }
-
-         EndingLineNumber = LineNumber + lineShift;
-         EndingColumnPosition = (LineNumber == EndingLineNumber) ? ColumnPosition + positionShift : positionShift;
       }
    }
 }

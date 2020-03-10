@@ -1,12 +1,11 @@
 ﻿#region BSD 3-Clause License
-
-// <copyright file="GraphingWorkItem.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// <copyright file="EditorSettings.cs" company="Edgerunner.org">
+// Copyright 2020 
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2020, 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -33,67 +32,37 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
 
-using System;
-using System.Collections.Generic;
-using Antlr4.Runtime.Tree;
-
-using Org.Edgerunner.ANTLR4.Tools.Graphing;
-
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
 {
    /// <summary>
-   ///    Struct that represents an item of work for the parser.
+   /// Class that represents various code editor settings.
    /// </summary>
-   public struct GraphingWorkItem
+   public class EditorSettings
    {
-      #region Constructors And Finalizers
+      /// <summary>
+      /// Gets or sets the node threshold count for throttling.
+      /// </summary>
+      /// <value>The node threshold count for throttling.</value>
+      public int NodeThresholdCountForThrottling { get; set; }
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="GraphingWorkItem" /> struct.
+      /// Gets or sets the milliseconds to delay per node when throttling.
       /// </summary>
-      /// <param name="tree">The parse tree to graph.</param>
-      /// <param name="parserRules">The parser rules.</param>
-      /// <param name="grapher">The parse tree grapher to use.</param>
-      /// <param name="graphWhen">The DateTime indicating when to parse.</param>
-      public GraphingWorkItem(
-         ITree tree,
-         IList<string> parserRules,
-         IParseTreeGrapher grapher,
-         DateTime graphWhen)
-      {
-         ParseTree = tree;
-         ParserRules = parserRules;
-         GraphWhen = graphWhen;
-         TreeGrapher = grapher;
-      }
-
-      #endregion
+      /// <value>The milliseconds to delay per node when throttling.</value>
+      public int MillisecondsToDelayPerNodeWhenThrottling { get; set; }
 
       /// <summary>
-      /// Gets the parse tree to graph.
+      /// Gets or sets the maximum render short delay.
       /// </summary>
-      /// <value>The parse tree.</value>
-      public ITree ParseTree { get; }
+      /// <value>The maximum render short delay.</value>
+      public int MaximumRenderShortDelay { get; set; }
 
       /// <summary>
-      ///    Gets the parse tree grapher to use.
+      /// Gets or sets the minimum render count to trigger a long delay.
       /// </summary>
-      /// <value>The parse tree grapher.</value>
-      public IParseTreeGrapher TreeGrapher { get; }
-
-      /// <summary>
-      /// Gets the parser rules.
-      /// </summary>
-      /// <value>The parser rules.</value>
-      public IList<string> ParserRules { get; }
-
-      /// <summary>
-      /// Gets the date/time of when to parse.
-      /// </summary>
-      /// <value>The <see cref="DateTime"/>.</value>
-      public DateTime GraphWhen { get; }
+      /// <value>The minimum render count to trigger a long delay.</value>
+      public int MinimumRenderCountToTriggerLongDelay { get; set; }
    }
 }

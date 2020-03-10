@@ -44,7 +44,7 @@ using JetBrains.Annotations;
 using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 {
    /// <summary>
    /// Class for managing the various Style configurations of different tokens and errors.

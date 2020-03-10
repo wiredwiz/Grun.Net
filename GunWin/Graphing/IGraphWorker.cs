@@ -41,12 +41,9 @@ using Antlr4.Runtime.Tree;
 
 using JetBrains.Annotations;
 
-using Microsoft.Msagl.Drawing;
-
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 {
    /// <summary>
    /// Interface representing an instance that does the work building parse tree graphs.

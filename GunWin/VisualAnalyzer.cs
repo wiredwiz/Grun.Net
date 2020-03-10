@@ -61,7 +61,13 @@ using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
+
+using Place = FastColoredTextBoxNS.Place;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
@@ -113,10 +119,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// <remarks>If SLL is also enabled, SLL will supersede diagnostic mode.</remarks>
       public bool ParseWithDiagnostics
       {
-         get => diagnosticsToolStripMenuItem.Checked;
+         get => DiagnosticsToolStripMenuItem.Checked;
          set
          {
-            diagnosticsToolStripMenuItem.Checked = value;
+            DiagnosticsToolStripMenuItem.Checked = value;
             ParseSource();
          }
       }
@@ -128,10 +134,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// <remarks>If Diagnostics are also enabled, SLL will supersede diagnostic mode.</remarks>
       public bool ParseWithSllMode
       {
-         get => simpleLLModeToolStripMenuItem.Checked;
+         get => SimpleLLModeToolStripMenuItem.Checked;
          set
          {
-            simpleLLModeToolStripMenuItem.Checked = value;
+            SimpleLLModeToolStripMenuItem.Checked = value;
             ParseSource();
          }
       }
@@ -142,10 +148,24 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// <value><c>true</c> if tracing is enabled; otherwise, <c>false</c>.</value>
       public bool ParseWithTracing
       {
-         get => tracingToolStripMenuItem.Checked;
+         get => TracingToolStripMenuItem.Checked;
          set
          {
-            tracingToolStripMenuItem.Checked = value;
+            TracingToolStripMenuItem.Checked = value;
+            ParseSource();
+         }
+      }
+
+      /// <summary>
+      ///    Gets or sets a value indicating whether to use heuristic syntax highlighting.
+      /// </summary>
+      /// <value><c>true</c> if heuristic syntax highlighting is enabled; otherwise, <c>false</c>.</value>
+      public bool UseHeuristicSyntaxHighlighting
+      {
+         get => HeuristicHighlightingtToolStripMenuItem.Checked;
+         set
+         {
+            HeuristicHighlightingtToolStripMenuItem.Checked = value;
             ParseSource();
          }
       }
@@ -234,7 +254,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void _Viewer_Click(object sender, EventArgs e)
       {
          if (_Viewer.SelectedObject is Node node)
-            ShowSourceForTreeNode(node.UserData as ITree ?? throw new InvalidOperationException());
+         {
+            CodeEditor.SelectSource(node.UserData as ITree ?? throw new InvalidOperationException());
+            CodeEditor.Focus();
+         }
       }
 
       private void AddTreeBranchesAndLeaves(TreeNode treeNode, ITree tree)
@@ -520,7 +543,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             if (selected.RowObject != null)
             {
                var message = (ParseMessage)selected.RowObject;
-               ShowSourcePosition(message.Token);
+               CodeEditor.SelectSource(message.Token);
+               CodeEditor.Focus();
             }
       }
 
@@ -530,7 +554,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (e.Node.Tag is ITree selected)
          {
             RenderParseTreeGraph(selected);
-            ShowSourceForTreeNode(selected);
+            CodeEditor.SelectSource(selected);
          }
       }
 
@@ -543,80 +567,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          tokenListView.SetObjects(tokens);
       }
-
-      private void ShowSourceForTreeNode([NotNull] ITree tree)
-      {
-         if (tree is null)
-            throw new ArgumentNullException(nameof(tree));
-
-         if (tree is ParserRuleContext context)
-            ShowSourcePosition(context);
-         else if (tree is ErrorNodeImpl errorTerminal)
-            ShowSourcePosition(errorTerminal);
-         else if (tree is TerminalNodeImpl terminal)
-            ShowSourcePosition(terminal);
-      }
-
-      // ReSharper disable once FlagArgument
-      private void ShowSourcePosition(ParserRuleContext context, bool setFocus = true)
-      {
-         if (context == null)
-            return;
-
-         var startingPlace = new Place(context.Start.Column, context.start.Line - 1);
-         var stoppingPlace = new Place(context.Stop.Column + context.stop.Text.Length, context.stop.Line - 1);
-
-         CodeEditor.Selection = new Range(CodeEditor, startingPlace, stoppingPlace);
-         CodeEditor.DoCaretVisible();
-         if (setFocus)
-            CodeEditor.Focus();
-      }
-
-      // ReSharper disable once FlagArgument
-      private void ShowSourcePosition(TerminalNodeImpl node, bool setFocus = true)
-      {
-         if (node == null)
-            return;
-
-         var startingPlace = new Place(node.Symbol.Column, node.Symbol.Line - 1);
-         var stoppingPlace = new Place(node.Symbol.Column + node.Symbol.Text.Length, node.Symbol.Line - 1);
-
-         CodeEditor.Selection = new Range(CodeEditor, startingPlace, stoppingPlace);
-         CodeEditor.DoCaretVisible();
-         if (setFocus)
-            CodeEditor.Focus();
-      }
-
-      // ReSharper disable once FlagArgument
-      private void ShowSourcePosition(ErrorNodeImpl node, bool setFocus = true)
-      {
-         if (node == null)
-            return;
-
-         var startingPlace = new Place(node.Symbol.Column, node.Symbol.Line - 1);
-         var stoppingPlace = new Place(node.Symbol.Column + node.symbol.Text.Length, node.Symbol.Line - 1);
-
-         CodeEditor.Selection = new Range(CodeEditor, startingPlace, stoppingPlace);
-         CodeEditor.DoCaretVisible();
-         if (setFocus)
-            CodeEditor.Focus();
-      }
-
-      // ReSharper disable once FlagArgument
-      private void ShowSourcePosition(IToken token, bool setFocus = true)
-      {
-         if (token == null)
-            return;
-
-         var startingPlace = new Place(token.Column, token.Line - 1);
-         var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
-
-         CodeEditor.Selection = new Range(CodeEditor, startingPlace, stoppingPlace);
-         CodeEditor.DoCaretVisible();
-         if (setFocus)
-            CodeEditor.Focus();
-      }
-
+      
       private void TokenListView_Click(object sender, EventArgs e)
       {
          OLVListItem selected;
@@ -624,7 +575,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             if (selected.RowObject != null)
             {
                var tokenView = (TokenViewModel)selected.RowObject;
-               ShowSourcePosition(tokenView.ActualToken, false);
+               CodeEditor.SelectSource(tokenView.ActualToken);
             }
       }
 
@@ -658,18 +609,45 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var appSettings = System.Configuration.ConfigurationManager.AppSettings;
 
          _Settings = new EditorSettings();
+
          // Fetch NodeThresholdCountForThrottling setting
          string result = appSettings["NodeThresholdCountForThrottling"] ?? string.Empty;
          _Settings.NodeThresholdCountForThrottling = !int.TryParse(result, out var settingValue) ? 50 : settingValue;
+
          // Fetch MillisecondsToDelayPerNodeWhenThrottling setting
          result = appSettings["MillisecondsToDelayPerNodeWhenThrottling"] ?? string.Empty;
          _Settings.MillisecondsToDelayPerNodeWhenThrottling = !int.TryParse(result, out settingValue) ? 5 : settingValue;
+
          // Fetch MaximumRenderShortDelay setting
          result = appSettings["MaximumRenderShortDelay"] ?? string.Empty;
          _Settings.MaximumRenderShortDelay = !int.TryParse(result, out settingValue) ? 1000 : settingValue;
+
          // Fetch MinimumRenderCountToTriggerLongDelay setting
          result = appSettings["MinimumRenderCountToTriggerLongDelay"] ?? string.Empty;
          _Settings.MinimumRenderCountToTriggerLongDelay = !int.TryParse(result, out settingValue) ? 10 : settingValue;
+      }
+
+      private void HeuristicHighlightingtToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         if (HeuristicHighlightingtToolStripMenuItem.Checked)
+            ColorizeTokens(null);
+         else
+            CodeEditor.ClearStyle(StyleIndex.All);
+      }
+
+      private void TracingToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         ParseSource();
+      }
+
+      private void DiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         ParseSource();
+      }
+
+      private void SimpleLLModeToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         ParseSource();
       }
    }
 }

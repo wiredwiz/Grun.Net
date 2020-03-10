@@ -77,26 +77,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EditorSettings.cs" />
-    <Compile Include="EditorSyntaxHighlighter.cs" />
-    <Compile Include="GrammarSelector.cs">
+    <Compile Include="Editor\EditorSettings.cs" />
+    <Compile Include="Editor\FastColoredTextBoxExtensions.cs" />
+    <Compile Include="Editor\SyntaxHighlighting\EditorSyntaxHighlighter.cs" />
+    <Compile Include="Dialogs\GrammarSelector.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GrammarSelector.Designer.cs">
+    <Compile Include="Dialogs\GrammarSelector.Designer.cs">
       <DependentUpon>GrammarSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="GraphingResult.cs" />
-    <Compile Include="GraphingWorkItem.cs" />
-    <Compile Include="GraphWorker.cs" />
-    <Compile Include="HeuristicStyleRegistry.cs" />
-    <Compile Include="IGraphWorker.cs" />
-    <Compile Include="IParseWorker.cs" />
-    <Compile Include="IStyleRegistry.cs" />
+    <Compile Include="Graphing\GraphingResult.cs" />
+    <Compile Include="Graphing\GraphingWorkItem.cs" />
+    <Compile Include="Graphing\GraphWorker.cs" />
+    <Compile Include="Editor\SyntaxHighlighting\HeuristicStyleRegistry.cs" />
+    <Compile Include="Graphing\IGraphWorker.cs" />
+    <Compile Include="Parsing\IParseWorker.cs" />
+    <Compile Include="Editor\SyntaxHighlighting\IStyleRegistry.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="ParserResult.cs" />
-    <Compile Include="ParseWorker.cs" />
-    <Compile Include="ParserWorkItem.cs" />
-    <Compile Include="StyleRegistry.cs" />
+    <Compile Include="Parsing\ParserResult.cs" />
+    <Compile Include="Parsing\ParseWorker.cs" />
+    <Compile Include="Parsing\ParserWorkItem.cs" />
+    <Compile Include="Editor\SyntaxHighlighting\StyleRegistry.cs" />
     <Compile Include="VisualAnalyzer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,7 +106,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="GrammarSelector.resx">
+    <EmbeddedResource Include="Dialogs\GrammarSelector.resx">
       <DependentUpon>GrammarSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VisualAnalyzer.resx">
@@ -149,5 +150,6 @@
       <Name>TestRig</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -57,9 +57,11 @@
          this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
          this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.tracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.diagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.simpleLLModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.HeuristicHighlightingtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+         this.TracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.DiagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.SimpleLLModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
          this.splitContainer2 = new System.Windows.Forms.SplitContainer();
          this.ParseMessageListView = new BrightIdeasSoftware.ObjectListView();
@@ -156,6 +158,7 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -279,6 +282,7 @@
          this.tokenListView.Location = new System.Drawing.Point(3, 3);
          this.tokenListView.MultiSelect = false;
          this.tokenListView.Name = "tokenListView";
+         this.tokenListView.ShowGroups = false;
          this.tokenListView.ShowItemCountOnGroups = true;
          this.tokenListView.Size = new System.Drawing.Size(624, 402);
          this.tokenListView.TabIndex = 0;
@@ -393,33 +397,53 @@
          // optionsToolStripMenuItem
          // 
          this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tracingToolStripMenuItem,
-            this.diagnosticsToolStripMenuItem,
-            this.simpleLLModeToolStripMenuItem});
+            this.HeuristicHighlightingtToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.TracingToolStripMenuItem,
+            this.DiagnosticsToolStripMenuItem,
+            this.SimpleLLModeToolStripMenuItem});
          this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
          this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
          this.optionsToolStripMenuItem.Text = "&Options";
          // 
-         // tracingToolStripMenuItem
+         // HeuristicHighlightingtToolStripMenuItem
          // 
-         this.tracingToolStripMenuItem.CheckOnClick = true;
-         this.tracingToolStripMenuItem.Name = "tracingToolStripMenuItem";
-         this.tracingToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-         this.tracingToolStripMenuItem.Text = "Tracing";
+         this.HeuristicHighlightingtToolStripMenuItem.Checked = true;
+         this.HeuristicHighlightingtToolStripMenuItem.CheckOnClick = true;
+         this.HeuristicHighlightingtToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.HeuristicHighlightingtToolStripMenuItem.Name = "HeuristicHighlightingtToolStripMenuItem";
+         this.HeuristicHighlightingtToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.HeuristicHighlightingtToolStripMenuItem.Text = "Heuristic Syntax Highlighting";
+         this.HeuristicHighlightingtToolStripMenuItem.Click += new System.EventHandler(this.HeuristicHighlightingtToolStripMenuItem_Click);
          // 
-         // diagnosticsToolStripMenuItem
+         // toolStripSeparator2
          // 
-         this.diagnosticsToolStripMenuItem.CheckOnClick = true;
-         this.diagnosticsToolStripMenuItem.Name = "diagnosticsToolStripMenuItem";
-         this.diagnosticsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-         this.diagnosticsToolStripMenuItem.Text = "Diagnostics";
+         this.toolStripSeparator2.Name = "toolStripSeparator2";
+         this.toolStripSeparator2.Size = new System.Drawing.Size(225, 6);
          // 
-         // simpleLLModeToolStripMenuItem
+         // TracingToolStripMenuItem
          // 
-         this.simpleLLModeToolStripMenuItem.CheckOnClick = true;
-         this.simpleLLModeToolStripMenuItem.Name = "simpleLLModeToolStripMenuItem";
-         this.simpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-         this.simpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
+         this.TracingToolStripMenuItem.CheckOnClick = true;
+         this.TracingToolStripMenuItem.Name = "TracingToolStripMenuItem";
+         this.TracingToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.TracingToolStripMenuItem.Text = "Tracing";
+         this.TracingToolStripMenuItem.Click += new System.EventHandler(this.TracingToolStripMenuItem_Click);
+         // 
+         // DiagnosticsToolStripMenuItem
+         // 
+         this.DiagnosticsToolStripMenuItem.CheckOnClick = true;
+         this.DiagnosticsToolStripMenuItem.Name = "DiagnosticsToolStripMenuItem";
+         this.DiagnosticsToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.DiagnosticsToolStripMenuItem.Text = "Diagnostics";
+         this.DiagnosticsToolStripMenuItem.Click += new System.EventHandler(this.DiagnosticsToolStripMenuItem_Click);
+         // 
+         // SimpleLLModeToolStripMenuItem
+         // 
+         this.SimpleLLModeToolStripMenuItem.CheckOnClick = true;
+         this.SimpleLLModeToolStripMenuItem.Name = "SimpleLLModeToolStripMenuItem";
+         this.SimpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.SimpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
+         this.SimpleLLModeToolStripMenuItem.Click += new System.EventHandler(this.SimpleLLModeToolStripMenuItem_Click);
          // 
          // openFileDialog
          // 
@@ -498,7 +522,7 @@
          // 
          this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.StripLabelGrammar.Name = "StripLabelGrammar";
-         this.StripLabelGrammar.Size = new System.Drawing.Size(69, 17);
+         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
          this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName
@@ -575,9 +599,9 @@
       private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
       private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem tracingToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem diagnosticsToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem simpleLLModeToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem TracingToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem DiagnosticsToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem SimpleLLModeToolStripMenuItem;
       private System.Windows.Forms.OpenFileDialog openFileDialog;
       private System.Windows.Forms.SplitContainer splitContainer2;
       private BrightIdeasSoftware.ObjectListView ParseMessageListView;
@@ -591,6 +615,8 @@
       private System.Windows.Forms.SplitContainer splitContainer3;
       private System.Windows.Forms.TreeView ParseTreeView;
       private System.Windows.Forms.TrackBar GraphZoomTrackBar;
+      private System.Windows.Forms.ToolStripMenuItem HeuristicHighlightingtToolStripMenuItem;
+      private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
    }
 }
 

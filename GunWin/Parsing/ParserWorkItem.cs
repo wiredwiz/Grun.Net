@@ -40,10 +40,9 @@ using System;
 
 using JetBrains.Annotations;
 
-using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
 {
    /// <summary>
    ///    Struct that represents an item of work for the parser.

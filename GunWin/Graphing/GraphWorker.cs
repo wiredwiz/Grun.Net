@@ -48,15 +48,16 @@ using JetBrains.Annotations;
 using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 {
    /// <summary>
    ///    Class that handles the work of text in the background.
-   ///    Implements the <see cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.IGraphWorker" />
+   ///    Implements the <see cref="IGraphWorker" />
    /// </summary>
    /// <remarks>This class is thread safe.</remarks>
-   /// <seealso cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.IGraphWorker" />
+   /// <seealso cref="IGraphWorker" />
    public class GraphWorker : IGraphWorker
    {
       private readonly object _Padlock;
@@ -194,7 +195,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                   return;
 
                // We really only care about the last work item, so that's all we are keeping
-               // However, we use the "ParseWhen" target date/time for the first entry for our check
+               // However, we use the "GraphWhen" target date/time for the first entry for our check
                var work = QueuedWork.Dequeue();
                var graphWhen = work.GraphWhen;
                while (QueuedWork.Count != 0)

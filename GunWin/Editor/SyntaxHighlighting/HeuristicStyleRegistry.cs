@@ -40,7 +40,7 @@ using FastColoredTextBoxNS;
 
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 {
    public class HeuristicStyleRegistry : IStyleRegistry
    {

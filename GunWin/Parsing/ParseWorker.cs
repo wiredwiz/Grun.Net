@@ -1,4 +1,5 @@
 ﻿#region BSD 3-Clause License
+
 // <copyright file="ParseWorker.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
 // </copyright>
@@ -32,6 +33,7 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
 using System;
@@ -46,51 +48,122 @@ using JetBrains.Annotations;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
 {
    /// <summary>
-   /// Class that handles the work of text in the background.
-   /// Implements the <see cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.IParseWorker" />
+   ///    Class that handles the work of text in the background.
+   ///    Implements the <see cref="IParseWorker" />
    /// </summary>
    /// <remarks>This class is thread safe.</remarks>
-   /// <seealso cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.IParseWorker" />
+   /// <seealso cref="IParseWorker" />
    public class ParseWorker : IParseWorker
    {
-      private readonly SynchronizationContext _SynchronizationContext;
-
       private readonly object _Padlock;
 
-      private int _PreviousNodeQty;
+      private readonly SynchronizationContext _SynchronizationContext;
 
       private DateTime _LastQueuedTime;
 
+      private int _PreviousNodeQty;
+
+      #region Constructors And Finalizers
+
       /// <summary>
-      /// Initializes a new instance of the <see cref="ParseWorker" /> class.
+      ///    Initializes a new instance of the <see cref="ParseWorker" /> class.
       /// </summary>
       /// <param name="synchronizationContext">The synchronization context.</param>
       public ParseWorker([NotNull] SynchronizationContext synchronizationContext)
       {
-         _SynchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
+         _SynchronizationContext =
+            synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
          _PreviousNodeQty = 0;
          _Padlock = new object();
          QueuedWork = new Queue<ParserWorkItem>();
          ParserTask = new Task(ParserWorkLoop);
       }
 
-      /// <inheritdoc/>
-      public event EventHandler<ParserResult> ParsingFinished;
+      #endregion
 
       /// <summary>
-      /// Gets the parser task.
+      ///    Gets or sets the parser task.
       /// </summary>
       /// <value>The parser task.</value>
-      private Task ParserTask { get; }
+      private Task ParserTask { get; set; }
 
       private Queue<ParserWorkItem> QueuedWork { get; }
 
-      private void PostParsingFinishedEvent(object state)
+      #region IParseWorker Members
+
+      /// <inheritdoc />
+      public bool CancelWork()
       {
-         ParsingFinished?.Invoke(this, (ParserResult)state);
+         lock (_Padlock)
+         {
+            var hadWork = QueuedWork.Count != 0;
+            QueuedWork.Clear();
+            return hadWork;
+         }
+      }
+
+      /// <inheritdoc />
+      public void Parse(GrammarReference grammar, string parserRuleName, string text, ParseOption options)
+      {
+         lock (_Padlock)
+         {
+            var nextRun = CalculateNextRunTime(_PreviousNodeQty, 50, 5, 1000);
+            var work = new ParserWorkItem(grammar, parserRuleName, text, options, nextRun);
+            QueuedWork.Enqueue(work);
+            _LastQueuedTime = DateTime.Now;
+            if (ParserTask.IsCompleted)
+               ParserTask = new Task(ParserWorkLoop);
+            if (ParserTask.Status != TaskStatus.Running)
+               ParserTask.Start();
+         }
+      }
+
+      /// <inheritdoc />
+      public event EventHandler<ParserResult> ParsingFinished;
+
+      #endregion
+
+      private DateTime CalculateNextRunTime(
+         int previousNodes,
+         int minimumNodeThresholdToDelay,
+         int millisecondsPerNodeToDelay,
+         int maximumDelay)
+      {
+         // We use reactive throttling to avoid overwhelming the client with repeated parsing of large samples
+         if (previousNodes < minimumNodeThresholdToDelay)
+            return DateTime.Now;
+
+         var delay = Math.Min(maximumDelay, previousNodes * millisecondsPerNodeToDelay);
+         return DateTime.Now + TimeSpan.FromMilliseconds(delay);
+      }
+
+      private int CalculateTotalTreeNodes(ITree tree)
+      {
+         if (tree == null)
+            return 0;
+
+         var result = 1;
+         for (var i = 0; i < tree.ChildCount; i++)
+            result += CalculateTotalTreeNodes(tree.GetChild(i));
+
+         return result;
+      }
+
+      /// <summary>
+      ///    Handles the actual parsing.
+      /// </summary>
+      /// <param name="work">The work item to parse.</param>
+      /// <returns>A new <see cref="ParserResult" />.</returns>
+      private ParserResult HandleParsing(ParserWorkItem work)
+      {
+         var listener = new TestingErrorListener();
+         var analyzer = new Analyzer(work.Grammar, work.Text);
+         analyzer.Parse(work.ParserRuleName, work.Options, listener);
+
+         return new ParserResult(analyzer.DisplayTokens, analyzer.ParseContext, work.ParserRuleName, listener.Errors);
       }
 
       private void OnParsingFinished(ParserResult result)
@@ -125,14 +198,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                if (QueuedWork.Count == 0)
                   return;
 
-               ParserWorkItem work = new ParserWorkItem();
-
                // We really only care about the last work item, so that's all we are keeping
+               // However, we use the "ParseWhen" target date/time for the first entry for our check
+               var work = QueuedWork.Dequeue();
+               var parseWhen = work.ParseWhen;
                while (QueuedWork.Count != 0)
                   work = QueuedWork.Dequeue();
 
                // If we should delay longer, we enqueue the last item again for later evaluation
-               if (DateTime.Now < work.ParseWhen)
+               if (DateTime.Now < parseWhen)
                {
                   QueuedWork.Enqueue(work);
                   continue;
@@ -145,69 +219,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
-      private int CalculateTotalTreeNodes(ITree tree)
+      private void PostParsingFinishedEvent(object state)
       {
-         if (tree == null)
-            return 0;
-
-         var result = 1;
-         for (int i = 0; i < tree.ChildCount; i++)
-            result += CalculateTotalTreeNodes(tree.GetChild(i));
-
-         return result;
-      }
-
-      private DateTime CalculateNextRunTime(int previousNodes, int minimumNodeThresholdToDelay, int millisecondsPerNodeToDelay, int maximumDelay)
-      {
-         // We use reactive throttling to avoid overwhelming the client with repeated parsing of large samples
-         if (previousNodes < minimumNodeThresholdToDelay)
-            return DateTime.Now;
-
-         var delay = Math.Min(maximumDelay, previousNodes * millisecondsPerNodeToDelay);
-         return DateTime.Now + TimeSpan.FromMilliseconds(delay);
-      }
-
-      /// <summary>
-      /// Handles the actual parsing.
-      /// </summary>
-      /// <param name="work">The work item to parse.</param>
-      /// <returns>A new <see cref="ParserResult"/>.</returns>
-      private ParserResult HandleParsing(ParserWorkItem work)
-      {
-         var listener = new TestingErrorListener();
-         var analyzer = new Analyzer(work.Grammar, work.Text);
-         analyzer.Parse(work.ParserRuleName, work.Options, listener);
-
-         return new ParserResult(
-            analyzer.DisplayTokens,
-            analyzer.ParseContext,
-            work.ParserRuleName,
-            listener.Errors);
-      }
-
-      /// <inheritdoc/>
-      public void Parse(GrammarReference grammar, string parserRuleName, string text, ParseOption options)
-      {
-         lock (_Padlock)
-         {
-            var nextRun = CalculateNextRunTime(_PreviousNodeQty, 50, 5, 1000);
-            var work = new ParserWorkItem(grammar, parserRuleName, text, options, nextRun);
-            QueuedWork.Enqueue(work);
-            _LastQueuedTime = DateTime.Now;
-            if (ParserTask.Status != TaskStatus.Running)
-               ParserTask.Start();
-         }
-      }
-
-      /// <inheritdoc/>
-      public bool CancelWork()
-      {
-         lock (_Padlock)
-         {
-            var hadWork = QueuedWork.Count != 0;
-            QueuedWork.Clear();
-            return hadWork;
-         }
+         ParsingFinished?.Invoke(this, (ParserResult)state);
       }
    }
 }

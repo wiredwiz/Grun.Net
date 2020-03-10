@@ -1,12 +1,11 @@
 ﻿#region BSD 3-Clause License
-
-// <copyright file="IStyleRegistry.cs" company="Edgerunner.org">
-// Copyright  
+// <copyright file="Place.cs" company="Edgerunner.org">
+// Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) , 
+// Copyright (c) 2020, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -33,28 +32,37 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
 
-using FastColoredTextBoxNS;
-
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
-
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
-   public interface IStyleRegistry
+   /// <summary>
+   /// Struct representing a placement within some source.
+   /// </summary>
+   public struct Place
    {
       /// <summary>
-      /// Gets the style for a given token.
+      /// Initializes a new instance of the <see cref="Place"/> struct.
       /// </summary>
-      /// <param name="token">The token.</param>
-      /// <returns>A <see cref="Style"/> instance.</returns>
-      Style GetTokenStyle(TokenViewModel token);
+      /// <param name="line">The line number.</param>
+      /// <param name="position">The position.</param>
+      public Place(int line, int position)
+      {
+         Line = line;
+         Position = position;
+      }
 
       /// <summary>
-      /// Gets the style for a parse error .
+      /// Gets the line number.
       /// </summary>
-      /// <returns>A <see cref="Style"/> instance.</returns>
-      Style GetParseErrorStyle();
+      /// <value>The line number.</value>
+      public int Line { get; }
+
+      /// <summary>
+      /// Gets the position within the line.
+      /// </summary>
+      /// <value>The position.</value>
+      /// <remarks>The position is 0 index based.</remarks>
+      public int Position { get; }
    }
 }
