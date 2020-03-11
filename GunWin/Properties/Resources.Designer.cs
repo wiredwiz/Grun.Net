@@ -79,11 +79,92 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to load file..
+        /// </summary>
+        internal static string FileLoadFailedMessage {
+            get {
+                return ResourceManager.GetString("FileLoadFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot find file &quot;{0}&quot;..
+        /// </summary>
+        internal static string FileNotFoundMessage {
+            get {
+                return ResourceManager.GetString("FileNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading grammars.
+        /// </summary>
+        internal static string GrammarLoadErrorTitle {
+            get {
+                return ResourceManager.GetString("GrammarLoadErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while queueing graph work.
+        /// </summary>
+        internal static string GraphQueueErrorTitle {
+            get {
+                return ResourceManager.GetString("GraphQueueErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while rendering the graph.
+        /// </summary>
+        internal static string GraphRenderErrorTitle {
+            get {
+                return ResourceManager.GetString("GraphRenderErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The rule &quot;{0}&quot; is invalid.
         /// </summary>
         internal static string InvalidParserRule {
             get {
                 return ResourceManager.GetString("InvalidParserRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No ANTLR4 grammars were found in assembly &quot;{0}&quot;.
+        /// </summary>
+        internal static string NoGrammarsFoundInAssembly {
+            get {
+                return ResourceManager.GetString("NoGrammarsFoundInAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while parsing the source.
+        /// </summary>
+        internal static string SourceParseErrorTitle {
+            get {
+                return ResourceManager.GetString("SourceParseErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while coloring syntax errors.
+        /// </summary>
+        internal static string SyntaxErrorColoringErrorTitle {
+            get {
+                return ResourceManager.GetString("SyntaxErrorColoringErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while coloring grammar tokens.
+        /// </summary>
+        internal static string TokenColoringErrorTitle {
+            get {
+                return ResourceManager.GetString("TokenColoringErrorTitle", resourceCulture);
             }
         }
     }

@@ -1,12 +1,12 @@
 ﻿#region BSD 3-Clause License
 
-// <copyright file="IStyleRegistry.cs" company="Edgerunner.org">
-// Copyright  
+// <copyright file="ErrorDisplay.cs" company="Edgerunner.org">
+// Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) , 
+// Copyright (c) 2020, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -36,25 +36,46 @@
 
 #endregion
 
-using FastColoredTextBoxNS;
+using System;
+using System.Windows.Forms;
 
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
-
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs
 {
-   public interface IStyleRegistry
+   /// <summary>
+   ///    Class used to display errors to the user.
+   ///    Implements the <see cref="System.Windows.Forms.Form" />
+   /// </summary>
+   /// <seealso cref="System.Windows.Forms.Form" />
+   public partial class ErrorDisplay : Form
    {
-      /// <summary>
-      /// Gets the style for a given token.
-      /// </summary>
-      /// <param name="token">The token.</param>
-      /// <returns>A <see cref="Style"/> instance.</returns>
-      Style GetTokenStyle(SyntaxToken token);
+      #region Constructors And Finalizers
 
       /// <summary>
-      /// Gets the style for a parse error .
+      ///    Initializes a new instance of the <see cref="ErrorDisplay" /> class.
       /// </summary>
-      /// <returns>A <see cref="Style"/> instance.</returns>
-      Style GetParseErrorStyle();
+      public ErrorDisplay()
+      {
+         InitializeComponent();
+      }
+
+      #endregion
+
+      /// <summary>
+      ///    Gets or sets the error message.
+      /// </summary>
+      /// <value>The error message.</value>
+      public string ErrorMessage { get; set; }
+
+      /// <summary>
+      ///    Gets or sets the error stack trace.
+      /// </summary>
+      /// <value>The error stack trace.</value>
+      public string ErrorStackTrace { get; set; }
+
+      private void BtnErrOk_Click(object sender, EventArgs e)
+      {
+         DialogResult = DialogResult.OK;
+         Close();
+      }
    }
 }

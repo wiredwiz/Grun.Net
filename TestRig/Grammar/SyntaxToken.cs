@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="TokenViewModel.cs" company="Edgerunner.org">
+// <copyright file="SyntaxToken.cs" company="Edgerunner.org">
 // Copyright 2020 
 // </copyright>
 // 
@@ -42,26 +42,27 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
    /// Struct that represents a lightweight view model for IToken instances
    /// </summary>
    /// <seealso cref="Antlr4.Runtime.IToken"/>
-   public struct TokenViewModel
+   public struct SyntaxToken
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="TokenViewModel"/> struct.
+      /// Initializes a new instance of the <see cref="SyntaxToken"/> struct.
       /// </summary>
       /// <param name="lexer">The lexer.</param>
-      /// <param name="token">The token.</param>
-      public TokenViewModel(Lexer lexer, IToken token)
+      /// <param name="parserToken">The token.</param>
+      public SyntaxToken(Lexer lexer, IToken parserToken)
       {
-         ActualToken = token;
-         Text = FormatTokenText(token);
-         Type = token.Type > -1 ? lexer.Vocabulary.GetDisplayName(token.Type) : string.Empty;
-         LineNumber = token.Line;
-         ColumnPosition = token.Column + 1;
-         ChannelId = token.Channel;
-         Length = token.StopIndex - token.StartIndex + 1;
-         StartPosition = token.StartIndex;
-         StopPosition = token.StopIndex;
+         ActualParserToken = parserToken;
+         Text = FormatTokenText(parserToken);
+         Type = parserToken.Type > -1 ? lexer.Vocabulary.GetDisplayName(parserToken.Type) : string.Empty;
+         TypeUpperCase = Type.ToUpperInvariant();
+         LineNumber = parserToken.Line;
+         ColumnPosition = parserToken.Column + 1;
+         ChannelId = parserToken.Channel;
+         Length = parserToken.StopIndex - parserToken.StartIndex + 1;
+         StartPosition = parserToken.StartIndex;
+         StopPosition = parserToken.StopIndex;
 
-         var spot = token.GetEndPlace();
+         var spot = parserToken.GetEndPlace();
          EndingLineNumber = spot.Line;
          EndingColumnPosition = spot.Position + 1;
       }
@@ -77,6 +78,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// </summary>
       /// <value>The token type.</value>
       public string Type { get; }
+
+      /// <summary>
+      /// Gets the upper case type.
+      /// </summary>
+      /// <value>The upper case type.</value>
+      /// <remarks>Exists solely to avoid repeated upper casing of the Type property.</remarks>
+      public string TypeUpperCase { get; }
 
       /// <summary>
       /// Gets the line number where the token occurs.
@@ -100,13 +108,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// Gets the line number for the end of token.
       /// </summary>
       /// <value>The ending line number.</value>
-      public int EndingLineNumber { get; private set; }
+      public int EndingLineNumber { get; }
 
       /// <summary>
       /// Gets the column position for the end of the token.
       /// </summary>
       /// <value>The ending column position.</value>
-      public int EndingColumnPosition { get; private set; }
+      public int EndingColumnPosition { get; }
 
       /// <summary>
       /// Gets the start position of the token within the source.
@@ -127,10 +135,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       public int ChannelId { get; }
 
       /// <summary>
-      /// Gets the actual token.
+      /// Gets the actual parser token.
       /// </summary>
-      /// <value>The actual token.</value>
-      public IToken ActualToken { get; }
+      /// <value>The actual parser token.</value>
+      public IToken ActualParserToken { get; }
 
       private static string FormatTokenText(IToken token)
       {

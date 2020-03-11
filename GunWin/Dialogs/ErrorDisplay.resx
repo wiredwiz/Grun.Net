@@ -117,40 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidParserRule" xml:space="preserve">
-    <value>The rule "{0}" is invalid</value>
-  </data>
-  <data name="AssemblyFileFilter" xml:space="preserve">
-    <value>Assembly files|*.dll</value>
-  </data>
-  <data name="AllFilesFilter" xml:space="preserve">
-    <value>All files|*.*</value>
-  </data>
-  <data name="GraphRenderErrorTitle" xml:space="preserve">
-    <value>An error occurred while rendering the graph</value>
-  </data>
-  <data name="GrammarLoadErrorTitle" xml:space="preserve">
-    <value>An error occurred while loading grammars</value>
-  </data>
-  <data name="NoGrammarsFoundInAssembly" xml:space="preserve">
-    <value>No ANTLR4 grammars were found in assembly "{0}"</value>
-  </data>
-  <data name="TokenColoringErrorTitle" xml:space="preserve">
-    <value>An error occurred while coloring grammar tokens</value>
-  </data>
-  <data name="SyntaxErrorColoringErrorTitle" xml:space="preserve">
-    <value>An error occurred while coloring syntax errors</value>
-  </data>
-  <data name="SourceParseErrorTitle" xml:space="preserve">
-    <value>An error occurred while parsing the source</value>
-  </data>
-  <data name="GraphQueueErrorTitle" xml:space="preserve">
-    <value>An error occurred while queueing graph work</value>
-  </data>
-  <data name="FileNotFoundMessage" xml:space="preserve">
-    <value>Cannot find file "{0}".</value>
-  </data>
-  <data name="FileLoadFailedMessage" xml:space="preserve">
-    <value>Failed to load file.</value>
-  </data>
 </root>

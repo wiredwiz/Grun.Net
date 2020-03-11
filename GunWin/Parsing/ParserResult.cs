@@ -58,7 +58,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
       /// <param name="errors">The errors.</param>
       /// <param name="traceEvents">The trace events.</param>
       // ReSharper disable once TooManyDependencies
-      public ParserResult(IList<TokenViewModel> tokens, ParserRuleContext ruleContext, string ruleName, IList<ParseMessage> errors, IList<TraceEvent> traceEvents)
+      public ParserResult(IList<SyntaxToken> tokens, ParserRuleContext ruleContext, string ruleName, IList<ParseMessage> errors, IList<TraceEvent> traceEvents)
       {
          Tokens = tokens;
          RuleContext = ruleContext;
@@ -71,7 +71,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
       /// Gets the parse tokens.
       /// </summary>
       /// <value>The parse tokens.</value>
-      public IList<TokenViewModel> Tokens { get; }
+      public IList<SyntaxToken> Tokens { get; }
 
       /// <summary>
       /// Gets the parser rule context.

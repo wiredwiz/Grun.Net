@@ -34,6 +34,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Collections.Generic;
 using System.Drawing;
 
 using FastColoredTextBoxNS;
@@ -42,48 +43,77 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 {
+   /// <summary>
+   /// Class that represents a heuristic style registry.
+   /// Implements the <see cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting.IStyleRegistry" />
+   /// </summary>
+   /// <seealso cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting.IStyleRegistry" />
    public class HeuristicStyleRegistry : IStyleRegistry
    {
+      private readonly Style _LiteralStyle;
+
+      private readonly Style _CommentStyle;
+
+      private readonly Style _KeywordStyle;
+
+      private readonly Style _DefaultStyle;
+
+      private readonly Dictionary<string, Style> _InternalRegistry;
+
       private Style _ErrorStyle;
 
-      private Style _LiteralStyle;
-
-      private Style _CommentStyle;
-
-      private Style _KeywordStyle;
-
-      private Style _DefaultStyle;
-
+      /// <summary>
+      /// Initializes a new instance of the <see cref="HeuristicStyleRegistry"/> class.
+      /// </summary>
       public HeuristicStyleRegistry()
       {
          _KeywordStyle = new TextStyle(Brushes.Blue, Brushes.Transparent, FontStyle.Regular);
          _LiteralStyle = new TextStyle(Brushes.DarkRed, Brushes.Transparent, FontStyle.Regular);
          _CommentStyle = new TextStyle(Brushes.Green, Brushes.Transparent, FontStyle.Regular);
          _DefaultStyle = new TextStyle(Brushes.Black, Brushes.Transparent, FontStyle.Regular);
+         _InternalRegistry = new Dictionary<string, Style>();
       }
 
-      public Style GetTokenStyle(TokenViewModel token)
+      /// <inheritdoc/>
+      public Style GetTokenStyle(SyntaxToken token)
       {
-         var type = token.Type.ToUpperInvariant();
+         if (_InternalRegistry.TryGetValue(token.TypeUpperCase, out var style))
+            return style;
 
-         if (IsKeyword(type))
+         if (IsKeyword(token))
+         {
+            _InternalRegistry[token.TypeUpperCase] = _KeywordStyle;
             return _KeywordStyle;
-         if (IsLiteral(type))
-            return _LiteralStyle;
-         if (IsComment(type))
-            return _CommentStyle;
+         }
 
+         if (IsLiteral(token))
+         {
+            _InternalRegistry[token.TypeUpperCase] = _LiteralStyle;
+            return _LiteralStyle;
+         }
+
+         if (IsComment(token))
+         {
+            _InternalRegistry[token.TypeUpperCase] = _CommentStyle;
+            return _CommentStyle;
+         }
+
+         _InternalRegistry[token.TypeUpperCase] = _DefaultStyle;
          return _DefaultStyle;
       }
 
+      /// <inheritdoc/>
       public Style GetParseErrorStyle()
       {
          return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, Color.Red));
       }
 
-      private bool IsLiteral(string type)
+      private bool IsLiteral(SyntaxToken token)
       {
+         var type = token.TypeUpperCase;
          if (type.Contains("LITERAL"))
+            return true;
+         if (type.EndsWith("_LIT"))
             return true;
          if (type.Contains("NUMBER"))
             return true;
@@ -105,10 +135,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          return false;
       }
 
-      private bool IsKeyword(string type)
+      private bool IsKeyword(SyntaxToken token)
       {
+         var type = token.TypeUpperCase;
+         if (type.StartsWith("'") && type.EndsWith("'"))
+            type = type.Trim('\'');
+
          switch (type)
          {
+            // ReSharper disable StringLiteralTypo
+
+            // First we check the most obvious type name
+            case "KEYWORD":
+
+            // Next we check common flow keywords
             case "IF":
             case "ELSE":
             case "ELSEIF":
@@ -121,37 +161,101 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "WEND":
             case "FOR":
             case "ENDFOR":
+            case "CASE":
+            case "SWITCH":
+            case "DEFAULT":
+            case "FALLTHROUGH":
+            case "FORK":
+            case "ENDFORK":
             case "FOREACH":
-            case "IN":
-            case "IS":
-            case "ISA":
-            case "EXIT":
             case "RETURN":
+            case "EXIT":
             case "CONTINUE":
             case "BREAK":
-            case "IMPORT":
-            case "PASS":
-            case "DEL":
+            case "GO":
+            case "GOTO":
+            case "PAUSE":
+            case "STOP":
+            case "DO":
+            case "WHEN":
+
+            // Common literals
             case "TRUE":
             case "FALSE":
-            case "NOT":
-            case "OR":
-            case "AND":
-            case "MOD":
+            case "NULL":
+            case "NIL":
+
+            // Common error handling
             case "TRY":
             case "EXCEPT":
             case "CATCH":
             case "FINALLY":
+            case "THROW":
             case "RAISE":
-            case "DEF":
+
+            // Common operations
+            case "IN":
+            case "IS":
+            case "ISA":
             case "AS":
+            case "NOT":
+            case "OR":
+            case "AND":
+            case "MOD":
+            case "DIV":
+            case "DIVIDE":
+            case "MULT":
+            case "MULTIPLY":
+            case "ADD":
+            case "SUBTRACT":
+            case "EXP":
+            case "EXPONENT":
+
+            // Common types
+            case "VAR":
+            case "COMPLEX64":
+            case "COMPLEX128":
+            case "RUNE":
+            case "LONG":
+            case "SHORT":
+            case "DBL":
+            case "DOUBLE":
+            case "STRING":
+            case "CHAR":
+            case "CHARACTER":
+            case "DECIMAL":
+            case "BOOL":
+            case "BOOLEAN":
+            case "BINARY":
+            case "HEX":
+            case "BYTE":
+            case "UINTPTR":
+            case "INTPTR":
+            case "PTR":
+            case "POINTER":
+            case "LIST":
+
+            // Common access modifiers
+            case "PUBLIC":
+            case "PRIVATE":
+            case "PROTECTED":
+            case "INTERNAL":
+
+            // Everything else
+            case "IMPORT":
+            case "IMPORTS":
+            case "USING":
+            case "PASS":
+            case "DEL":
+            case "DEF":
             case "PUTS":
-            case "NULL":
-            case "NIL":
             case "WITH":
             case "CLASS":
             case "STRUCT":
             case "INTERFACE":
+            case "FUNCTION":
+            case "FUNC":
+            case "PROGRAM":
             case "ENUM":
             case "STATIC":
             case "UNION":
@@ -162,26 +266,84 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "OPCODE":
             case "THIS":
             case "BASE":
-            case "DO":
-            case "WHEN":
-            case "THROW":
-            case "PUBLIC":
-            case "PRIVATE":
-            case "PROTECTED":
             case "DYNAMIC":
             case "CONST":
             case "FINAL":
             case "SEALED":
             case "OPEN":
-               return true;
+            case "CLOSE":
+            case "BLOCK":
+            case "WRITE":
+            case "READ":
+            case "PRINT":
+            case "ERR":
+            case "FORMAT":
+            case "CALL":
+            case "MAP":
+            case "PACKAGE":
+            case "DEFER":
+            case "CHAN":
+               {
+                  if (type.Equals(token.Text.ToUpperInvariant()))
+                     return true;
 
+                  return false;
+               }
+
+            // Special float handling
+            case "FLOAT":
+            case "FLOATING_POINT":
+            case "FLOAT32":
+            case "FLOAT64":
+               {
+                  var lastChar = type[type.Length];
+                  // ReSharper disable once ComplexConditionExpression
+                  if (type.StartsWith("FLOAT") && ((lastChar > 47 && lastChar < 58) || lastChar == 't'))
+                     return true;
+
+                  return false;
+               }
+
+            // Special integer handling
+            case "INT":
+            case "INT8":
+            case "INT16":
+            case "INT32":
+            case "INT64":
+            case "INTEGER":
+               {
+                  var lastChar = type[type.Length];
+                  // ReSharper disable once ComplexConditionExpression
+                  if (type.StartsWith("INT") && ((lastChar > 47 && lastChar < 58) || lastChar == 't' || lastChar == 'r'))
+                     return true;
+
+                  return false;
+               }
+
+            // Special unsigned integer handling
+            case "UINT":
+            case "UINT8":
+            case "UINT16":
+            case "UINT32":
+            case "UINT64":
+               {
+                  var lastChar = type[type.Length];
+                  // ReSharper disable once ComplexConditionExpression
+                  if (type.StartsWith("UINT") && ((lastChar > 47 && lastChar < 58) || lastChar == 't'))
+                     return true;
+
+                  return false;
+               }
+
+            // ReSharper restore StringLiteralTypo
             default:
                return false;
          }
       }
 
-      private bool IsComment(string type)
+      private bool IsComment(SyntaxToken token)
       {
+         var type = token.TypeUpperCase;
          return type.Contains("COMMENT");
       }
    }

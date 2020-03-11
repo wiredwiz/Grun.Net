@@ -103,17 +103,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
                   context.stop != null
                   && context.stop.TokenIndex < context.start.TokenIndex;
 
-            if (TextColor.HasValue || tree is IErrorNode || ruleFailedAndMatchedNothing)
-               if (tree is IErrorNode || ruleFailedAndMatchedNothing)
-                  node.Label.FontColor = Color.Red;
-               else
-                  node.Label.FontColor = TextColor.Value;
+            if (tree is IErrorNode || ruleFailedAndMatchedNothing)
+               node.Label.FontColor = Color.Red;
+            else
+               node.Label.FontColor = TextColor ?? Color.Black;
+
+            node.Attr.Color = BorderColor ?? Color.Black;
 
             if (BackgroundColor.HasValue)
                node.Attr.FillColor = BackgroundColor.Value;
 
-            if (BorderColor.HasValue)
-               node.Attr.Color = BorderColor.Value;
+            node.Attr.Color = BorderColor ?? Color.Black;
 
             node.UserData = tree;
          }

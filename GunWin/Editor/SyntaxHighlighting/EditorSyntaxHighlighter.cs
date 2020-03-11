@@ -36,6 +36,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
@@ -43,6 +44,8 @@ using System.Windows.Forms;
 using FastColoredTextBoxNS;
 
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 
 using Place = FastColoredTextBoxNS.Place;
 
@@ -61,7 +64,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// <param name="editor">The editor.</param>
       /// <param name="registry">The registry.</param>
       /// <param name="tokens">The tokens.</param>
-      public void ColorizeTokens(FastColoredTextBox editor, IStyleRegistry registry, IList<TokenViewModel> tokens)
+      public void ColorizeTokens(FastColoredTextBox editor, IStyleRegistry registry, IList<SyntaxToken> tokens)
       {
          int coloring = Interlocked.Exchange(ref _TokenColoringInProgress, 1);
          if (coloring != 0) 
@@ -76,13 +79,24 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
                    {
                       foreach (var token in tokens)
                       {
-                         var startingPlace = new Place(token.ActualToken.Column, token.ActualToken.Line - 1);
+                         var startingPlace = new Place(token.ActualParserToken.Column, token.ActualParserToken.Line - 1);
                          var stoppingPlace = new Place(token.EndingColumnPosition, token.EndingLineNumber - 1);
                          var tokenRange = editor.GetRange(startingPlace, stoppingPlace);
                          tokenRange.ClearStyle(StyleIndex.All);
                          var style = registry.GetTokenStyle(token);
                          tokenRange.SetStyle(style);
                       }
+                   }
+                   // ReSharper disable once CatchAllClause
+                   catch (Exception ex)
+                   {
+                      var errorDisplay = new ErrorDisplay
+                      {
+                         Text = Resources.TokenColoringErrorTitle,
+                         ErrorMessage = ex.Message,
+                         ErrorStackTrace = ex.StackTrace
+                      };
+                      errorDisplay.ShowDialog();
                    }
                    finally
                    {

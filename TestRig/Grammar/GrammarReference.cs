@@ -64,6 +64,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       ///    or
       ///    lexerType was <see langword="null" /> or empty.
       /// </exception>
+      /// <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+      /// <exception cref="T:System.IO.IOException"><see cref="M:System.IO.FileSystemInfo.Refresh" /> cannot initialize the data.</exception>
+      /// <exception cref="T:System.IO.FileNotFoundException">The file does not exist.-or- The Length property is called for a directory.</exception>
       // ReSharper disable once TooManyDependencies
       public GrammarReference(
          [NotNull] FileInfo assemblyInfo,

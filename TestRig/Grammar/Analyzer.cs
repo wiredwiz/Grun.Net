@@ -62,7 +62,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// Gets the display tokens.
       /// </summary>
       /// <value>The display tokens.</value>
-      public IList<TokenViewModel> DisplayTokens { get; private set; }
+      public IList<SyntaxToken> DisplayTokens { get; private set; }
 
       /// <summary>
       /// Gets the parse context.
@@ -187,14 +187,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          IsParsed = true;
       }
 
-      private IList<TokenViewModel> ConvertTokensForDisplay([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
+      private IList<SyntaxToken> ConvertTokensForDisplay([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
       {
          if (lexer is null) throw new ArgumentNullException(nameof(lexer));
          if (tokens is null) throw new ArgumentNullException(nameof(tokens));
 
-         var viewTokens = new List<TokenViewModel>();
+         var viewTokens = new List<SyntaxToken>();
          foreach (var token in tokens)
-            viewTokens.Add(new TokenViewModel(lexer, token));
+            viewTokens.Add(new SyntaxToken(lexer, token));
 
          return viewTokens;
       }

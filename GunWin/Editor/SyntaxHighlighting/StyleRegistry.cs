@@ -71,7 +71,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// </summary>
       /// <param name="token">The token.</param>
       /// <returns>A <see cref="Style"/> instance.</returns>
-      public Style GetTokenStyle(TokenViewModel token)
+      public Style GetTokenStyle(SyntaxToken token)
       {
          if (_TokenStyles.TryGetValue(token.Type, out var style))
             return style;
