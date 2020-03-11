@@ -296,7 +296,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "FLOAT32":
             case "FLOAT64":
                {
-                  var lastChar = type[type.Length];
+                  var lastChar = type[type.Length - 1];
                   // ReSharper disable once ComplexConditionExpression
                   if (type.StartsWith("FLOAT") && ((lastChar > 47 && lastChar < 58) || lastChar == 't'))
                      return true;
@@ -312,7 +312,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "INT64":
             case "INTEGER":
                {
-                  var lastChar = type[type.Length];
+                  var lastChar = type[type.Length - 1];
                   // ReSharper disable once ComplexConditionExpression
                   if (type.StartsWith("INT") && ((lastChar > 47 && lastChar < 58) || lastChar == 't' || lastChar == 'r'))
                      return true;
@@ -327,7 +327,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "UINT32":
             case "UINT64":
                {
-                  var lastChar = type[type.Length];
+                  var lastChar = type[type.Length - 1];
                   // ReSharper disable once ComplexConditionExpression
                   if (type.StartsWith("UINT") && ((lastChar > 47 && lastChar < 58) || lastChar == 't'))
                      return true;

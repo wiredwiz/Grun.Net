@@ -64,13 +64,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs
       ///    Gets or sets the error message.
       /// </summary>
       /// <value>The error message.</value>
-      public string ErrorMessage { get; set; }
+      public string ErrorMessage
+      {
+         get => TxtErrorMessage.Text;
+         set => TxtErrorMessage.Text = value;
+      }
 
       /// <summary>
       ///    Gets or sets the error stack trace.
       /// </summary>
       /// <value>The error stack trace.</value>
-      public string ErrorStackTrace { get; set; }
+      public string ErrorStackTrace
+      {
+         get => TxtStackTrace.Text;
+         set => TxtStackTrace.Text = value;
+      }
 
       private void BtnErrOk_Click(object sender, EventArgs e)
       {
