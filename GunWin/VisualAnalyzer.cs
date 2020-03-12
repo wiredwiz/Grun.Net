@@ -38,14 +38,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
-using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
 using BrightIdeasSoftware;
@@ -80,27 +79,27 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
    /// <seealso cref="System.Windows.Forms.Form" />
    public partial class VisualAnalyzer : Form
    {
-      private GrammarReference _Grammar;
-
       private IEditorGuide _EditorGuide;
 
-      private IStyleRegistry _Registry;
-
-      private EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
-
-      private IGraphWorker _GraphWorker;
+      private GrammarReference _Grammar;
 
       private IParseTreeGrapher _Grapher;
 
-      private List<string> _ParserRules;
+      private IGraphWorker _GraphWorker;
 
-      private GViewer _Viewer;
-
-      private IList<SyntaxToken> _Tokens;
+      private readonly EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
 
       private List<ParseMessage> _ParseErrors;
 
+      private List<string> _ParserRules;
+
+      private IStyleRegistry _Registry;
+
       private EditorSettings _Settings;
+
+      private IList<SyntaxToken> _Tokens;
+
+      private GViewer _Viewer;
 
       #region Constructors And Finalizers
 
@@ -110,6 +109,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public VisualAnalyzer()
       {
          InitializeComponent();
+
+         LoadApplicationSettings();
       }
 
       #endregion
@@ -176,9 +177,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       ///    Parses the source code.
       /// </summary>
       /// <exception cref="T:Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions.GrammarException">
-      /// No parser found for the current grammar
-      /// OR
-      /// Selected parser rule does not exist for the current grammar.
+      ///    No parser found for the current grammar
+      ///    OR
+      ///    Selected parser rule does not exist for the current grammar.
       /// </exception>
       /// <exception cref="T:System.ArgumentNullException">Selected parser rule is null or empty.</exception>
       public void ParseSource()
@@ -214,11 +215,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-            {
-               Text = Resources.SourceParseErrorTitle,
-               ErrorMessage = ex.Message,
-               ErrorStackTrace = ex.StackTrace
-            };
+                                  {
+                                     Text = Resources.SourceParseErrorTitle,
+                                     ErrorMessage = ex.Message,
+                                     ErrorStackTrace = ex.StackTrace
+                                  };
             errorDisplay.ShowDialog();
          }
 
@@ -229,11 +230,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-            {
-               Text = Resources.GraphQueueErrorTitle,
-               ErrorMessage = ex.Message,
-               ErrorStackTrace = ex.StackTrace
-            };
+                                  {
+                                     Text = Resources.GraphQueueErrorTitle,
+                                     ErrorMessage = ex.Message,
+                                     ErrorStackTrace = ex.StackTrace
+                                  };
             errorDisplay.ShowDialog();
          }
 
@@ -242,14 +243,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          PopulateTokens(analyzer.DisplayTokens);
          PopulateParserMessages(_ParseErrors);
          PopulateTraceEvents(parseTreeListener);
-      }
-
-      private void PopulateTraceEvents(GuiTraceListener parseTreeListener)
-      {
-         if (parseTreeListener == null)
-            TraceListView.SetObjects(null);
-         else
-            TraceListView.SetObjects(parseTreeListener.Events);
       }
 
       /// <summary>
@@ -289,7 +282,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (_EditorGuide != null)
             _Registry = new StyleRegistry(_EditorGuide);
          else
-            _Registry = new HeuristicStyleRegistry();
+            _Registry = new HeuristicStyleRegistry(_Settings);
       }
 
       /// <summary>
@@ -304,6 +297,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ColorizeErrors(null);
       }
 
+      private void _GraphWorker_GraphingFinished(object sender, GraphingResult e)
+      {
+         BuildParseTreeTreeViewGuide(e.ParseTree);
+         RenderParseTreeGraph(e.Graph);
+      }
+
       private void _Viewer_Click(object sender, EventArgs e)
       {
          if (_Viewer.SelectedObject is Node node)
@@ -313,6 +312,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
+      private void _Viewer_MouseWheel(object sender, MouseEventArgs e)
+      {
+         var factor = Math.Max(
+            Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / 0.1), GraphZoomTrackBar.Maximum),
+            GraphZoomTrackBar.Minimum);
+         GraphZoomTrackBar.Value = factor;
+      }
+
       private void AddTreeBranchesAndLeaves(TreeNode treeNode, ITree tree)
       {
          for (var i = 0; i < tree.ChildCount; i++)
@@ -320,66 +327,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             var child = tree.GetChild(i);
             var newNode =
                new TreeNode(Trees.GetNodeText(child, _ParserRules))
-               {
-                  Tag = child,
-                  Name = child.GetHashCode().ToString()
-               };
+                  {
+                     Tag = child, Name = child.GetHashCode().ToString()
+                  };
             treeNode.Nodes.Add(newNode);
             AddTreeBranchesAndLeaves(newNode, child);
          }
-      }
-
-      private void RenderParseTreeGraph(ITree tree, int? zoomFactor = null)
-      {
-         if (_Viewer == null)
-            return;
-
-         if (tree == null)
-            return;
-
-         if (_Grapher == null)
-            return;
-
-         try
-         {
-            var graph = _Grapher.CreateGraph(tree, _ParserRules);
-            graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
-            _Viewer.SuspendLayout();
-            _Viewer.Graph = graph;
-            if (zoomFactor.HasValue)
-               GraphZoomTrackBar.Value = zoomFactor.Value;
-            _Viewer.ZoomF = GraphZoomTrackBar.Value;
-            _Viewer.ResumeLayout();
-         }
-         catch (Exception ex)
-         {
-            var errorDisplay = new ErrorDisplay
-            {
-               Text = Resources.GraphRenderErrorTitle,
-               ErrorMessage = ex.Message,
-               ErrorStackTrace = ex.StackTrace
-            };
-            errorDisplay.ShowDialog();
-         }
-      }
-
-      private void RenderParseTreeGraph(Graph graph, int? zoomFactor = null)
-      {
-         if (_Viewer == null)
-            return;
-
-         if (graph == null)
-            return;
-
-         if (_Grapher == null)
-            return;
-
-         _Viewer.SuspendLayout();
-         _Viewer.Graph = graph;
-         if (zoomFactor.HasValue)
-            GraphZoomTrackBar.Value = zoomFactor.Value;
-         _Viewer.ZoomF = GraphZoomTrackBar.Value;
-         _Viewer.ResumeLayout();
       }
 
       private void BuildParseTreeTreeViewGuide(ITree tree)
@@ -401,49 +354,38 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseTreeView.ResumeLayout();
       }
 
-      private void LoadEditorGuide([NotNull] GrammarReference grammar)
+      private void CodeEditor_DragDrop(object sender, DragEventArgs e)
       {
-         if (grammar == null)
-            throw new ArgumentNullException(nameof(grammar));
-
-         _EditorGuide = null;
-
-         var scanner = new Scanner();
-         var loader = new Loader();
-
-         // First try loading a guide from the target assembly's directory
-         var pathRoot = Path.GetDirectoryName(grammar.AssemblyPath);
-         if (LoadGuideFromPath(grammar, scanner, loader, pathRoot))
-            return;
-
-         // Now try loading a guide from the Grun.Net Guides folder
-         pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
-         // ReSharper disable once AssignNullToNotNullAttribute
-         pathRoot = Path.Combine(pathRoot, "Guides");
-         if (Directory.Exists(pathRoot))
-            LoadGuideFromPath(grammar, scanner, loader, pathRoot);
-      }
-
-      private bool LoadGuideFromPath(GrammarReference grammar, Scanner scanner, Loader loader, string pathRoot)
-      {
-         var guideReferences = scanner.LocateAllEditorGuides(pathRoot ?? throw new InvalidOperationException());
-         foreach (var reference in guideReferences)
-         {
-            var guide = loader.LoadEditorGuide(reference);
-            if (guide != null && guide.GrammarName == grammar.GrammarName)
+         if (e.Data.GetDataPresent(DataFormats.Text))
+            CodeEditor.Text = e.Data.GetData(DataFormats.Text).ToString();
+         else if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+            CodeEditor.Text = e.Data.GetData(DataFormats.UnicodeText).ToString();
+         else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
             {
-               _EditorGuide = guide;
-               return true;
-            }
-         }
+               var assemblyFiles = (from file in files where file.EndsWith(".dll") select file).ToList();
+               var otherFiles = (from file in files where !file.EndsWith(".dll") select file).ToList();
+               if (assemblyFiles.Count > 1 || (assemblyFiles.Count + otherFiles.Count > 2))
+               {
+                  MessageBox.Show(Resources.DragDropLoadErrorMessage);
+                  return;
+               }
 
-         return false;
+               if (assemblyFiles.Count != 0)
+                  LoadGrammarInternal(assemblyFiles[0]);
+
+               if (otherFiles.Count != 0)
+                  LoadSourceFileInternal(otherFiles[0]);
+            }
       }
 
-      private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
+      private void CodeEditor_DragEnter(object sender, DragEventArgs e)
       {
-         if (CmbRules.Items.Count > 0)
-            ParseSource();
+         if (e.Data.GetDataPresent(DataFormats.UnicodeText) || e.Data.GetDataPresent(DataFormats.Text)
+                                                            || e.Data.GetDataPresent(DataFormats.FileDrop))
+            e.Effect = DragDropEffects.Copy;
+         else
+            e.Effect = DragDropEffects.None;
       }
 
       private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
@@ -476,11 +418,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-            {
-               Text = Resources.SyntaxErrorColoringErrorTitle,
-               ErrorMessage = ex.Message,
-               ErrorStackTrace = ex.StackTrace
-            };
+                                  {
+                                     Text = Resources.SyntaxErrorColoringErrorTitle,
+                                     ErrorMessage = ex.Message,
+                                     ErrorStackTrace = ex.StackTrace
+                                  };
             errorDisplay.ShowDialog();
          }
          finally
@@ -496,6 +438,40 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          var tokensToColor = range == null ? _Tokens : FindTokensInRange(_Tokens, range);
          _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor);
+      }
+
+      private void ConfigureGraphWorker()
+      {
+         _GraphWorker = new GraphWorker(SynchronizationContext.Current, _Settings);
+         _GraphWorker.GraphingFinished += _GraphWorker_GraphingFinished;
+         _Grapher = new ParseTreeGrapher
+                       {
+                          BackgroundColor = new Color(
+                             _Settings.GraphNodeBackgroundColor.A,
+                             _Settings.GraphNodeBackgroundColor.R,
+                             _Settings.GraphNodeBackgroundColor.G,
+                             _Settings.GraphNodeBackgroundColor.B),
+                          BorderColor = new Color(
+                             _Settings.GraphNodeBorderColor.A,
+                             _Settings.GraphNodeBorderColor.R,
+                             _Settings.GraphNodeBorderColor.G,
+                             _Settings.GraphNodeBorderColor.B),
+                          TextColor = new Color(
+                             _Settings.GraphNodeTextColor.A,
+                             _Settings.GraphNodeTextColor.R,
+                             _Settings.GraphNodeTextColor.G,
+                             _Settings.GraphNodeTextColor.B),
+         };
+      }
+
+      private void DiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         ParseSource();
+      }
+
+      private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         Application.Exit();
       }
 
       private IList<SyntaxToken> FindTokensInRange(IList<SyntaxToken> tokens, Range range)
@@ -515,15 +491,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          return results;
       }
 
-      private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
-      {
-         Application.Exit();
-      }
-
       private void GraphZoomTrackBar_ValueChanged(object sender, EventArgs e)
       {
          if (_Viewer != null)
             _Viewer.ZoomF = GraphZoomTrackBar.Value * 0.1 + 1.0;
+      }
+
+      private void HeuristicHighlightingtToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         if (HeuristicHighlightingtToolStripMenuItem.Checked)
+         {
+            ColorizeTokens(null);
+            ColorizeErrors(null);
+         }
+         else
+         {
+            CodeEditor.ClearStyle(StyleIndex.All);
+         }
       }
 
       private void InitializeGraphCanvas()
@@ -542,23 +526,36 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.ContextMenu = viewerContextMenu;
       }
 
-      private void _Viewer_MouseWheel(object sender, MouseEventArgs e)
+      private void LoadApplicationSettings()
       {
-         var factor = Math.Max(Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / 0.1), GraphZoomTrackBar.Maximum), GraphZoomTrackBar.Minimum);
-         GraphZoomTrackBar.Value = factor;
+         var appSettings = ConfigurationManager.AppSettings;
+
+         _Settings = new EditorSettings();
+         _Settings.LoadFrom(appSettings);
       }
 
-      private void LoadGrammarToolStripMenuItem_Click(object sender, EventArgs e)
+      private void LoadEditorGuide([NotNull] GrammarReference grammar)
       {
-         openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-         openFileDialog.Filter = Resources.AssemblyFileFilter;
-         openFileDialog.DefaultExt = "dll";
+         if (grammar == null)
+            throw new ArgumentNullException(nameof(grammar));
 
-         if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+         _EditorGuide = null;
+
+         var scanner = new Scanner();
+         var loader = new Loader();
+
+         // First try loading a guide from the target assembly's directory
+         var pathRoot = Path.GetDirectoryName(grammar.AssemblyPath);
+         if (LoadGuideFromPath(grammar, scanner, loader, pathRoot))
             return;
 
-         var fileToSearch = openFileDialog.FileName;
-         LoadGrammarInternal(fileToSearch);
+         // Now try loading a guide from the Grun.Net Guides folder
+         pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+
+         // ReSharper disable once AssignNullToNotNullAttribute
+         pathRoot = Path.Combine(pathRoot, "Guides");
+         if (Directory.Exists(pathRoot))
+            LoadGuideFromPath(grammar, scanner, loader, pathRoot);
       }
 
       private void LoadGrammarInternal(string fileToSearch)
@@ -607,22 +604,39 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          SetGrammar(grammarToLoad);
       }
 
-      private void LoadParserRules()
-      {
-         CmbRules.DataSource = _ParserRules.OrderBy(x => x).Distinct().ToList();
-         CmbRules.Refresh();
-      }
-
-      private void LoadSourceToolStripMenuItem_Click(object sender, EventArgs e)
+      private void LoadGrammarToolStripMenuItem_Click(object sender, EventArgs e)
       {
          openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-         openFileDialog.Filter = Resources.AllFilesFilter;
+         openFileDialog.Filter = Resources.AssemblyFileFilter;
+         openFileDialog.DefaultExt = "dll";
 
          if (openFileDialog.ShowDialog() == DialogResult.Cancel)
             return;
 
-         var fileToLoad = openFileDialog.FileName;
-         LoadSourceFileInternal(fileToLoad);
+         var fileToSearch = openFileDialog.FileName;
+         LoadGrammarInternal(fileToSearch);
+      }
+
+      private bool LoadGuideFromPath(GrammarReference grammar, Scanner scanner, Loader loader, string pathRoot)
+      {
+         var guideReferences = scanner.LocateAllEditorGuides(pathRoot ?? throw new InvalidOperationException());
+         foreach (var reference in guideReferences)
+         {
+            var guide = loader.LoadEditorGuide(reference);
+            if (guide != null && guide.GrammarName == grammar.GrammarName)
+            {
+               _EditorGuide = guide;
+               return true;
+            }
+         }
+
+         return false;
+      }
+
+      private void LoadParserRules()
+      {
+         CmbRules.DataSource = _ParserRules.OrderBy(x => x).Distinct().ToList();
+         CmbRules.Refresh();
       }
 
       private void LoadSourceFileInternal(string fileToLoad)
@@ -636,7 +650,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
          catch (ArgumentException)
          {
-            return;
          }
          catch (FileNotFoundException)
          {
@@ -650,6 +663,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             MessageBox.Show(Resources.FileLoadFailedMessage);
          }
+      }
+
+      private void LoadSourceToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         openFileDialog.InitialDirectory = Environment.CurrentDirectory;
+         openFileDialog.Filter = Resources.AllFilesFilter;
+
+         if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+            return;
+
+         var fileToLoad = openFileDialog.FileName;
+         LoadSourceFileInternal(fileToLoad);
       }
 
       private void Menu_GraphFromHere_Click(object sender, EventArgs e)
@@ -679,6 +704,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             }
       }
 
+      private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         if (CmbRules.Items.Count > 0)
+            ParseSource();
+      }
+
       private void ParseTreeView_AfterSelect(object sender, TreeViewEventArgs e)
       {
          // Now we graph and display just the selected branch
@@ -699,112 +730,65 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          tokenListView.SetObjects(tokens);
       }
 
-      private void TokenListView_Click(object sender, EventArgs e)
+      private void PopulateTraceEvents(GuiTraceListener parseTreeListener)
       {
-         OLVListItem selected;
-         if ((selected = tokenListView.SelectedItem) != null)
-            if (selected.RowObject != null)
-            {
-               var tokenView = (SyntaxToken)selected.RowObject;
-               CodeEditor.SelectSource(tokenView.ActualParserToken);
-            }
-      }
-
-      private void VisualAnalyzer_Load(object sender, EventArgs e)
-      {
-         LoadApplicationSettings();
-         InitializeGraphCanvas();
-         ConfigureGraphWorker();
-
-         // Handle initial parse and coloring on load
-         ParseSource();
-         ColorizeTokens(null);
-         ColorizeErrors(null);
-      }
-
-      private void ConfigureGraphWorker()
-      {
-         _GraphWorker = new GraphWorker(SynchronizationContext.Current, _Settings);
-         _GraphWorker.GraphingFinished += _GraphWorker_GraphingFinished;
-         _Grapher = new ParseTreeGrapher
-         {
-            BackgroundColor = Color.LightBlue,
-            BorderColor = Color.Black,
-            TextColor = Color.Black
-         };
-      }
-
-      private void _GraphWorker_GraphingFinished(object sender, GraphingResult e)
-      {
-         BuildParseTreeTreeViewGuide(e.ParseTree);
-         RenderParseTreeGraph(e.Graph);
-      }
-
-      private void LoadApplicationSettings()
-      {
-         var appSettings = System.Configuration.ConfigurationManager.AppSettings;
-
-         _Settings = new EditorSettings();
-
-         // Fetch NodeThresholdCountForThrottling setting
-         string result = appSettings["NodeThresholdCountForThrottling"] ?? string.Empty;
-         _Settings.NodeThresholdCountForThrottling = !int.TryParse(result, out var settingValue) ? 50 : settingValue;
-
-         // Fetch MillisecondsToDelayPerNodeWhenThrottling setting
-         result = appSettings["MillisecondsToDelayPerNodeWhenThrottling"] ?? string.Empty;
-         _Settings.MillisecondsToDelayPerNodeWhenThrottling = !int.TryParse(result, out settingValue) ? 5 : settingValue;
-
-         // Fetch MaximumRenderShortDelay setting
-         result = appSettings["MaximumRenderShortDelay"] ?? string.Empty;
-         _Settings.MaximumRenderShortDelay = !int.TryParse(result, out settingValue) ? 1000 : settingValue;
-
-         // Fetch MinimumRenderCountToTriggerLongDelay setting
-         result = appSettings["MinimumRenderCountToTriggerLongDelay"] ?? string.Empty;
-         _Settings.MinimumRenderCountToTriggerLongDelay = !int.TryParse(result, out settingValue) ? 10 : settingValue;
-      }
-
-      private void HeuristicHighlightingtToolStripMenuItem_Click(object sender, EventArgs e)
-      {
-         if (HeuristicHighlightingtToolStripMenuItem.Checked)
-         {
-            ColorizeTokens(null);
-            ColorizeErrors(null);
-         }
+         if (parseTreeListener == null)
+            TraceListView.SetObjects(null);
          else
-            CodeEditor.ClearStyle(StyleIndex.All);
+            TraceListView.SetObjects(parseTreeListener.Events);
       }
 
-      private void TracingToolStripMenuItem_Click(object sender, EventArgs e)
+      private void RenderParseTreeGraph(ITree tree, int? zoomFactor = null)
       {
-         ParseSource();
+         if (_Viewer == null)
+            return;
+
+         if (tree == null)
+            return;
+
+         if (_Grapher == null)
+            return;
+
+         try
+         {
+            var graph = _Grapher.CreateGraph(tree, _ParserRules);
+            graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
+            _Viewer.SuspendLayout();
+            _Viewer.Graph = graph;
+            if (zoomFactor.HasValue)
+               GraphZoomTrackBar.Value = zoomFactor.Value;
+            _Viewer.ZoomF = GraphZoomTrackBar.Value;
+            _Viewer.ResumeLayout();
+         }
+         catch (Exception ex)
+         {
+            var errorDisplay = new ErrorDisplay
+                                  {
+                                     Text = Resources.GraphRenderErrorTitle,
+                                     ErrorMessage = ex.Message,
+                                     ErrorStackTrace = ex.StackTrace
+                                  };
+            errorDisplay.ShowDialog();
+         }
       }
 
-      private void DiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
+      private void RenderParseTreeGraph(Graph graph, int? zoomFactor = null)
       {
-         ParseSource();
-      }
+         if (_Viewer == null)
+            return;
 
-      private void SimpleLLModeToolStripMenuItem_Click(object sender, EventArgs e)
-      {
-         ParseSource();
-      }
+         if (graph == null)
+            return;
 
-      private void TraceListView_BeforeSorting(object sender, BeforeSortingEventArgs e)
-      {
-         e.Canceled = true;
-      }
+         if (_Grapher == null)
+            return;
 
-      private void SelectTokenToolStripMenuItem_Click(object sender, EventArgs e)
-      {
-         OLVListItem selected;
-         if ((selected = TraceListView.SelectedItem) != null)
-            if (selected.RowObject != null)
-            {
-               var traceEvent = (TraceEvent)selected.RowObject;
-               CodeEditor.SelectSource(traceEvent.Token);
-               var model = (from token in _Tokens where token.ActualParserToken == traceEvent.Token select token).First();
-               tokenListView.SelectObject(model);
-            }
+         _Viewer.SuspendLayout();
+         _Viewer.Graph = graph;
+         if (zoomFactor.HasValue)
+            GraphZoomTrackBar.Value = zoomFactor.Value;
+         _Viewer.ZoomF = GraphZoomTrackBar.Value;
+         _Viewer.ResumeLayout();
       }
 
       private void SelectParserRuleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -822,39 +806,55 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
-      private void CodeEditor_DragEnter(object sender, DragEventArgs e)
+      private void SelectTokenToolStripMenuItem_Click(object sender, EventArgs e)
       {
-         if (e.Data.GetDataPresent(DataFormats.UnicodeText) || e.Data.GetDataPresent(DataFormats.Text) || e.Data.GetDataPresent(DataFormats.FileDrop))
-            e.Effect = DragDropEffects.Copy;
-         else
-            e.Effect = DragDropEffects.None;
+         OLVListItem selected;
+         if ((selected = TraceListView.SelectedItem) != null)
+            if (selected.RowObject != null)
+            {
+               var traceEvent = (TraceEvent)selected.RowObject;
+               CodeEditor.SelectSource(traceEvent.Token);
+               var model =
+                  (from token in _Tokens where token.ActualParserToken == traceEvent.Token select token).First();
+               tokenListView.SelectObject(model);
+            }
       }
 
-      private void CodeEditor_DragDrop(object sender, DragEventArgs e)
+      private void SimpleLLModeToolStripMenuItem_Click(object sender, EventArgs e)
       {
-         if (e.Data.GetDataPresent(DataFormats.Text))
-            CodeEditor.Text = e.Data.GetData(DataFormats.Text).ToString();
-         else if (e.Data.GetDataPresent(DataFormats.UnicodeText))
-            CodeEditor.Text = e.Data.GetData(DataFormats.UnicodeText).ToString();
-         else if (e.Data.GetDataPresent(DataFormats.FileDrop))
-         {
-            if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
+         ParseSource();
+      }
+
+      private void TokenListView_Click(object sender, EventArgs e)
+      {
+         OLVListItem selected;
+         if ((selected = tokenListView.SelectedItem) != null)
+            if (selected.RowObject != null)
             {
-               var assemblyFiles = (from file in files where file.EndsWith(".dll") select file).ToList();
-               var otherFiles = (from file in files where !file.EndsWith(".dll") select file).ToList();
-               if (assemblyFiles.Count > 1 || (assemblyFiles.Count + otherFiles.Count > 2))
-               {
-                  MessageBox.Show(Resources.DragDropLoadErrorMessage);
-                  return;
-               }
-
-               if (assemblyFiles.Count != 0)
-                  LoadGrammarInternal(assemblyFiles[0]);
-
-               if (otherFiles.Count != 0)
-                  LoadSourceFileInternal(otherFiles[0]);
+               var tokenView = (SyntaxToken)selected.RowObject;
+               CodeEditor.SelectSource(tokenView.ActualParserToken);
             }
-         }
+      }
+
+      private void TraceListView_BeforeSorting(object sender, BeforeSortingEventArgs e)
+      {
+         e.Canceled = true;
+      }
+
+      private void TracingToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         ParseSource();
+      }
+
+      private void VisualAnalyzer_Load(object sender, EventArgs e)
+      {
+         InitializeGraphCanvas();
+         ConfigureGraphWorker();
+
+         // Handle initial parse and coloring on load
+         ParseSource();
+         ColorizeTokens(null);
+         ColorizeErrors(null);
       }
    }
 }

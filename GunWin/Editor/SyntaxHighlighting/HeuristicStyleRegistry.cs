@@ -63,14 +63,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       private Style _ErrorStyle;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="HeuristicStyleRegistry"/> class.
+      /// Initializes a new instance of the <see cref="HeuristicStyleRegistry" /> class.
       /// </summary>
-      public HeuristicStyleRegistry()
+      /// <param name="settings">The settings.</param>
+      public HeuristicStyleRegistry(EditorSettings settings)
       {
-         _KeywordStyle = new TextStyle(Brushes.Blue, Brushes.Transparent, FontStyle.Regular);
-         _LiteralStyle = new TextStyle(Brushes.DarkRed, Brushes.Transparent, FontStyle.Regular);
-         _CommentStyle = new TextStyle(Brushes.Green, Brushes.Transparent, FontStyle.Regular);
-         _DefaultStyle = new TextStyle(Brushes.Black, Brushes.Transparent, FontStyle.Regular);
+         var keywordForeBrush = new SolidBrush(settings.KeywordTokenColor);
+         var keywordBackBrush = new SolidBrush(settings.KeywordTokenBackgroundColor);
+         var literalForeBrush = new SolidBrush(settings.LiteralTokenColor);
+         var literalBackBrush = new SolidBrush(settings.LiteralTokenBackgroundColor);
+         var commentForeBrush = new SolidBrush(settings.CommentTokenColor);
+         var commentBackBrush = new SolidBrush(settings.CommentTokenBackgroundColor);
+         var defaultForeBrush = new SolidBrush(settings.DefaultTokenColor);
+         var defaultBackBrush = new SolidBrush(settings.DefaultTokenBackgroundColor);
+         _KeywordStyle = new TextStyle(keywordForeBrush, keywordBackBrush, settings.KeywordTokenFontStyle);
+         _LiteralStyle = new TextStyle(literalForeBrush, literalBackBrush, settings.LiteralTokenFontStyle);
+         _CommentStyle = new TextStyle(commentForeBrush, commentBackBrush, settings.CommentTokenFontStyle);
+         _DefaultStyle = new TextStyle(defaultForeBrush, defaultBackBrush, settings.DefaultTokenFontStyle);
          _InternalRegistry = new Dictionary<string, Style>();
       }
 
