@@ -299,6 +299,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public void SetSourceCode(string code)
       {
          CodeEditor.Text = code;
+
+         // Handle initial parse and coloring on loading of new source
+         ParseSource();
+         ColorizeTokens(null);
+         ColorizeErrors(null);
       }
 
       private void _Viewer_Click(object sender, EventArgs e)
@@ -446,7 +451,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
       {
          ParseSource();
-         CodeEditor.ClearStylesBuffer();
+         //CodeEditor.ClearStylesBuffer();
          ColorizeTokens(e.ChangedRange);
          ColorizeErrors(e.ChangedRange);
       }
@@ -489,9 +494,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (_Registry == null)
             return;
 
-         //var tokensToColor = FindTokensInRange(_Tokens, range);
-         var tokensToColor = _Tokens;
-
+         var tokensToColor = range == null ? _Tokens : FindTokensInRange(_Tokens, range);
          _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor);
       }
 
