@@ -448,10 +448,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
       {
-         ParseSource();
-         //CodeEditor.ClearStylesBuffer();
-         
-
+         if (string.IsNullOrEmpty(CodeEditor.Text))
+            CodeEditor.ClearStyle(StyleIndex.All);
+         else
+            ParseSource();
+         ColorizeTokens(e.ChangedRange);
+         ColorizeErrors(e.ChangedRange);
       }
 
       private void ColorizeErrors(Range range)
