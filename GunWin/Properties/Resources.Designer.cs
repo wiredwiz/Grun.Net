@@ -79,6 +79,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You may only load one grammar and one source file at a time..
+        /// </summary>
+        internal static string DragDropLoadErrorMessage {
+            get {
+                return ResourceManager.GetString("DragDropLoadErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to load file..
         /// </summary>
         internal static string FileLoadFailedMessage {

@@ -184,6 +184,8 @@
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
          this.CodeEditor.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChanged);
+         this.CodeEditor.DragDrop += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragDrop);
+         this.CodeEditor.DragEnter += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragEnter);
          // 
          // tabControlParse
          // 
@@ -421,19 +423,19 @@
             this.selectTokenToolStripMenuItem,
             this.selectParserRuleToolStripMenuItem});
          this.TracingContextMenuStrip.Name = "TracingContextMenuStrip";
-         this.TracingContextMenuStrip.Size = new System.Drawing.Size(181, 70);
+         this.TracingContextMenuStrip.Size = new System.Drawing.Size(167, 48);
          // 
          // selectTokenToolStripMenuItem
          // 
          this.selectTokenToolStripMenuItem.Name = "selectTokenToolStripMenuItem";
-         this.selectTokenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.selectTokenToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
          this.selectTokenToolStripMenuItem.Text = "Select Token";
          this.selectTokenToolStripMenuItem.Click += new System.EventHandler(this.SelectTokenToolStripMenuItem_Click);
          // 
          // selectParserRuleToolStripMenuItem
          // 
          this.selectParserRuleToolStripMenuItem.Name = "selectParserRuleToolStripMenuItem";
-         this.selectParserRuleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.selectParserRuleToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
          this.selectParserRuleToolStripMenuItem.Text = "Select Parser Rule";
          this.selectParserRuleToolStripMenuItem.Click += new System.EventHandler(this.SelectParserRuleToolStripMenuItem_Click);
          // 

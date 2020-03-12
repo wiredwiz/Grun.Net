@@ -153,4 +153,7 @@
   <data name="FileLoadFailedMessage" xml:space="preserve">
     <value>Failed to load file.</value>
   </data>
+  <data name="DragDropLoadErrorMessage" xml:space="preserve">
+    <value>You may only load one grammar and one source file at a time.</value>
+  </data>
 </root>

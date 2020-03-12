@@ -556,6 +556,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             return;
 
          var fileToSearch = openFileDialog.FileName;
+         LoadGrammarInternal(fileToSearch);
+      }
+
+      private void LoadGrammarInternal(string fileToSearch)
+      {
          var scanner = new Scanner();
          IEnumerable<GrammarReference> grammars;
          try
@@ -565,11 +570,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-            {
-               Text = Resources.GrammarLoadErrorTitle,
-               ErrorMessage = ex.Message,
-               ErrorStackTrace = ex.StackTrace
-            };
+                                  {
+                                     Text = Resources.GrammarLoadErrorTitle,
+                                     ErrorMessage = ex.Message,
+                                     ErrorStackTrace = ex.StackTrace
+                                  };
             errorDisplay.ShowDialog();
             return;
          }
@@ -615,6 +620,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             return;
 
          var fileToLoad = openFileDialog.FileName;
+         LoadSourceFileInternal(fileToLoad);
+      }
+
+      private void LoadSourceFileInternal(string fileToLoad)
+      {
          try
          {
             using (var reader = new StreamReader(fileToLoad))
@@ -807,6 +817,41 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                   var traceEvent = (TraceEvent)selected.RowObject;
                   CodeEditor.SelectSource(traceEvent.ParserRuleContext);
                }
+         }
+      }
+
+      private void CodeEditor_DragEnter(object sender, DragEventArgs e)
+      {
+         if (e.Data.GetDataPresent(DataFormats.UnicodeText) || e.Data.GetDataPresent(DataFormats.Text) || e.Data.GetDataPresent(DataFormats.FileDrop))
+            e.Effect = DragDropEffects.Copy;
+         else
+            e.Effect = DragDropEffects.None;
+      }
+
+      private void CodeEditor_DragDrop(object sender, DragEventArgs e)
+      {
+         if (e.Data.GetDataPresent(DataFormats.Text))
+            CodeEditor.Text = e.Data.GetData(DataFormats.Text).ToString();
+         else if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+            CodeEditor.Text = e.Data.GetData(DataFormats.UnicodeText).ToString();
+         else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+         {
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
+            {
+               var assemblyFiles = (from file in files where file.EndsWith(".dll") select file).ToList();
+               var otherFiles = (from file in files where !file.EndsWith(".dll") select file).ToList();
+               if (assemblyFiles.Count > 1 || (assemblyFiles.Count + otherFiles.Count > 2))
+               {
+                  MessageBox.Show(Resources.DragDropLoadErrorMessage);
+                  return;
+               }
+
+               if (assemblyFiles.Count != 0)
+                  LoadGrammarInternal(assemblyFiles[0]);
+
+               if (otherFiles.Count != 0)
+                  LoadSourceFileInternal(otherFiles[0]);
+            }
          }
       }
    }
