@@ -65,9 +65,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
             return;
 
          var startingPlace = new Place(context.Start.Column, context.start.Line - 1);
-         var spot = context.stop.GetEndPlace();
+         var stopToken = context.Stop ?? context.Start;
+         var spot = stopToken.GetEndPlace();
          var stoppingPlace = new Place(spot.Position + 1, spot.Line - 1);
-
+         
          codeEditor.Selection = new Range(codeEditor, startingPlace, stoppingPlace);
          codeEditor.DoCaretVisible();
       }
