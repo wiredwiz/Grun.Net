@@ -299,9 +299,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public void SetSourceCode(string code)
       {
          CodeEditor.Text = code;
-
-         // Handle initial parse and coloring on loading of new source
-         ParseSource();
+         CodeEditor.ClearStyle(StyleIndex.All);
          ColorizeTokens(null);
          ColorizeErrors(null);
       }
@@ -452,8 +450,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          ParseSource();
          //CodeEditor.ClearStylesBuffer();
-         ColorizeTokens(e.ChangedRange);
-         ColorizeErrors(e.ChangedRange);
+         
+
       }
 
       private void ColorizeErrors(Range range)
