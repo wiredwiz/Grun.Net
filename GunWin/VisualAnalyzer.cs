@@ -753,7 +753,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void HeuristicHighlightingtToolStripMenuItem_Click(object sender, EventArgs e)
       {
          if (HeuristicHighlightingtToolStripMenuItem.Checked)
+         {
             ColorizeTokens(null);
+            ColorizeErrors(null);
+         }
          else
             CodeEditor.ClearStyle(StyleIndex.All);
       }
