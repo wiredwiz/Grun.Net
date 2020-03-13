@@ -200,7 +200,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
 
          // Fetch EditorFontSize setting
          result = appSettings["EditorFontSize"]?.Value ?? string.Empty;
-         EditorFontSize = !float.TryParse(result, out var settingValueFloat) ? 9.5f : settingValueFloat;
+         EditorFontSize = !float.TryParse(result, out var settingValueFloat) ? 8f : settingValueFloat;
       }
 
       private void LoadGraphingNodeColorSettings(KeyValueConfigurationCollection appSettings)
