@@ -54,6 +54,7 @@ using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
 
 // ReSharper disable RedundantNameQualifier
@@ -110,8 +111,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                             var grammar = scanner.LocateGrammar(workingDirectory, o.GrammarName);
                             if (grammar == null)
                             {
-                               Console.WriteLine(
-                                                 $"Could not find an assembly that defines grammar \"{o.GrammarName}\" in the current working directory");
+                               Console.WriteLine(Resources.GrammarNotFoundErrorMessage, o.GrammarName);
                                return;
                             }
 
@@ -125,7 +125,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                             }
                             else
                             {
-                               Console.WriteLine("Now reading from standard input.  Use Ctrl+Z to terminate input.");
+                               Console.WriteLine(Resources.ReadingFromStandardInputPromptMessage);
                                string line;
                                while ((line = Console.ReadLine()) != null)
                                   data += line + Environment.NewLine;
