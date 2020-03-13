@@ -38,10 +38,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -58,6 +56,7 @@ using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
 
+// ReSharper disable RedundantNameQualifier
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
 {
    /// <summary>
@@ -81,6 +80,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                             var options = Grammar.ParseOption.None;
                             var loadGui = false;
                             var showParseTree = false;
+                            var writeSvg = false;
 
                             if (o.Tokens) options |= Grammar.ParseOption.Tokens;
                             if (o.Diagnostics) options |= Grammar.ParseOption.Diagnostics;
@@ -89,6 +89,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                             {
                                options |= Grammar.ParseOption.Tree;
                                showParseTree = true;
+                            }
+
+                            if (!string.IsNullOrEmpty(o.SvgFileName))
+                            {
+                               writeSvg = true;
+                               options |= Grammar.ParseOption.Tree;
                             }
 
                             if (o.Sll) options |= Grammar.ParseOption.Sll;
@@ -109,7 +115,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                return;
                             }
 
-                            string line;
                             var data = string.Empty;
 
                             if (!string.IsNullOrEmpty(o.FileName))
@@ -121,6 +126,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                             else
                             {
                                Console.WriteLine("Now reading from standard input.  Use Ctrl+Z to terminate input.");
+                               string line;
                                while ((line = Console.ReadLine()) != null)
                                   data += line + Environment.NewLine;
                             }
@@ -139,22 +145,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                             if (showParseTree)
                               Console.WriteLine(analyzer.ParseContext.ToStringTree(grammarParser));
 
-                            if (!string.IsNullOrEmpty(o.SvgFileName))
+                            if (writeSvg)
                             {
-                               Console.WriteLine("--svg option is not yet supported.");
-
-                               //var rules = scanner.GetParserRulesForGrammar(grammar);
-                               //var grapher = new ParseTreeGrapher(analyzer.ParseContext, rules.ToList())
-                               //{
-                               //   BackgroundColor = Color.LightBlue,
-                               //   BorderColor = Color.Black,
-                               //   TextColor = Color.Black
-                               //};
-                               //var graph = grapher.CreateGraph();
-                               //graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
-                               //GraphRenderer renderer = new GraphRenderer(graph);
-                               //renderer.CalculateLayout();
-                               //SvgGraphWriter.Write(graph, o.SvgFileName, null, null, 4);
+                               var rules = scanner.GetParserRulesForGrammar(grammar);
+                               var grapher = new ParseTreeGrapher()
+                               {
+                                  BackgroundColor = Color.LightBlue,
+                                  BorderColor = Color.Black,
+                                  TextColor = Color.Black
+                               };
+                               var graph = grapher.CreateGraph(analyzer.ParseContext, rules.ToList());
+                               graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
+                               GraphRenderer renderer = new GraphRenderer(graph);
+                               renderer.CalculateLayout();
+                               graph.EscapeNodesForSvg();
+                               SvgGraphWriter.Write(graph, o.SvgFileName, null, null, 4);
                             }
 
                             if (loadGui)
@@ -167,7 +172,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
          {
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.StackTrace);
-            Console.ReadKey();
          }
       }
 
