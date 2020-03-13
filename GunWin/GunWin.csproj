@@ -92,7 +92,6 @@
     <Compile Include="Dialogs\ErrorDisplay.Designer.cs">
       <DependentUpon>ErrorDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editor\EditorSettings.cs" />
     <Compile Include="Editor\FastColoredTextBoxExtensions.cs" />
     <Compile Include="Editor\SyntaxHighlighting\EditorSyntaxHighlighter.cs" />
     <Compile Include="Dialogs\GrammarSelector.cs">

@@ -39,6 +39,7 @@ using System.Drawing;
 
 using FastColoredTextBoxNS;
 
+using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
@@ -66,7 +67,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// Initializes a new instance of the <see cref="HeuristicStyleRegistry" /> class.
       /// </summary>
       /// <param name="settings">The settings.</param>
-      public HeuristicStyleRegistry(EditorSettings settings)
+      public HeuristicStyleRegistry(Settings settings)
       {
          var keywordForeBrush = new SolidBrush(settings.KeywordTokenColor);
          var keywordBackBrush = new SolidBrush(settings.KeywordTokenBackgroundColor);

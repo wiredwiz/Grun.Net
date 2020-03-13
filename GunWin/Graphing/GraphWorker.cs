@@ -48,6 +48,7 @@ using JetBrains.Annotations;
 using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
@@ -62,7 +63,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
    {
       private readonly object _Padlock;
 
-      private readonly EditorSettings _Settings;
+      private readonly Settings _Settings;
 
       private readonly SynchronizationContext _SynchronizationContext;
 
@@ -82,7 +83,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       ///    or
       ///    settings are null
       /// </exception>
-      public GraphWorker([NotNull] SynchronizationContext synchronizationContext, [NotNull] EditorSettings settings)
+      public GraphWorker([NotNull] SynchronizationContext synchronizationContext, [NotNull] Settings settings)
       {
          _SynchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
          _Settings = settings ?? throw new ArgumentNullException(nameof(settings));

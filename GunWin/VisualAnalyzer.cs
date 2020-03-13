@@ -70,6 +70,7 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;
 
 using Place = FastColoredTextBoxNS.Place;
+using Settings = Org.Edgerunner.ANTLR4.Tools.Testing.Configuration.Settings;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
@@ -96,7 +97,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private IStyleRegistry _Registry;
 
-      private EditorSettings _Settings;
+      private Settings _Settings;
 
       private IList<SyntaxToken> _Tokens;
 
@@ -529,7 +530,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void LoadApplicationSettings()
       {
-         _Settings = new EditorSettings();
+         _Settings = new Settings();
          var pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
          if (pathRoot != null)
          {

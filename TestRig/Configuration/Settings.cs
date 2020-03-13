@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="EditorSettings.cs" company="Edgerunner.org">
+// <copyright file="Settings.cs" company="Edgerunner.org">
 // Copyright 2020 
 // </copyright>
 // 
@@ -42,13 +42,13 @@ using System.IO;
 
 using JetBrains.Annotations;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
 {
    /// <summary>
    /// Class that represents various code editor settings.
    /// </summary>
    [SuppressMessage("ReSharper", "CatchAllClause", Justification = "We want to recover gracefully regardless of errors in settings.")]
-   public class EditorSettings
+   public class Settings
    {
       /// <summary>
       /// Gets or sets the node threshold count for throttling.
