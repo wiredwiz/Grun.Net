@@ -38,6 +38,9 @@ using System;
 using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
+
+using JetBrains.Annotations;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
 {
@@ -172,6 +175,28 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
       /// </summary>
       /// <value>The size of the editor font.</value>
       public float EditorFontSize { get; set; }
+
+      /// <summary>
+      /// Loads the editor settings from the specified file.
+      /// </summary>
+      /// <param name="filePath">The file path.</param>
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="filePath"/> is <see langword="null"/> or empty.</exception>
+      /// <exception cref="T:System.Configuration.ConfigurationErrorsException">A configuration file could not be loaded.</exception>
+      public void LoadFrom([NotNull] string filePath)
+      {
+         if (string.IsNullOrEmpty(filePath))
+            throw new ArgumentNullException(nameof(filePath));
+
+         if (File.Exists(filePath))
+         {
+            var configMap = new ExeConfigurationFileMap { ExeConfigFilename = filePath };
+            var config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+            var appSettings = config.AppSettings.Settings;
+            LoadFrom(appSettings);
+         }
+         else
+            LoadFrom(null as KeyValueConfigurationCollection);
+      }
 
       /// <summary>
       /// Loads the editor settings from the supplied application settings.

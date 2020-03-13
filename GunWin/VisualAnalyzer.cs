@@ -529,21 +529,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void LoadApplicationSettings()
       {
-         KeyValueConfigurationCollection appSettings = new KeyValueConfigurationCollection();
+         _Settings = new EditorSettings();
          var pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
          if (pathRoot != null)
          {
             var configFile = Path.Combine(pathRoot, "GrunWin.exe.config");
             if (File.Exists(configFile))
             {
-               var configMap = new ExeConfigurationFileMap { ExeConfigFilename = configFile };
-               var config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
-               appSettings = config.AppSettings.Settings;
+               _Settings.LoadFrom(configFile);
             }
+            else
+               _Settings.LoadFrom(null as KeyValueConfigurationCollection);
          }
-
-         _Settings = new EditorSettings();
-         _Settings.LoadFrom(appSettings);
+         else
+            _Settings.LoadFrom(null as KeyValueConfigurationCollection);
       }
 
       private void LoadEditorGuide([NotNull] GrammarReference grammar)
