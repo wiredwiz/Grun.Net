@@ -70,6 +70,8 @@
          this.TracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.DiagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.SimpleLLModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
          this.splitContainer2 = new System.Windows.Forms.SplitContainer();
          this.ParseMessageListView = new BrightIdeasSoftware.ObjectListView();
@@ -169,7 +171,6 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -443,7 +444,8 @@
          // 
          this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.optionsToolStripMenuItem});
+            this.optionsToolStripMenuItem,
+            this.helpToolStripMenuItem});
          this.menuStrip1.Location = new System.Drawing.Point(0, 0);
          this.menuStrip1.Name = "menuStrip1";
          this.menuStrip1.Size = new System.Drawing.Size(969, 24);
@@ -537,6 +539,21 @@
          this.SimpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
          this.SimpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
          this.SimpleLLModeToolStripMenuItem.Click += new System.EventHandler(this.SimpleLLModeToolStripMenuItem_Click);
+         // 
+         // helpToolStripMenuItem
+         // 
+         this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+         this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+         this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+         this.helpToolStripMenuItem.Text = "&Help";
+         // 
+         // aboutToolStripMenuItem
+         // 
+         this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+         this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.aboutToolStripMenuItem.Text = "&About GrunWin";
+         this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
          // 
          // openFileDialog
          // 
@@ -721,6 +738,8 @@
       private System.Windows.Forms.ContextMenuStrip TracingContextMenuStrip;
       private System.Windows.Forms.ToolStripMenuItem selectTokenToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem selectParserRuleToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
    }
 }
 

@@ -79,6 +79,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
    /// <seealso cref="System.Windows.Forms.Form" />
    public partial class VisualAnalyzer : Form
    {
+      private readonly EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
+
       private IEditorGuide _EditorGuide;
 
       private GrammarReference _Grammar;
@@ -86,8 +88,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private IParseTreeGrapher _Grapher;
 
       private IGraphWorker _GraphWorker;
-
-      private readonly EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
 
       private List<ParseMessage> _ParseErrors;
 
@@ -294,7 +294,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          CodeEditor.Text = code;
          CodeEditor.ClearStyle(StyleIndex.All);
          ColorizeTokens(null);
-         ColorizeErrors(null);
+         ColorizeErrors();
       }
 
       private void _GraphWorker_GraphingFinished(object sender, GraphingResult e)
@@ -395,10 +395,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          else
             ParseSource();
          ColorizeTokens(e.ChangedRange);
-         ColorizeErrors(e.ChangedRange);
+         ColorizeErrors();
       }
 
-      private void ColorizeErrors(Range range)
+      // ReSharper disable once TooManyDeclarations
+      private void ColorizeErrors()
       {
          if (_Registry == null)
             return;
@@ -502,7 +503,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (HeuristicHighlightingtToolStripMenuItem.Checked)
          {
             ColorizeTokens(null);
-            ColorizeErrors(null);
+            ColorizeErrors();
          }
          else
          {
@@ -854,7 +855,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // Handle initial parse and coloring on load
          ParseSource();
          ColorizeTokens(null);
-         ColorizeErrors(null);
+         ColorizeErrors();
+      }
+
+      private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         var aboutBox = new AboutBox();
+         aboutBox.ShowDialog();
       }
    }
 }
