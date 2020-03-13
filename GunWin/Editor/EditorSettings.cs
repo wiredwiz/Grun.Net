@@ -161,6 +161,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
       public Color GraphNodeBackgroundColor { get; set; }
 
       /// <summary>
+      /// Gets or sets the editor font family.
+      /// </summary>
+      /// <value>The editor font family.</value>
+      public FontFamily EditorFontFamily { get; set; }
+
+      /// <summary>
+      /// Gets or sets the size of the editor font.
+      /// </summary>
+      /// <value>The size of the editor font.</value>
+      public float EditorFontSize { get; set; }
+
+      /// <summary>
       /// Loads the editor settings from the supplied application settings.
       /// </summary>
       /// <param name="appSettings">The application settings.</param>
@@ -329,6 +341,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          {
             GraphNodeBackgroundColor = Color.LightBlue;
          }
+
+         // Fetch EditorFontFamily setting
+         result = appSettings["EditorFontFamily"]?.Value ?? "Courier New";
+         try
+         {
+            EditorFontFamily = new FontFamily(result);
+         }
+         catch (ArgumentException)
+         {
+            EditorFontFamily = FontFamily.GenericMonospace;
+         }
+
+         // Fetch EditorFontSize setting
+         result = appSettings["EditorFontSize"]?.Value ?? string.Empty;
+         EditorFontSize = !float.TryParse(result, out var settingValueFloat) ? 9.5f : settingValueFloat;
       }
    }
 }

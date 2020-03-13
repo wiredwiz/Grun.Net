@@ -174,7 +174,7 @@
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
-         this.CodeEditor.Location = new System.Drawing.Point(3, 40);
+         this.CodeEditor.Location = new System.Drawing.Point(3, 36);
          this.CodeEditor.Name = "CodeEditor";
          this.CodeEditor.Paddings = new System.Windows.Forms.Padding(0);
          this.CodeEditor.RightBracket = ')';
@@ -552,7 +552,7 @@
          // aboutToolStripMenuItem
          // 
          this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-         this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.aboutToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
          this.aboutToolStripMenuItem.Text = "&About GrunWin";
          this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
          // 
@@ -633,7 +633,7 @@
          // 
          this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.StripLabelGrammar.Name = "StripLabelGrammar";
-         this.StripLabelGrammar.Size = new System.Drawing.Size(69, 17);
+         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
          this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName

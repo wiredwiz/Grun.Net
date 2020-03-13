@@ -394,7 +394,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             ParseSource();
             ColorizeTokens(e.ChangedRange);
-            ColorizeErrors(e.ChangedRange);
+            ColorizeErrors();
          }
       }
 
@@ -529,12 +529,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void LoadApplicationSettings()
       {
+         KeyValueConfigurationCollection appSettings = new KeyValueConfigurationCollection();
          var pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-         var configMap = new ExeConfigurationFileMap();
-         configMap.ExeConfigFilename = Path.Combine(pathRoot, "GrunWin.exe.config");
-         var config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
-
-         var appSettings = config.AppSettings.Settings;
+         if (pathRoot != null)
+         {
+            var configFile = Path.Combine(pathRoot, "GrunWin.exe.config");
+            if (File.Exists(configFile))
+            {
+               var configMap = new ExeConfigurationFileMap { ExeConfigFilename = configFile };
+               var config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+               appSettings = config.AppSettings.Settings;
+            }
+         }
 
          _Settings = new EditorSettings();
          _Settings.LoadFrom(appSettings);
@@ -856,6 +862,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          InitializeGraphCanvas();
          ConfigureGraphWorker();
+
+         CodeEditor.Font = new System.Drawing.Font(_Settings.EditorFontFamily, _Settings.EditorFontSize);
 
          // Handle initial parse and coloring on load
          ParseSource();
