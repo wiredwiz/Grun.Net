@@ -36,6 +36,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Drawing;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
@@ -163,29 +164,29 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
       /// Loads the editor settings from the supplied application settings.
       /// </summary>
       /// <param name="appSettings">The application settings.</param>
-      public void LoadFrom(NameValueCollection appSettings)
+      public void LoadFrom(KeyValueConfigurationCollection appSettings)
       {
          // Fetch NodeThresholdCountForThrottling setting
-         string result = appSettings["NodeThresholdCountForThrottling"] ?? string.Empty;
+         string result = appSettings["NodeThresholdCountForThrottling"]?.Value ?? string.Empty;
          NodeThresholdCountForThrottling = !int.TryParse(result, out var settingValue) ? 50 : settingValue;
 
          // Fetch MillisecondsToDelayPerNodeWhenThrottling setting
-         result = appSettings["MillisecondsToDelayPerNodeWhenThrottling"] ?? string.Empty;
+         result = appSettings["MillisecondsToDelayPerNodeWhenThrottling"]?.Value ?? string.Empty;
          MillisecondsToDelayPerNodeWhenThrottling = !int.TryParse(result, out settingValue) ? 5 : settingValue;
 
          // Fetch MaximumRenderShortDelay setting
-         result = appSettings["MaximumRenderShortDelay"] ?? string.Empty;
+         result = appSettings["MaximumRenderShortDelay"]?.Value ?? string.Empty;
          MaximumRenderShortDelay = !int.TryParse(result, out settingValue) ? 1000 : settingValue;
 
          // Fetch MinimumRenderCountToTriggerLongDelay setting
-         result = appSettings["MinimumRenderCountToTriggerLongDelay"] ?? string.Empty;
+         result = appSettings["MinimumRenderCountToTriggerLongDelay"]?.Value ?? string.Empty;
          MinimumRenderCountToTriggerLongDelay = !int.TryParse(result, out settingValue) ? 10 : settingValue;
 
          // Fetch DefaultTokenColor setting
-         result = appSettings["DefaultTokenColor"] ?? string.Empty;
+         result = appSettings["DefaultTokenColor"]?.Value ?? string.Empty;
          try
          {
-            DefaultTokenColor = ColorTranslator.FromHtml(result);
+            DefaultTokenColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Black;
          }
          catch (Exception)
          {
@@ -193,10 +194,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch DefaultTokenBackgroundColor setting
-         result = appSettings["DefaultTokenBackgroundColor"] ?? string.Empty;
+         result = appSettings["DefaultTokenBackgroundColor"]?.Value ?? string.Empty;
          try
          {
-            DefaultTokenBackgroundColor = ColorTranslator.FromHtml(result);
+            DefaultTokenBackgroundColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Transparent;
          }
          catch (Exception)
          {
@@ -204,14 +205,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch DefaultTokenFontStyle setting
-         result = appSettings["DefaultTokenFontStyle"] ?? string.Empty;
+         result = appSettings["DefaultTokenFontStyle"]?.Value ?? string.Empty;
          DefaultTokenFontStyle = !Enum.TryParse(result, out FontStyle style) ? FontStyle.Regular : style;
 
          // Fetch KeywordTokenColor setting
-         result = appSettings["KeywordTokenColor"] ?? string.Empty;
+         result = appSettings["KeywordTokenColor"]?.Value ?? string.Empty;
          try
          {
-            KeywordTokenColor = ColorTranslator.FromHtml(result);
+            KeywordTokenColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Blue;
          }
          catch (Exception)
          {
@@ -219,10 +220,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch KeywordTokenBackgroundColor setting
-         result = appSettings["KeywordTokenBackgroundColor"] ?? string.Empty;
+         result = appSettings["KeywordTokenBackgroundColor"]?.Value ?? string.Empty;
          try
          {
-            KeywordTokenBackgroundColor = ColorTranslator.FromHtml(result);
+            KeywordTokenBackgroundColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Transparent;
          }
          catch (Exception)
          {
@@ -230,14 +231,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch KeywordTokenFontStyle setting
-         result = appSettings["KeywordTokenFontStyle"] ?? string.Empty;
+         result = appSettings["KeywordTokenFontStyle"]?.Value ?? string.Empty;
          KeywordTokenFontStyle = !Enum.TryParse(result, out style) ? FontStyle.Regular : style;
 
          // Fetch LiteralTokenColor setting
-         result = appSettings["LiteralTokenColor"] ?? string.Empty;
+         result = appSettings["LiteralTokenColor"]?.Value ?? string.Empty;
          try
          {
-            LiteralTokenColor = ColorTranslator.FromHtml(result);
+            LiteralTokenColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Red;
          }
          catch (Exception)
          {
@@ -245,10 +246,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch LiteralTokenBackgroundColor setting
-         result = appSettings["LiteralTokenBackgroundColor"] ?? string.Empty;
+         result = appSettings["LiteralTokenBackgroundColor"]?.Value ?? string.Empty;
          try
          {
-            LiteralTokenBackgroundColor = ColorTranslator.FromHtml(result);
+            LiteralTokenBackgroundColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Transparent;
          }
          catch (Exception)
          {
@@ -256,14 +257,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch LiteralTokenFontStyle setting
-         result = appSettings["LiteralTokenFontStyle"] ?? string.Empty;
+         result = appSettings["LiteralTokenFontStyle"]?.Value ?? string.Empty;
          LiteralTokenFontStyle = !Enum.TryParse(result, out style) ? FontStyle.Regular : style;
 
          // Fetch CommentTokenColor setting
-         result = appSettings["CommentTokenColor"] ?? string.Empty;
+         result = appSettings["CommentTokenColor"]?.Value ?? string.Empty;
          try
          {
-            CommentTokenColor = ColorTranslator.FromHtml(result);
+            CommentTokenColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Green;
          }
          catch (Exception)
          {
@@ -271,10 +272,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch CommentTokenBackgroundColor setting
-         result = appSettings["CommentTokenBackgroundColor"] ?? string.Empty;
+         result = appSettings["CommentTokenBackgroundColor"]?.Value ?? string.Empty;
          try
          {
-            CommentTokenBackgroundColor = ColorTranslator.FromHtml(result);
+            CommentTokenBackgroundColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Transparent;
          }
          catch (Exception)
          {
@@ -282,14 +283,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch CommentTokenFontStyle setting
-         result = appSettings["CommentTokenFontStyle"] ?? string.Empty;
+         result = appSettings["CommentTokenFontStyle"]?.Value ?? string.Empty;
          CommentTokenFontStyle = !Enum.TryParse(result, out style) ? FontStyle.Regular : style;
 
          // Fetch GraphNodeBorderColor setting
-         result = appSettings["GraphNodeBorderColor"] ?? string.Empty;
+         result = appSettings["GraphNodeBorderColor"]?.Value ?? string.Empty;
          try
          {
-            GraphNodeBorderColor = ColorTranslator.FromHtml(result);
+            GraphNodeBorderColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Transparent;
          }
          catch (Exception)
          {
@@ -297,10 +298,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch GraphNodeTextColor setting
-         result = appSettings["GraphNodeTextColor"] ?? string.Empty;
+         result = appSettings["GraphNodeTextColor"]?.Value ?? string.Empty;
          try
          {
-            GraphNodeTextColor = ColorTranslator.FromHtml(result);
+            GraphNodeTextColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Black;
          }
          catch (Exception)
          {
@@ -308,10 +309,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch GraphNodeBorderColor setting
-         result = appSettings["GraphNodeBorderColor"] ?? string.Empty;
+         result = appSettings["GraphNodeBorderColor"]?.Value ?? string.Empty;
          try
          {
-            GraphNodeBorderColor = ColorTranslator.FromHtml(result);
+            GraphNodeBorderColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.Black;
          }
          catch (Exception)
          {
@@ -319,10 +320,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          }
 
          // Fetch GraphNodeBackgroundColor setting
-         result = appSettings["GraphNodeBackgroundColor"] ?? string.Empty;
+         result = appSettings["GraphNodeBackgroundColor"]?.Value ?? string.Empty;
          try
          {
-            GraphNodeBackgroundColor = ColorTranslator.FromHtml(result);
+            GraphNodeBackgroundColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : Color.LightBlue;
          }
          catch (Exception)
          {

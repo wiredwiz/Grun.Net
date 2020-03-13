@@ -59,6 +59,7 @@ using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs;
@@ -256,7 +257,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (string.IsNullOrEmpty(rule)) throw new ArgumentNullException(nameof(rule));
 
          if (!_ParserRules.Contains(rule))
-            throw new ArgumentException(string.Format(Resources.InvalidParserRule, rule), nameof(rule));
+            throw new GrammarException(string.Format(Resources.InvalidParserRule, rule));
 
          CmbRules.SelectedIndex = CmbRules.FindStringExact(rule);
       }
@@ -292,9 +293,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public void SetSourceCode(string code)
       {
          CodeEditor.Text = code;
-         CodeEditor.ClearStyle(StyleIndex.All);
-         ColorizeTokens(null);
-         ColorizeErrors();
       }
 
       private void _GraphWorker_GraphingFinished(object sender, GraphingResult e)
@@ -393,9 +391,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (string.IsNullOrEmpty(CodeEditor.Text))
             CodeEditor.ClearStyle(StyleIndex.All);
          else
+         {
             ParseSource();
-         ColorizeTokens(e.ChangedRange);
-         ColorizeErrors();
+            ColorizeTokens(e.ChangedRange);
+            ColorizeErrors(e.ChangedRange);
+         }
       }
 
       // ReSharper disable once TooManyDeclarations
@@ -529,7 +529,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void LoadApplicationSettings()
       {
-         var appSettings = ConfigurationManager.AppSettings;
+         var pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+         var configMap = new ExeConfigurationFileMap();
+         configMap.ExeConfigFilename = Path.Combine(pathRoot, "GrunWin.exe.config");
+         var config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+
+         var appSettings = config.AppSettings.Settings;
 
          _Settings = new EditorSettings();
          _Settings.LoadFrom(appSettings);

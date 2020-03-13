@@ -6,6 +6,10 @@ These tools are meant to supplement the need to continually build java classes t
 ![.Net Framework CI](https://github.com/wiredwiz/Grun.Net/workflows/.Net%20Framework%20CI/badge.svg)
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://raw.githubusercontent.com/antlr/antlr4/master/LICENSE.txt)
 
+The video below demonstrates the Grun and GrunWin tools.
+
+[![Demonstration Video](http://img.youtube.com/vi/M_qMlIUjLMA/0.jpg)](http://www.youtube.com/watch?v=M_qMlIUjLMA)
+
 ### Grun.exe
 
 Grun.exe is meant to be a mostly faithful port of existing functionality provided by the standard

@@ -382,6 +382,7 @@
          this.TraceListView.Dock = System.Windows.Forms.DockStyle.Fill;
          this.TraceListView.FullRowSelect = true;
          this.TraceListView.HeaderUsesThemes = false;
+         this.TraceListView.HideSelection = false;
          this.TraceListView.Location = new System.Drawing.Point(0, 0);
          this.TraceListView.MultiSelect = false;
          this.TraceListView.Name = "TraceListView";
@@ -632,7 +633,7 @@
          // 
          this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.StripLabelGrammar.Name = "StripLabelGrammar";
-         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
+         this.StripLabelGrammar.Size = new System.Drawing.Size(69, 17);
          this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName

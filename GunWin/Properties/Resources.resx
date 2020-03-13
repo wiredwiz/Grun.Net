@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InvalidParserRule" xml:space="preserve">
-    <value>The rule "{0}" is invalid</value>
+    <value>The parser rule "{0}" is invalid</value>
   </data>
   <data name="AssemblyFileFilter" xml:space="preserve">
     <value>Assembly files|*.dll</value>

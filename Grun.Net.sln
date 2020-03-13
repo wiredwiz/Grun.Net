@@ -21,6 +21,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code Grapher", "Code Graphe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{8BD992FD-A3B3-4AF9-9371-5AA14DDFDA68}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{78D2482C-5CF3-46F9-85FA-0DE8918DDD08}"
+	ProjectSection(SolutionItems) = preProject
+		grun.net.ico = grun.net.ico
+		Grun.Net.png = Grun.Net.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +56,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{78D2482C-5CF3-46F9-85FA-0DE8918DDD08} = {7B8535ED-1440-4F63-9F90-A086FD870EF3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1CB1A18-09C5-4D7F-916D-2346D29A8563}

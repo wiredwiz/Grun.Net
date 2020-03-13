@@ -133,7 +133,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The rule &quot;{0}&quot; is invalid.
+        ///   Looks up a localized string similar to The parser rule &quot;{0}&quot; is invalid.
         /// </summary>
         internal static string InvalidParserRule {
             get {
