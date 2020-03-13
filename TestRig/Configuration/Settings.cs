@@ -204,6 +204,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
       /// <param name="appSettings">The application settings.</param>
       public void LoadFrom(KeyValueConfigurationCollection appSettings)
       {
+         // BUG: Fix null loading logic.
+
          LoadGraphThrottlingSettings(appSettings);
          LoadSyntaxHighlightingSettings(appSettings);
          LoadGraphingNodeColorSettings(appSettings);
