@@ -1,7 +1,7 @@
 # Grun.Net
 
-A set of tools written in C# for testing ANTLR generated C# grammar assemblies. 
-These tools are meant to supplement the need to continually build java classes to test with the java TestRig assembly.
+A set of tools written in C# for testing Antlr4 generated C# grammar assemblies. 
+These tools are meant to supplement the need to continually test with the java TestRig assembly.
 
 ![.Net Framework CI](https://github.com/wiredwiz/Grun.Net/workflows/.Net%20Framework%20CI/badge.svg)
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://raw.githubusercontent.com/antlr/antlr4/master/LICENSE.txt)
