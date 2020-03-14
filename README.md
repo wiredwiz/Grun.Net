@@ -41,7 +41,7 @@ parser that is being used (you'll notice you need to use '--' and not '-').  The
   |--tree             |         Display a Lisp-style parse tree.|
   |--trace            |         Trace grammar parsing.          |
   |--gui              |         Opens GrunWin.exe gui tool.     |
-  |--svg \<file name> |         Outputs graph to a scalable vector graphics file.|
+  |--svg \<file name> |         Outputs parse tree graph to a scalable vector graphics file.|
   |--SLL              |         Parse using SLL prediction mode.|
   |--diagnostics      |         Parse with diagnostics.         |
   |--encoding \<name> |         Encoding type to use.           |

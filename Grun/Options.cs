@@ -73,7 +73,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
       [Option("encoding", Required = false, HelpText = "Encoding type to use")]
       public string EncodingName { get; set; }
 
-      [Option("svg", Required = false, HelpText = "Scalable vector graphics file name to output the parse tree graph to")]
+      [Option("svg", Required = false, HelpText = "Writes parse tree graph to a scalable vector graphics file with the specified name.")]
       public string SvgFileName { get; set; }
    }
 }
