@@ -38,8 +38,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -53,6 +55,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
@@ -65,6 +68,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
    /// </summary>
    internal class Program
    {
+      private static Settings _Settings;
+
       #region Static
 
       [STAThread]
@@ -73,6 +78,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
       {
          try
          {
+            LoadApplicationSettings();
+
             var parser = new Parser(with => with.HelpWriter = null);
             var parserResult = parser.ParseArguments<Options>(args);
             parserResult
@@ -166,12 +173,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                LoadGui(data, grammar, o.RuleName);
                          })
                       .WithNotParsed(errs => DisplayHelp(parserResult, errs));
+
+#if DEBUG
+            Console.WriteLine(Resources.PressAnyKeyMessage);
+            Console.Read();
+#endif
          }
          // ReSharper disable once CatchAllClause
          catch (Exception ex)
          {
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.StackTrace);
+            #if DEBUG
+            Console.WriteLine(Resources.PressAnyKeyMessage);
+            Console.Read();
+#endif
          }
       }
 
@@ -220,6 +236,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
             e => e);
 
          Console.WriteLine(helpText);
+      }
+
+      private static void LoadApplicationSettings()
+      {
+         _Settings = new Settings();
+         var pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+         if (pathRoot != null)
+         {
+            var configFile = Path.Combine(pathRoot, Resources.AppconfigFile);
+            if (File.Exists(configFile))
+            {
+               _Settings.LoadFrom(configFile);
+               return;
+            }
+         }
+
+         _Settings.LoadDefaults();
       }
 
       #endregion

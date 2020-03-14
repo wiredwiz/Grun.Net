@@ -534,16 +534,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
          if (pathRoot != null)
          {
-            var configFile = Path.Combine(pathRoot, "GrunWin.exe.config");
+            var configFile = Path.Combine(pathRoot, Resources.AppconfigFile);
             if (File.Exists(configFile))
             {
                _Settings.LoadFrom(configFile);
+               return;
             }
-            else
-               _Settings.LoadFrom(null as KeyValueConfigurationCollection);
          }
-         else
-            _Settings.LoadFrom(null as KeyValueConfigurationCollection);
+
+         _Settings.LoadDefaults();
       }
 
       private void LoadEditorGuide([NotNull] GrammarReference grammar)

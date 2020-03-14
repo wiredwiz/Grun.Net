@@ -156,4 +156,7 @@
   <data name="DragDropLoadErrorMessage" xml:space="preserve">
     <value>You may only load one grammar and one source file at a time.</value>
   </data>
+  <data name="AppconfigFile" xml:space="preserve">
+    <value>Grun.Net.config</value>
+  </data>
 </root>

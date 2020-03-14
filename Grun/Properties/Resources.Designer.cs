@@ -61,11 +61,29 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grun.Net.config.
+        /// </summary>
+        internal static string AppconfigFile {
+            get {
+                return ResourceManager.GetString("AppconfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find an assembly that defines grammar &quot;{0}&quot; in the current working directory.
         /// </summary>
         internal static string GrammarNotFoundErrorMessage {
             get {
                 return ResourceManager.GetString("GrammarNotFoundErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press any key to continue.
+        /// </summary>
+        internal static string PressAnyKeyMessage {
+            get {
+                return ResourceManager.GetString("PressAnyKeyMessage", resourceCulture);
             }
         }
         

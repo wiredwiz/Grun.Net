@@ -70,6 +70,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grun.Net.config.
+        /// </summary>
+        internal static string AppconfigFile {
+            get {
+                return ResourceManager.GetString("AppconfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assembly files|*.dll.
         /// </summary>
         internal static string AssemblyFileFilter {
