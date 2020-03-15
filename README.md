@@ -11,6 +11,7 @@ These tools are meant to supplement the need to continually test with the Antlr 
 --->
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/wiredwiz/Grun.Net/graphs/commit-activity)
+[![GitHub issues open](https://img.shields.io/github/issues/wiredwiz/Grun.Net.svg?maxAge=2592000)](https://github.com/wiredwiz/Grun.Net/issues)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/wiredwiz/Grun.Net.svg)](http://isitmaintained.com/project/wiredwiz/Grun.Net "Percentage of issues still open")
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/wiredwiz/Grun.Net.svg)](http://isitmaintained.com/project/wiredwiz/Grun.Net "Average time to resolve an issue")
 
