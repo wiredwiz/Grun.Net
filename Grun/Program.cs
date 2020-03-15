@@ -55,6 +55,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
+using Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties;
@@ -157,9 +158,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                var rules = scanner.GetParserRulesForGrammar(grammar);
                                var grapher = new ParseTreeGrapher()
                                {
-                                  BackgroundColor = Color.LightBlue,
-                                  BorderColor = Color.Black,
-                                  TextColor = Color.Black
+                                  BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
+                                  BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
+                                  TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
                                };
                                var graph = grapher.CreateGraph(analyzer.ParseContext, rules.ToList());
                                graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();

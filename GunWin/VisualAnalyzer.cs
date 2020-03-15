@@ -59,6 +59,7 @@ using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
+using Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
@@ -217,11 +218,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-                                  {
-                                     Text = Resources.SourceParseErrorTitle,
-                                     ErrorMessage = ex.Message,
-                                     ErrorStackTrace = ex.StackTrace
-                                  };
+            {
+               Text = Resources.SourceParseErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
             errorDisplay.ShowDialog();
          }
 
@@ -232,11 +233,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-                                  {
-                                     Text = Resources.GraphQueueErrorTitle,
-                                     ErrorMessage = ex.Message,
-                                     ErrorStackTrace = ex.StackTrace
-                                  };
+            {
+               Text = Resources.GraphQueueErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
             errorDisplay.ShowDialog();
          }
 
@@ -326,9 +327,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             var child = tree.GetChild(i);
             var newNode =
                new TreeNode(Trees.GetNodeText(child, _ParserRules))
-                  {
-                     Tag = child, Name = child.GetHashCode().ToString()
-                  };
+               {
+                  Tag = child,
+                  Name = child.GetHashCode().ToString()
+               };
             treeNode.Nodes.Add(newNode);
             AddTreeBranchesAndLeaves(newNode, child);
          }
@@ -420,11 +422,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-                                  {
-                                     Text = Resources.SyntaxErrorColoringErrorTitle,
-                                     ErrorMessage = ex.Message,
-                                     ErrorStackTrace = ex.StackTrace
-                                  };
+            {
+               Text = Resources.SyntaxErrorColoringErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
             errorDisplay.ShowDialog();
          }
          finally
@@ -447,22 +449,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _GraphWorker = new GraphWorker(SynchronizationContext.Current, _Settings);
          _GraphWorker.GraphingFinished += _GraphWorker_GraphingFinished;
          _Grapher = new ParseTreeGrapher
-                       {
-                          BackgroundColor = new Color(
-                             _Settings.GraphNodeBackgroundColor.A,
-                             _Settings.GraphNodeBackgroundColor.R,
-                             _Settings.GraphNodeBackgroundColor.G,
-                             _Settings.GraphNodeBackgroundColor.B),
-                          BorderColor = new Color(
-                             _Settings.GraphNodeBorderColor.A,
-                             _Settings.GraphNodeBorderColor.R,
-                             _Settings.GraphNodeBorderColor.G,
-                             _Settings.GraphNodeBorderColor.B),
-                          TextColor = new Color(
-                             _Settings.GraphNodeTextColor.A,
-                             _Settings.GraphNodeTextColor.R,
-                             _Settings.GraphNodeTextColor.G,
-                             _Settings.GraphNodeTextColor.B),
+         {
+            BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
+            BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
+            TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
          };
       }
 
@@ -580,11 +570,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-                                  {
-                                     Text = Resources.GrammarLoadErrorTitle,
-                                     ErrorMessage = ex.Message,
-                                     ErrorStackTrace = ex.StackTrace
-                                  };
+            {
+               Text = Resources.GrammarLoadErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
             errorDisplay.ShowDialog();
             return;
          }
@@ -774,11 +764,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          catch (Exception ex)
          {
             var errorDisplay = new ErrorDisplay
-                                  {
-                                     Text = Resources.GraphRenderErrorTitle,
-                                     ErrorMessage = ex.Message,
-                                     ErrorStackTrace = ex.StackTrace
-                                  };
+            {
+               Text = Resources.GraphRenderErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
             errorDisplay.ShowDialog();
          }
       }

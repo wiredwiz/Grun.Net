@@ -36,7 +36,7 @@
 
 using Microsoft.Msagl.Drawing;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Graphing
+namespace Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions
 {
    /// <summary>
    /// Class containing graph extension methods.
