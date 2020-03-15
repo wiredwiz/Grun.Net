@@ -177,7 +177,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
 
 #if DEBUG
             Console.WriteLine(Resources.PressAnyKeyMessage);
-            Console.Read();
+            Console.ReadKey();
 #endif
          }
          // ReSharper disable once CatchAllClause
@@ -187,7 +187,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
             Console.WriteLine(ex.StackTrace);
             #if DEBUG
             Console.WriteLine(Resources.PressAnyKeyMessage);
-            Console.Read();
+            Console.ReadKey();
 #endif
          }
       }
