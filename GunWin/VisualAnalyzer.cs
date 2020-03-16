@@ -345,6 +345,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          RenderParseTreeGraph(e.Graph);
          if (e.Graph != null)
             stripLabelNodeCount.Text = e.Graph.Nodes.Count().ToString();
+         if (_GraphWorker != null)
+         {
+            StripLabelThrottling.Text = _GraphWorker.CurrentlyThrottling ? Resources.Yes : Resources.No;
+            StripLabelDelay.Text = _GraphWorker.LongDelayActive
+                                      ? Resources.Long
+                                      : _GraphWorker.CurrentMillisecondDelayBetweenGraphs + Resources.MillisecondsAbbreviation;
+         }
+         else
+         {
+            StripLabelThrottling.Text = Resources.No;
+            StripLabelDelay.Text = Resources.ZeroMilliseconds;
+         }
       }
 
       private void Viewer_Click(object sender, EventArgs e)

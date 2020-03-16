@@ -160,6 +160,33 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Long.
+        /// </summary>
+        internal static string Long {
+            get {
+                return ResourceManager.GetString("Long", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ms.
+        /// </summary>
+        internal static string MillisecondsAbbreviation {
+            get {
+                return ResourceManager.GetString("MillisecondsAbbreviation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string No {
+            get {
+                return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No ANTLR4 grammars were found in assembly &quot;{0}&quot;.
         /// </summary>
         internal static string NoGrammarsFoundInAssembly {
@@ -192,6 +219,24 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         internal static string TokenColoringErrorTitle {
             get {
                 return ResourceManager.GetString("TokenColoringErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        internal static string Yes {
+            get {
+                return ResourceManager.GetString("Yes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0ms.
+        /// </summary>
+        internal static string ZeroMilliseconds {
+            get {
+                return ResourceManager.GetString("ZeroMilliseconds", resourceCulture);
             }
         }
     }

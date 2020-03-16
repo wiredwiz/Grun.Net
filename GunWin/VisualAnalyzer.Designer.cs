@@ -83,11 +83,14 @@
          this.stripLabelGrammarName = new System.Windows.Forms.ToolStripStatusLabel();
          this.stripLabelNode = new System.Windows.Forms.ToolStripStatusLabel();
          this.stripLabelNodeCount = new System.Windows.Forms.ToolStripStatusLabel();
-         this.StripLabelSpacer = new System.Windows.Forms.ToolStripStatusLabel();
          this.StripLabelLineCaption = new System.Windows.Forms.ToolStripStatusLabel();
          this.StripLabelLine = new System.Windows.Forms.ToolStripStatusLabel();
          this.StripLabelColumnCaption = new System.Windows.Forms.ToolStripStatusLabel();
          this.StripLabelColumn = new System.Windows.Forms.ToolStripStatusLabel();
+         this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+         this.StripLabelThrottling = new System.Windows.Forms.ToolStripStatusLabel();
+         this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+         this.StripLabelDelay = new System.Windows.Forms.ToolStripStatusLabel();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -633,11 +636,14 @@
             this.stripLabelGrammarName,
             this.stripLabelNode,
             this.stripLabelNodeCount,
-            this.StripLabelSpacer,
             this.StripLabelLineCaption,
             this.StripLabelLine,
             this.StripLabelColumnCaption,
-            this.StripLabelColumn});
+            this.StripLabelColumn,
+            this.toolStripStatusLabel1,
+            this.StripLabelThrottling,
+            this.toolStripStatusLabel2,
+            this.StripLabelDelay});
          this.StatusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
          this.StatusStrip1.Location = new System.Drawing.Point(0, 611);
          this.StatusStrip1.Name = "StatusStrip1";
@@ -675,14 +681,9 @@
          this.stripLabelNodeCount.Size = new System.Drawing.Size(40, 17);
          this.stripLabelNodeCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
-         // StripLabelSpacer
-         // 
-         this.StripLabelSpacer.AutoSize = false;
-         this.StripLabelSpacer.Name = "StripLabelSpacer";
-         this.StripLabelSpacer.Size = new System.Drawing.Size(80, 15);
-         // 
          // StripLabelLineCaption
          // 
+         this.StripLabelLineCaption.Margin = new System.Windows.Forms.Padding(80, 3, 0, 2);
          this.StripLabelLineCaption.Name = "StripLabelLineCaption";
          this.StripLabelLineCaption.Size = new System.Drawing.Size(20, 15);
          this.StripLabelLineCaption.Text = "Ln";
@@ -705,8 +706,35 @@
          this.StripLabelColumn.AutoSize = false;
          this.StripLabelColumn.Name = "StripLabelColumn";
          this.StripLabelColumn.Size = new System.Drawing.Size(40, 15);
-         this.StripLabelColumn.Text = "toolStripStatusLabel1";
          this.StripLabelColumn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // toolStripStatusLabel1
+         // 
+         this.toolStripStatusLabel1.Margin = new System.Windows.Forms.Padding(40, 3, 0, 2);
+         this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+         this.toolStripStatusLabel1.Size = new System.Drawing.Size(65, 15);
+         this.toolStripStatusLabel1.Text = "Throttling?";
+         // 
+         // StripLabelThrottling
+         // 
+         this.StripLabelThrottling.AutoSize = false;
+         this.StripLabelThrottling.Name = "StripLabelThrottling";
+         this.StripLabelThrottling.Size = new System.Drawing.Size(40, 15);
+         this.StripLabelThrottling.Text = "No";
+         this.StripLabelThrottling.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // toolStripStatusLabel2
+         // 
+         this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+         this.toolStripStatusLabel2.Size = new System.Drawing.Size(39, 15);
+         this.toolStripStatusLabel2.Text = "Delay:";
+         // 
+         // StripLabelDelay
+         // 
+         this.StripLabelDelay.AutoSize = false;
+         this.StripLabelDelay.Name = "StripLabelDelay";
+         this.StripLabelDelay.Size = new System.Drawing.Size(80, 15);
+         this.StripLabelDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
          // VisualAnalyzer
          // 
@@ -809,11 +837,14 @@
       private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
       private System.Windows.Forms.ToolStripStatusLabel stripLabelNode;
       private System.Windows.Forms.ToolStripStatusLabel stripLabelNodeCount;
-      private System.Windows.Forms.ToolStripStatusLabel StripLabelSpacer;
       private System.Windows.Forms.ToolStripStatusLabel StripLabelLineCaption;
       private System.Windows.Forms.ToolStripStatusLabel StripLabelLine;
       private System.Windows.Forms.ToolStripStatusLabel StripLabelColumnCaption;
       private System.Windows.Forms.ToolStripStatusLabel StripLabelColumn;
+      private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+      private System.Windows.Forms.ToolStripStatusLabel StripLabelThrottling;
+      private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+      private System.Windows.Forms.ToolStripStatusLabel StripLabelDelay;
    }
 }
 

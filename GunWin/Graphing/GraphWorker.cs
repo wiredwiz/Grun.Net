@@ -49,7 +49,6 @@ using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
-using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 {
@@ -70,6 +69,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       private DateTime _LastQueuedTime;
 
       private int _PreviousNodeQty;
+
+      private volatile bool _CurrentlyThrottling;
+
+      private volatile int _CurrentMillisecondDelayBetweenGraphs;
+
+      private volatile bool _LongDelayActive;
 
       #region Constructors And Finalizers
 
@@ -117,6 +122,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       }
 
       /// <inheritdoc />
+      public int CurrentMillisecondDelayBetweenGraphs => _CurrentMillisecondDelayBetweenGraphs;
+
+      /// <inheritdoc />
       public void Graph(IParseTreeGrapher grapher, ITree tree, IList<string> parserRules)
       {
          lock (_Padlock)
@@ -140,6 +148,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       /// <inheritdoc />
       public event EventHandler<GraphingResult> GraphingFinished;
 
+      /// <inheritdoc />
+      public bool CurrentlyThrottling => _CurrentlyThrottling;
+
+      /// <inheritdoc />
+      public bool LongDelayActive => _LongDelayActive;
+
       #endregion
 
       private DateTime CalculateNextRunTime(
@@ -150,9 +164,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       {
          // We use reactive throttling to avoid overwhelming the client with repeated parsing of large samples
          if (previousNodes < minimumNodeThresholdToDelay)
+         {
+            lock (_Padlock)
+            {
+               _CurrentlyThrottling = false;
+               _CurrentMillisecondDelayBetweenGraphs = 0;
+            }
             return DateTime.Now;
+         }
 
          var delay = Math.Min(maximumDelay, previousNodes * millisecondsPerNodeToDelay);
+         lock (_Padlock)
+         {
+            _CurrentlyThrottling = true;
+            _CurrentMillisecondDelayBetweenGraphs = delay;
+         }
          return DateTime.Now + TimeSpan.FromMilliseconds(delay);
       }
 
@@ -185,12 +211,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 
             if (workCount > _Settings.MinimumRenderCountToTriggerLongDelay && (DateTime.Now - lastQueued) < TimeSpan.FromMilliseconds(500))
             {
+               lock (_Padlock)
+               {
+                  _CurrentlyThrottling = true;
+                  _LongDelayActive = true;
+               }
                Thread.Sleep(500);
                continue;
             }
 
             lock (_Padlock)
             {
+               _LongDelayActive = false;
+
                // Sanity check ....just in case
                if (QueuedWork.Count == 0)
                   return;

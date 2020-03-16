@@ -56,6 +56,24 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       event EventHandler<GraphingResult> GraphingFinished;
 
       /// <summary>
+      /// Gets a value indicating whether the worker is currently throttling.
+      /// </summary>
+      /// <value><c>true</c> if graph throttling is currently active; otherwise, <c>false</c>.</value>
+      bool CurrentlyThrottling { get; }
+
+      /// <summary>
+      /// Gets a value indicating whether a long graphing delay is active.
+      /// </summary>
+      /// <value><c>true</c> if long graphing delay is active; otherwise, <c>false</c>.</value>
+      bool LongDelayActive { get; }
+
+      /// <summary>
+      /// Gets the current millisecond delay between graphs.
+      /// </summary>
+      /// <value>The current millisecond delay between graphs.</value>
+      int CurrentMillisecondDelayBetweenGraphs { get; }
+
+      /// <summary>
       /// Queues the specified parse tree for graphing.
       /// </summary>
       /// <param name="grapher">The parse tree grapher.</param>
