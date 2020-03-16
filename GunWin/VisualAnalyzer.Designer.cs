@@ -81,6 +81,13 @@
          this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
          this.StripLabelGrammar = new System.Windows.Forms.ToolStripStatusLabel();
          this.stripLabelGrammarName = new System.Windows.Forms.ToolStripStatusLabel();
+         this.stripLabelNode = new System.Windows.Forms.ToolStripStatusLabel();
+         this.stripLabelNodeCount = new System.Windows.Forms.ToolStripStatusLabel();
+         this.StripLabelSpacer = new System.Windows.Forms.ToolStripStatusLabel();
+         this.StripLabelLineCaption = new System.Windows.Forms.ToolStripStatusLabel();
+         this.StripLabelLine = new System.Windows.Forms.ToolStripStatusLabel();
+         this.StripLabelColumnCaption = new System.Windows.Forms.ToolStripStatusLabel();
+         this.StripLabelColumn = new System.Windows.Forms.ToolStripStatusLabel();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -185,6 +192,7 @@
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
          this.CodeEditor.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChanged);
+         this.CodeEditor.SelectionChanged += new System.EventHandler(this.CodeEditor_SelectionChanged);
          this.CodeEditor.DragDrop += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragDrop);
          this.CodeEditor.DragEnter += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragEnter);
          // 
@@ -622,7 +630,15 @@
          // 
          this.StatusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StripLabelGrammar,
-            this.stripLabelGrammarName});
+            this.stripLabelGrammarName,
+            this.stripLabelNode,
+            this.stripLabelNodeCount,
+            this.StripLabelSpacer,
+            this.StripLabelLineCaption,
+            this.StripLabelLine,
+            this.StripLabelColumnCaption,
+            this.StripLabelColumn});
+         this.StatusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
          this.StatusStrip1.Location = new System.Drawing.Point(0, 611);
          this.StatusStrip1.Name = "StatusStrip1";
          this.StatusStrip1.Size = new System.Drawing.Size(969, 22);
@@ -638,9 +654,59 @@
          // 
          // stripLabelGrammarName
          // 
+         this.stripLabelGrammarName.AutoSize = false;
          this.stripLabelGrammarName.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.stripLabelGrammarName.Name = "stripLabelGrammarName";
-         this.stripLabelGrammarName.Size = new System.Drawing.Size(0, 17);
+         this.stripLabelGrammarName.Size = new System.Drawing.Size(100, 17);
+         this.stripLabelGrammarName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // stripLabelNode
+         // 
+         this.stripLabelNode.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.stripLabelNode.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
+         this.stripLabelNode.Name = "stripLabelNode";
+         this.stripLabelNode.Size = new System.Drawing.Size(116, 17);
+         this.stripLabelNode.Text = "Parse Tree Nodes:";
+         // 
+         // stripLabelNodeCount
+         // 
+         this.stripLabelNodeCount.AutoSize = false;
+         this.stripLabelNodeCount.Name = "stripLabelNodeCount";
+         this.stripLabelNodeCount.Size = new System.Drawing.Size(40, 17);
+         this.stripLabelNodeCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // StripLabelSpacer
+         // 
+         this.StripLabelSpacer.AutoSize = false;
+         this.StripLabelSpacer.Name = "StripLabelSpacer";
+         this.StripLabelSpacer.Size = new System.Drawing.Size(80, 15);
+         // 
+         // StripLabelLineCaption
+         // 
+         this.StripLabelLineCaption.Name = "StripLabelLineCaption";
+         this.StripLabelLineCaption.Size = new System.Drawing.Size(20, 15);
+         this.StripLabelLineCaption.Text = "Ln";
+         // 
+         // StripLabelLine
+         // 
+         this.StripLabelLine.AutoSize = false;
+         this.StripLabelLine.Name = "StripLabelLine";
+         this.StripLabelLine.Size = new System.Drawing.Size(40, 15);
+         this.StripLabelLine.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // StripLabelColumnCaption
+         // 
+         this.StripLabelColumnCaption.Name = "StripLabelColumnCaption";
+         this.StripLabelColumnCaption.Size = new System.Drawing.Size(25, 15);
+         this.StripLabelColumnCaption.Text = "Col";
+         // 
+         // StripLabelColumn
+         // 
+         this.StripLabelColumn.AutoSize = false;
+         this.StripLabelColumn.Name = "StripLabelColumn";
+         this.StripLabelColumn.Size = new System.Drawing.Size(40, 15);
+         this.StripLabelColumn.Text = "toolStripStatusLabel1";
+         this.StripLabelColumn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
          // VisualAnalyzer
          // 
@@ -741,6 +807,13 @@
       private System.Windows.Forms.ToolStripMenuItem selectParserRuleToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+      private System.Windows.Forms.ToolStripStatusLabel stripLabelNode;
+      private System.Windows.Forms.ToolStripStatusLabel stripLabelNodeCount;
+      private System.Windows.Forms.ToolStripStatusLabel StripLabelSpacer;
+      private System.Windows.Forms.ToolStripStatusLabel StripLabelLineCaption;
+      private System.Windows.Forms.ToolStripStatusLabel StripLabelLine;
+      private System.Windows.Forms.ToolStripStatusLabel StripLabelColumnCaption;
+      private System.Windows.Forms.ToolStripStatusLabel StripLabelColumn;
    }
 }
 

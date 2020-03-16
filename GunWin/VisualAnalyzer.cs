@@ -339,13 +339,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          CodeEditor.Text = code;
       }
 
-      private void _GraphWorker_GraphingFinished(object sender, GraphingResult e)
+      private void GraphingFinished(object sender, GraphingResult e)
       {
          BuildParseTreeTreeViewGuide(e.ParseTree);
          RenderParseTreeGraph(e.Graph);
+         if (e.Graph != null)
+            stripLabelNodeCount.Text = e.Graph.Nodes.Count().ToString();
       }
 
-      private void _Viewer_Click(object sender, EventArgs e)
+      private void Viewer_Click(object sender, EventArgs e)
       {
          if (_Viewer.SelectedObject is Node node)
          {
@@ -354,7 +356,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
-      private void _Viewer_MouseWheel(object sender, MouseEventArgs e)
+      private void Viewer_MouseWheel(object sender, MouseEventArgs e)
       {
          var factor = Math.Max(
             Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / 0.1), GraphZoomTrackBar.Maximum),
@@ -493,7 +495,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void ConfigureGraphWorker()
       {
          _GraphWorker = new GraphWorker(SynchronizationContext.Current, _Settings);
-         _GraphWorker.GraphingFinished += _GraphWorker_GraphingFinished;
+         _GraphWorker.GraphingFinished += GraphingFinished;
          _Grapher = new ParseTreeGrapher
          {
             BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
@@ -556,8 +558,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.Dock = DockStyle.Fill;
          ResumeLayout();
          _Viewer.LayoutAlgorithmSettingsButtonVisible = false;
-         _Viewer.Click += _Viewer_Click;
-         _Viewer.MouseWheel += _Viewer_MouseWheel;
+         _Viewer.Click += Viewer_Click;
+         _Viewer.MouseWheel += Viewer_MouseWheel;
          var viewerContextMenu = new ContextMenu();
          var menuItem = viewerContextMenu.MenuItems.Add("Graph from here");
          menuItem.Click += Menu_GraphFromHere_Click;
@@ -927,6 +929,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          var aboutBox = new AboutBox();
          aboutBox.ShowDialog();
+      }
+
+      private void CodeEditor_SelectionChanged(object sender, EventArgs e)
+      {
+         StripLabelLine.Text = (CodeEditor.Selection.Start.iLine + 1).ToString();
+         StripLabelColumn.Text = (CodeEditor.Selection.Start.iChar + 1).ToString();
       }
    }
 }
