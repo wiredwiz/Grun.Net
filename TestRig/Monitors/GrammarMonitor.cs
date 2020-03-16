@@ -82,6 +82,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Monitors
 
       #endregion
 
+      /// <summary>
+      /// Gets the grammar reference.
+      /// </summary>
+      /// <value>The grammar reference.</value>
       public GrammarReference Grammar { get; }
 
       /// <summary>
@@ -123,7 +127,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Monitors
       }
 
       /// <summary>
-      ///    Called when the grammar has been reloaded to fire the Reloaded event.
+      ///    Called when the grammar has been changed to fire the GrammarChanged event.
       /// </summary>
       private void OnGrammarChanged()
       {

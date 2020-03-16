@@ -34,10 +34,107 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-namespace Org.Edgerunner.ANTLR4.Tools.Common.Monitoring
+using System;
+using System.IO;
+using System.Threading;
+
+using JetBrains.Annotations;
+
+using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
+
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Monitors
 {
    public class EditorGuideMonitor
    {
-      
+      private readonly SynchronizationContext _SynchronizationContext;
+
+      // ReSharper disable once NotAccessedField.Local
+      private readonly FileSystemWatcher _Watcher;
+
+      private DateTime _LastWriteTime;
+
+      #region Constructors And Finalizers
+
+      /// <summary>
+      ///    Initializes a new instance of the <see cref="EditorGuideMonitor" /> class.
+      /// </summary>
+      /// <param name="guide">The editor guide.</param>
+      /// <param name="synchronizationContext">The synchronization context.</param>
+      /// <exception cref="ArgumentNullException">
+      ///    guide
+      ///    or
+      ///    synchronizationContext are <see langword="null" />
+      /// </exception>
+      /// <exception cref="T:System.Security.SecurityException">
+      ///    The caller does not have the required permission to access the
+      ///    guide assembly.
+      /// </exception>
+      /// <exception cref="T:System.UnauthorizedAccessException">Access to the guide assembly is denied.</exception>
+      public EditorGuideMonitor([NotNull] EditorGuideReference guide, [NotNull] SynchronizationContext synchronizationContext)
+      {
+         Guide = guide ?? throw new ArgumentNullException(nameof(guide));
+         _SynchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
+
+         _Watcher = CreateAssemblyWatcher(new FileInfo(guide.AssemblyPath));
+      }
+
+      #endregion
+
+      /// <summary>
+      /// Gets the editor guide reference.
+      /// </summary>
+      /// <value>The editor guide reference.</value>
+      public EditorGuideReference Guide { get; }
+
+      /// <summary>
+      ///    Occurs when the editor guide is changed.
+      /// </summary>
+      public event EventHandler<EditorGuideReference> GuideChanged;
+
+      private FileSystemWatcher CreateAssemblyWatcher(FileInfo assembly)
+      {
+         if (string.IsNullOrEmpty(assembly.DirectoryName))
+            throw new InvalidOperationException("Guide assembly has no directory, How is that possible?");
+
+         var watcher = new FileSystemWatcher(assembly.DirectoryName)
+         {
+            EnableRaisingEvents = true,
+            Filter = Path.GetFileName(assembly.FullName),
+            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime | NotifyFilters.Size
+         };
+         watcher.Changed += Guide_Changed;
+
+         return watcher;
+      }
+
+      private void Guide_Changed(object sender, FileSystemEventArgs e)
+      {
+         if (!File.Exists(e.FullPath))
+            return;
+
+         var info = new FileInfo(e.FullPath);
+         if (info.LastWriteTime <= _LastWriteTime)
+            return;
+
+         _LastWriteTime = info.LastWriteTime;
+
+         // Delay for a second to increase odds that the file has been released by the writer
+         Thread.Sleep(1000);
+
+         OnGuideChanged();
+      }
+
+      /// <summary>
+      ///    Called when the editor guide has been changed to fire the GuideChanged event.
+      /// </summary>
+      private void OnGuideChanged()
+      {
+         _SynchronizationContext.Post(PostGuideChangedEvent, Guide);
+      }
+
+      private void PostGuideChangedEvent(object state)
+      {
+         GuideChanged?.Invoke(this, state as EditorGuideReference);
+      }
    }
 }

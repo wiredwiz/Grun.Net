@@ -59,7 +59,6 @@ using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
-using Org.Edgerunner.ANTLR4.Tools.Common.Monitoring;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
@@ -292,17 +291,37 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          stripLabelGrammarName.Text = grammar.GrammarName;
          _GrammarMonitor = new GrammarMonitor(grammar, SynchronizationContext.Current);
-         _GrammarMonitor.GrammarChanged += _GrammarMonitor_GrammarChanged;
+         _GrammarMonitor.GrammarChanged += GrammarAssemblyChanged;
 
          // Now try to load an IEditorGuide instance for the specified Grammar
          var guide = LoadEditorGuide(grammar);
          if (guide != null)
+         {
             _Registry = new StyleRegistry(_EditorGuide);
+            _GuideMonitor = new EditorGuideMonitor(guide, SynchronizationContext.Current);
+            _GuideMonitor.GuideChanged += GuideAssemblyChanged;
+         }
          else
+         {
+            _GuideMonitor = null;
             _Registry = new HeuristicStyleRegistry(_Settings);
+         }
       }
 
-      private void _GrammarMonitor_GrammarChanged(object sender, GrammarReference e)
+      private void GuideAssemblyChanged(object sender, EditorGuideReference e)
+      {
+         var loader = new Loader();
+         var guide = loader.LoadEditorGuide(e);
+         if (guide != null)
+         {
+            _EditorGuide = guide;
+            _Registry = new StyleRegistry(_EditorGuide);
+            ColorizeTokens(null);
+            ColorizeErrors();
+         }
+      }
+
+      private void GrammarAssemblyChanged(object sender, GrammarReference e)
       {
          var grammar = FetchGrammarInternal(e.AssemblyPath, e.GrammarName);
          SetGrammar(grammar);
