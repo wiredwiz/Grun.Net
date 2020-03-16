@@ -345,12 +345,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          RenderParseTreeGraph(e.Graph);
          if (e.Graph != null)
             stripLabelNodeCount.Text = e.Graph.Nodes.Count().ToString();
-         if (_GraphWorker != null)
+
+         if (sender is IGraphWorker worker)
          {
-            StripLabelThrottling.Text = _GraphWorker.CurrentlyThrottling ? Resources.Yes : Resources.No;
-            StripLabelDelay.Text = _GraphWorker.LongDelayActive
-                                      ? Resources.Long
-                                      : _GraphWorker.CurrentMillisecondDelayBetweenGraphs + Resources.MillisecondsAbbreviation;
+            StripLabelThrottling.Text = worker.CurrentlyThrottling ? Resources.Yes : Resources.No;
+            StripLabelDelay.Text = worker.CurrentMillisecondDelayBetweenGraphs + Resources.MillisecondsAbbreviation;
          }
          else
          {
@@ -508,12 +507,22 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          _GraphWorker = new GraphWorker(SynchronizationContext.Current, _Settings);
          _GraphWorker.GraphingFinished += GraphingFinished;
+         _GraphWorker.ThrottleStatusChanged += ThrottleStatusChanged;
          _Grapher = new ParseTreeGrapher
          {
             BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
             BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
             TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
          };
+      }
+
+      private void ThrottleStatusChanged(object sender, EventArgs e)
+      {
+         if (sender is IGraphWorker worker)
+         {
+            if (worker.LongDelayActive && StripLabelDelay.Text != Resources.Long)
+               StripLabelDelay.Text = Resources.Long;
+         }
       }
 
       private void DiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -659,7 +668,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             default:
                {
                   var selector = new GrammarSelector { GrammarsToSelectFrom = selectableGrammars };
-                  if (selector.ShowDialog() == DialogResult.Cancel)
+                  if (selector.ShowDialog(this) == DialogResult.Cancel)
                      return null;
 
                   foundGrammar = selector.SelectedGrammar;
@@ -940,7 +949,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
       {
          var aboutBox = new AboutBox();
-         aboutBox.ShowDialog();
+         
+         aboutBox.ShowDialog(this);
       }
 
       private void CodeEditor_SelectionChanged(object sender, EventArgs e)

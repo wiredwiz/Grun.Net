@@ -56,6 +56,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       event EventHandler<GraphingResult> GraphingFinished;
 
       /// <summary>
+      /// Occurs when the throttling status has changed.
+      /// </summary>
+      event EventHandler ThrottleStatusChanged;
+
+      /// <summary>
       /// Gets a value indicating whether the worker is currently throttling.
       /// </summary>
       /// <value><c>true</c> if graph throttling is currently active; otherwise, <c>false</c>.</value>

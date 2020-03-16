@@ -70,11 +70,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 
       private int _PreviousNodeQty;
 
-      private volatile bool _CurrentlyThrottling;
+      private volatile int _CurrentlyThrottling;
 
       private volatile int _CurrentMillisecondDelayBetweenGraphs;
 
-      private volatile bool _LongDelayActive;
+      private volatile int _LongDelayActive;
 
       #region Constructors And Finalizers
 
@@ -149,10 +149,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       public event EventHandler<GraphingResult> GraphingFinished;
 
       /// <inheritdoc />
-      public bool CurrentlyThrottling => _CurrentlyThrottling;
+      public event EventHandler ThrottleStatusChanged;
 
       /// <inheritdoc />
-      public bool LongDelayActive => _LongDelayActive;
+      public bool CurrentlyThrottling => _CurrentlyThrottling == 1;
+
+      /// <inheritdoc />
+      public bool LongDelayActive => _LongDelayActive == 1;
 
       #endregion
 
@@ -162,23 +165,32 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
          int millisecondsPerNodeToDelay,
          int maximumDelay)
       {
+         bool changed;
+
          // We use reactive throttling to avoid overwhelming the client with repeated parsing of large samples
          if (previousNodes < minimumNodeThresholdToDelay)
          {
             lock (_Padlock)
             {
-               _CurrentlyThrottling = false;
+               changed = _CurrentlyThrottling == 1 || _CurrentMillisecondDelayBetweenGraphs == 1;
+               _CurrentlyThrottling = 0;
                _CurrentMillisecondDelayBetweenGraphs = 0;
             }
+
+            if (changed)
+               OnThrottleStatusChanged();
             return DateTime.Now;
          }
 
          var delay = Math.Min(maximumDelay, previousNodes * millisecondsPerNodeToDelay);
          lock (_Padlock)
          {
-            _CurrentlyThrottling = true;
+            changed = _CurrentlyThrottling == 0 || _CurrentMillisecondDelayBetweenGraphs != delay;
+            _CurrentlyThrottling = 1;
             _CurrentMillisecondDelayBetweenGraphs = delay;
          }
+         if (changed)
+            OnThrottleStatusChanged();
          return DateTime.Now + TimeSpan.FromMilliseconds(delay);
       }
 
@@ -196,13 +208,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 
       private void GraphingWorkLoop()
       {
+         var currentRenderCount = 0;
+
          while (true)
          {
+            bool changed;
             int workCount;
             DateTime lastQueued;
             lock (_Padlock)
             {
-               workCount = QueuedWork.Count;
+               if (currentRenderCount == 0)
+                  currentRenderCount = QueuedWork.Count;
+               else
+                  currentRenderCount += QueuedWork.Count - 1;
+
+               workCount = currentRenderCount;
                if (workCount == 0)
                   return;
 
@@ -213,16 +233,22 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
             {
                lock (_Padlock)
                {
-                  _CurrentlyThrottling = true;
-                  _LongDelayActive = true;
+                  changed = _CurrentlyThrottling == 0 || _LongDelayActive == 0;
+                  _CurrentlyThrottling = 1;
+                  _LongDelayActive = 1;
                }
+               if (changed)
+                  OnThrottleStatusChanged();
                Thread.Sleep(500);
                continue;
             }
 
             lock (_Padlock)
             {
-               _LongDelayActive = false;
+               changed = _LongDelayActive == 1;
+               _LongDelayActive = 0;
+               if (changed)
+                  OnThrottleStatusChanged();
 
                // Sanity check ....just in case
                if (QueuedWork.Count == 0)
@@ -242,6 +268,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
                   continue;
                }
 
+               currentRenderCount = 0;
                var result = HandleGraphing(work);
                _PreviousNodeQty = CalculateTotalTreeNodes(work.ParseTree);
                OnGraphingFinished(result);
@@ -273,6 +300,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       private void PostGraphingFinishedEvent(object state)
       {
          GraphingFinished?.Invoke(this, (GraphingResult)state);
+      }
+
+      private void OnThrottleStatusChanged()
+      {
+         _SynchronizationContext.Post(PostThrottleStatusChangedEvent, null);
+      }
+
+      private void PostThrottleStatusChangedEvent(object state)
+      {
+         ThrottleStatusChanged?.Invoke(this, new EventArgs());
       }
    }
 }
