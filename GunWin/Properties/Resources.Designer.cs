@@ -88,6 +88,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot set a default rule when a grammar is not loaded.
+        /// </summary>
+        internal static string CannotLoadDefaultRuleForNonexistentGrammarMessage {
+            get {
+                return ResourceManager.GetString("CannotLoadDefaultRuleForNonexistentGrammarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You may only load one grammar and one source file at a time..
         /// </summary>
         internal static string DragDropLoadErrorMessage {

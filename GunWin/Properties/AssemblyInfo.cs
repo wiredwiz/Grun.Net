@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GunWin")]
-[assembly: AssemblyDescription("An ANTLR grammar visual testing tool for use with C# deployed grammars.")]
+[assembly: AssemblyDescription("An ANTLR grammar graphical testing tool for use with C# deployed grammars.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Edgerunner.org")]
-[assembly: AssemblyProduct("GunWin")]
+[assembly: AssemblyProduct("GrunWin")]
 [assembly: AssemblyCopyright("Copyright © Thaddeus Ryker 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

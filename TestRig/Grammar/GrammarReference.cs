@@ -37,6 +37,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using JetBrains.Annotations;
@@ -57,6 +58,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="grammarName">Name of the grammar.</param>
       /// <param name="lexerType">Type of the lexer.</param>
       /// <param name="parserType">Type of the parser.</param>
+      /// <param name="parserRules">The parser rules.</param>
       /// <exception cref="ArgumentNullException">
       ///    assemblyInfo
       ///    or
@@ -72,7 +74,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          [NotNull] FileInfo assemblyInfo,
          [NotNull] string grammarName,
          [NotNull] Type lexerType,
-         [CanBeNull] Type parserType)
+         [CanBeNull] Type parserType,
+         [CanBeNull] IList<string> parserRules)
       {
          if (assemblyInfo is null) throw new ArgumentNullException(nameof(assemblyInfo));
          AssemblyPath = assemblyInfo.FullName;
@@ -82,6 +85,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          LoadTime = DateTime.Now;
          AssemblyLastWrite = assemblyInfo.LastWriteTime;
          AssemblySize = assemblyInfo.Length;
+         ParserRules = parserRules ?? new List<string>();
       }
 
       #endregion
@@ -114,24 +118,26 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <value>The parser type.</value>
       /// <see cref="Antlr4.Runtime.Parser" />
       [CanBeNull]
-      public Type Parser { get; }
+      public Type Parser { get; private set; }
 
       /// <summary>
       /// Gets the load time for the grammar assembly.
       /// </summary>
       /// <value>The load time.</value>
-      public DateTime LoadTime { get; }
+      public DateTime LoadTime { get; private set; }
 
       /// <summary>
       /// Gets the last write time of the assembly file.
       /// </summary>
       /// <value>The assembly last write time.</value>
-      public DateTime AssemblyLastWrite { get; }
+      public DateTime AssemblyLastWrite { get; private set; }
 
       /// <summary>
       /// Gets the size of the assembly file.
       /// </summary>
       /// <value>The size of the assembly.</value>
       public long AssemblySize { get; }
+
+      public IList<string> ParserRules { get; set; }
    }
 }

@@ -70,6 +70,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grammar &quot;{0}&quot; has no parser..
+        /// </summary>
+        internal static string GrammarHasNoParserErrorMessage {
+            get {
+                return ResourceManager.GetString("GrammarHasNoParserErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find an assembly that defines grammar &quot;{0}&quot; in the current working directory.
         /// </summary>
         internal static string GrammarNotFoundErrorMessage {
@@ -93,6 +102,24 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties {
         internal static string ReadingFromStandardInputPromptMessage {
             get {
                 return ResourceManager.GetString("ReadingFromStandardInputPromptMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing of svg aborted due to missing parser..
+        /// </summary>
+        internal static string SvgWritingAbortedErrorMessage {
+            get {
+                return ResourceManager.GetString("SvgWritingAbortedErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot display parse tree..
+        /// </summary>
+        internal static string UnableToDisplayParseTree {
+            get {
+                return ResourceManager.GetString("UnableToDisplayParseTree", resourceCulture);
             }
         }
     }

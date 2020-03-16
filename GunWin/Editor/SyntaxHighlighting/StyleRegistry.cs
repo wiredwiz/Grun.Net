@@ -42,6 +42,7 @@ using FastColoredTextBoxNS;
 using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Common;
+using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting

@@ -38,7 +38,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -146,28 +145,44 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                return;
                             }
 
-                            var analyzer = new Grammar.Analyzer();
-                            var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options);
-                            analyzer.ExecuteParsing(grammarParser, o.RuleName);
-
-                            if (showParseTree)
-                              Console.WriteLine(analyzer.ParseContext.ToStringTree(grammarParser));
-
-                            if (writeSvg)
+                            // Now we attempt to parse, but still handle a lexer-only grammar.
+                            if (grammar.Parser != null)
                             {
-                               var rules = scanner.GetParserRulesForGrammar(grammar);
-                               var grapher = new ParseTreeGrapher()
+                               var analyzer = new Analyzer();
+                               var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options);
+                               analyzer.ExecuteParsing(grammarParser, o.RuleName);
+
+                               if (showParseTree)
+                                  Console.WriteLine(analyzer.ParseContext.ToStringTree(grammarParser));
+
+                               if (writeSvg)
                                {
-                                  BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
-                                  BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
-                                  TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
-                               };
-                               var graph = grapher.CreateGraph(analyzer.ParseContext, rules.ToList());
-                               graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
-                               GraphRenderer renderer = new GraphRenderer(graph);
-                               renderer.CalculateLayout();
-                               graph.EscapeNodesForSvg();
-                               SvgGraphWriter.Write(graph, o.SvgFileName, null, null, 4);
+                                  var rules = scanner.GetParserRulesForGrammarParser(grammar.Parser);
+                                  var grapher = new ParseTreeGrapher()
+                                  {
+                                     BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
+                                     BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
+                                     TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
+                                  };
+                                  var graph = grapher.CreateGraph(analyzer.ParseContext, rules.ToList());
+                                  graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
+                                  GraphRenderer renderer = new GraphRenderer(graph);
+                                  renderer.CalculateLayout();
+                                  graph.EscapeNodesForSvg();
+                                  SvgGraphWriter.Write(graph, o.SvgFileName, null, null, 4);
+                               }
+                            }
+                            else
+                            {
+                               if (options.HasFlag(ParseOption.Tokens))
+                                  DisplayTokens(grammar, data);
+
+                               if (showParseTree || writeSvg)
+                                  Console.WriteLine(Resources.GrammarHasNoParserErrorMessage, grammar.GrammarName);
+                               if (showParseTree)
+                                  Console.WriteLine(Resources.UnableToDisplayParseTree);
+                               if (writeSvg)
+                                  Console.WriteLine(Resources.SvgWritingAbortedErrorMessage);
                             }
 
                             if (loadGui)
@@ -185,7 +200,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
          {
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.StackTrace);
-            #if DEBUG
+#if DEBUG
             Console.WriteLine(Resources.PressAnyKeyMessage);
             Console.ReadKey();
 #endif
@@ -208,7 +223,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
             var visualAnalyzer = new VisualAnalyzer();
             visualAnalyzer.SetSourceCode(data);
             visualAnalyzer.SetGrammar(grammar);
-            visualAnalyzer.SetDefaultParserRule(parserRule);
+            if (grammar.Parser != null || !parserRule.Equals("tokens", StringComparison.InvariantCultureIgnoreCase))
+               visualAnalyzer.SetDefaultParserRule(parserRule);
             Application.Run(visualAnalyzer);
          }
       }

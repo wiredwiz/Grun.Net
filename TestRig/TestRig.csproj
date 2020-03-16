@@ -62,8 +62,10 @@
     <Compile Include="Grammar\Errors\TestingErrorListener.cs" />
     <Compile Include="Grammar\EditorGuideReference.cs" />
     <Compile Include="Grammar\SyntaxToken.cs" />
+    <Compile Include="Monitors\EditorGuideMonitor.cs" />
+    <Compile Include="Monitors\GrammarMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TokenInterfaceExtensionMethods.cs" />
+    <Compile Include="Extensions\TokenInterfaceExtensionMethods.cs" />
     <Compile Include="Types\LexerType.cs" />
     <Compile Include="Types\ParserType.cs" />
   </ItemGroup>

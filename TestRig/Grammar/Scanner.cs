@@ -47,6 +47,7 @@ using Antlr4.Runtime;
 using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Common;
+using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Types;
 
@@ -209,22 +210,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          }
       }
 
-
-
       /// <summary>
-      /// Gets the parser rules for the specified grammar.
+      /// Gets the parser rules for the specified grammar parser.
       /// </summary>
-      /// <param name="reference">The grammar reference.</param>
+      /// <param name="parserType">The the grammar parser type.</param>
       /// <returns>An <see cref="IEnumerable{String}"/> containing the parser rules (if any).</returns>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="reference"/> is <see langword="null"/></exception>
-      public IEnumerable<string> GetParserRulesForGrammar([NotNull] GrammarReference reference)
+      /// <exception cref="T:System.ArgumentNullException"><paramref name="parserType"/> is <see langword="null"/></exception>
+      public IEnumerable<string> GetParserRulesForGrammarParser([NotNull] Type parserType)
       {
-         if (reference is null) throw new ArgumentNullException(nameof(reference));
+         if (parserType is null) throw new ArgumentNullException(nameof(parserType));
 
-         if (reference.Parser == null)
-            return new string[0];
-
-         var methods = reference.Parser.GetMethods()
+         var methods = parserType.GetMethods()
             .Where(m => m.GetCustomAttributes(typeof(RuleVersionAttribute), false).Length > 0);
          return from method in methods select method.Name;
       }
@@ -252,23 +248,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
             foreach (var lexer in matches)
             {
-               ParserType parser;
-               try
-               {
-                  parser = (from candidate in parsers
-                            where candidate.GrammarName == lexer.GrammarName
-                            select candidate).First();
-               }
-               catch (InvalidOperationException ex)
-               {
-                  throw new GrammarException($"Cannot find a matching lexer for grammar \"{lexer.GrammarName}\"", ex);
-               }
+               var parser = (from candidate in parsers
+                             where candidate.GrammarName == lexer.GrammarName
+                             select candidate).FirstOrDefault();
 
+               var rules = parser.ActualType == null
+                              ? new List<string>()
+                              : GetParserRulesForGrammarParser(parser.ActualType).ToList();
                var grammarRef = new GrammarReference(
                                                      file,
                                                      lexer.GrammarName,
                                                      lexer.ActualType,
-                                                     parser.ActualType);
+                                                     parser.ActualType,
+                                                     rules);
                results.Add(grammarRef);
             }
          }
@@ -297,22 +289,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          foreach (var lexer in matches)
          {
             ParserType parser;
-            try
-            {
-               parser = (from candidate in parsers
-                         where candidate.GrammarName == lexer.GrammarName
-                         select candidate).First();
-            }
-            catch (InvalidOperationException ex)
-            {
-               throw new GrammarException($"Cannot find a matching lexer for grammar \"{lexer.GrammarName}\"", ex);
-            }
+            parser = (from candidate in parsers
+                      where candidate.GrammarName == lexer.GrammarName
+                      select candidate).FirstOrDefault();
 
+            var rules = parser.ActualType == null
+                              ? new List<string>()
+                              : GetParserRulesForGrammarParser(parser.ActualType).ToList();
             var grammarRef = new GrammarReference(
                                                   file,
                                                   lexer.GrammarName,
                                                   lexer.ActualType,
-                                                  parser.ActualType);
+                                                  parser.ActualType,
+                                                  rules);
             results.Add(grammarRef);
          }
 

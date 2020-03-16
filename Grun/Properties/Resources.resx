@@ -129,4 +129,13 @@
   <data name="PressAnyKeyMessage" xml:space="preserve">
     <value>Press any key to continue</value>
   </data>
+  <data name="GrammarHasNoParserErrorMessage" xml:space="preserve">
+    <value>Grammar "{0}" has no parser.</value>
+  </data>
+  <data name="SvgWritingAbortedErrorMessage" xml:space="preserve">
+    <value>Writing of svg aborted due to missing parser.</value>
+  </data>
+  <data name="UnableToDisplayParseTree" xml:space="preserve">
+    <value>Cannot display parse tree.</value>
+  </data>
 </root>

@@ -43,6 +43,8 @@ using FastColoredTextBoxNS;
 
 using JetBrains.Annotations;
 
+using Org.Edgerunner.ANTLR4.Tools.Testing.Extensions;
+
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
 {
    /// <summary>

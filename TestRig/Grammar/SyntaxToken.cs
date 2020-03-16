@@ -36,6 +36,8 @@
 
 using Antlr4.Runtime;
 
+using Org.Edgerunner.ANTLR4.Tools.Testing.Extensions;
+
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
    /// <summary>

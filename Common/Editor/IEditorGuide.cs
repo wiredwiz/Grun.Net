@@ -36,7 +36,7 @@
 
 using System.Drawing;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Common
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Editor
 {
    public interface IEditorGuide
    {

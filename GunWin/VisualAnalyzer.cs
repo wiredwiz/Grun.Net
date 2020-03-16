@@ -58,6 +58,8 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
 using Org.Edgerunner.ANTLR4.Tools.Common;
+using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
+using Org.Edgerunner.ANTLR4.Tools.Common.Monitoring;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
@@ -69,6 +71,7 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Monitors;
 
 using Place = FastColoredTextBoxNS.Place;
 using Settings = Org.Edgerunner.ANTLR4.Tools.Testing.Configuration.Settings;
@@ -94,8 +97,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private List<ParseMessage> _ParseErrors;
 
-      private List<string> _ParserRules;
-
       private IStyleRegistry _Registry;
 
       private Settings _Settings;
@@ -103,6 +104,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private IList<SyntaxToken> _Tokens;
 
       private GViewer _Viewer;
+
+      private GrammarMonitor _GrammarMonitor;
+
+      private EditorGuideMonitor _GuideMonitor;
 
       #region Constructors And Finalizers
 
@@ -190,11 +195,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (_Grammar == null)
             return;
 
-         if (_ParserRules.Count == 0)
-            return;
-
-         if (string.IsNullOrEmpty(CmbRules.SelectedItem?.ToString()))
-            return;
+         var tokensOnly = _Grammar.Parser == null || string.IsNullOrEmpty(CmbRules.SelectedItem?.ToString());
 
          var errorListener = new TestingErrorListener();
          var analyzer = new Analyzer();
@@ -202,18 +203,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          GuiTraceListener parseTreeListener = null;
          try
          {
-            if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
-            if (ParseWithSllMode) options |= ParseOption.Sll;
-            var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options);
-            if (ParseWithTracing)
+            if (!tokensOnly)
             {
-               parseTreeListener = new GuiTraceListener(parser);
-               parser.AddParseListener(parseTreeListener);
-            }
+               if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
+               if (ParseWithSllMode) options |= ParseOption.Sll;
+               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options);
+               if (ParseWithTracing)
+               {
+                  parseTreeListener = new GuiTraceListener(parser);
+                  parser.AddParseListener(parseTreeListener);
+               }
 
-            parser.RemoveErrorListeners();
-            parser.AddErrorListener(errorListener);
-            analyzer.ExecuteParsing(parser, CmbRules.SelectedItem.ToString());
+               parser.RemoveErrorListeners();
+               parser.AddErrorListener(errorListener);
+               analyzer.ExecuteParsing(parser, CmbRules.SelectedItem.ToString());
+            }
+            else
+               analyzer.Tokenize(_Grammar, CodeEditor.Text);
          }
          catch (Exception ex)
          {
@@ -228,7 +234,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          try
          {
-            _GraphWorker?.Graph(_Grapher, analyzer.ParseContext, _ParserRules);
+            _GraphWorker?.Graph(_Grapher, analyzer.ParseContext, _Grammar.ParserRules);
          }
          catch (Exception ex)
          {
@@ -258,7 +264,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          if (string.IsNullOrEmpty(rule)) throw new ArgumentNullException(nameof(rule));
 
-         if (!_ParserRules.Contains(rule))
+         if (_Grammar == null)
+            throw new InvalidOperationException(Resources.CannotLoadDefaultRuleForNonexistentGrammarMessage);
+
+         if (!_Grammar.ParserRules.Contains(rule))
             throw new GrammarException(string.Format(Resources.InvalidParserRule, rule));
 
          CmbRules.SelectedIndex = CmbRules.FindStringExact(rule);
@@ -270,22 +279,36 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// <param name="grammar">The grammar.</param>
       public void SetGrammar([NotNull] GrammarReference grammar)
       {
-         if (grammar is null)
-            throw new ArgumentNullException(nameof(grammar));
+         var oldGrammar = _Grammar;
+         _Grammar = grammar ?? throw new ArgumentNullException(nameof(grammar));
 
-         var scanner = new Scanner();
-         _Grammar = grammar;
-
-         _ParserRules = scanner.GetParserRulesForGrammar(grammar).ToList();
          LoadParserRules();
+
+         // If our grammar is only being reloaded, no reason to load a new monitor and guide
+         if (oldGrammar != null)
+            if (oldGrammar.GrammarName == grammar.GrammarName &&
+                oldGrammar.AssemblyPath == grammar.AssemblyPath)
+               return;
+
          stripLabelGrammarName.Text = grammar.GrammarName;
+         _GrammarMonitor = new GrammarMonitor(grammar, SynchronizationContext.Current);
+         _GrammarMonitor.GrammarChanged += _GrammarMonitor_GrammarChanged;
 
          // Now try to load an IEditorGuide instance for the specified Grammar
-         LoadEditorGuide(grammar);
-         if (_EditorGuide != null)
+         var guide = LoadEditorGuide(grammar);
+         if (guide != null)
             _Registry = new StyleRegistry(_EditorGuide);
          else
             _Registry = new HeuristicStyleRegistry(_Settings);
+      }
+
+      private void _GrammarMonitor_GrammarChanged(object sender, GrammarReference e)
+      {
+         var grammar = FetchGrammarInternal(e.AssemblyPath, e.GrammarName);
+         SetGrammar(grammar);
+         ParseSource();
+         ColorizeTokens(null);
+         ColorizeErrors();
       }
 
       /// <summary>
@@ -326,7 +349,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             var child = tree.GetChild(i);
             var newNode =
-               new TreeNode(Trees.GetNodeText(child, _ParserRules))
+               new TreeNode(Trees.GetNodeText(child, _Grammar.ParserRules))
                {
                   Tag = child,
                   Name = child.GetHashCode().ToString()
@@ -348,7 +371,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
 
          var treeNode =
-            new TreeNode(Trees.GetNodeText(tree, _ParserRules)) { Tag = tree, Name = tree.GetHashCode().ToString() };
+            new TreeNode(Trees.GetNodeText(tree, _Grammar.ParserRules)) { Tag = tree, Name = tree.GetHashCode().ToString() };
          ParseTreeView.Nodes.Add(treeNode);
          AddTreeBranchesAndLeaves(treeNode, tree);
 
@@ -373,7 +396,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                }
 
                if (assemblyFiles.Count != 0)
-                  LoadGrammarInternal(assemblyFiles[0]);
+               {
+                  var grammar = FetchGrammarInternal(assemblyFiles[0]);
+                  if (grammar != null)
+                     SetGrammar(grammar);
+               }
 
                if (otherFiles.Count != 0)
                   LoadSourceFileInternal(otherFiles[0]);
@@ -535,7 +562,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Settings.LoadDefaults();
       }
 
-      private void LoadEditorGuide([NotNull] GrammarReference grammar)
+      private EditorGuideReference LoadEditorGuide([NotNull] GrammarReference grammar)
       {
          if (grammar == null)
             throw new ArgumentNullException(nameof(grammar));
@@ -547,8 +574,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          // First try loading a guide from the target assembly's directory
          var pathRoot = Path.GetDirectoryName(grammar.AssemblyPath);
-         if (LoadGuideFromPath(grammar, scanner, loader, pathRoot))
-            return;
+         var guide = LoadGuideFromPath(grammar, scanner, loader, pathRoot);
+         if (guide != null)
+            return guide;
 
          // Now try loading a guide from the Grun.Net Guides folder
          pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
@@ -556,10 +584,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // ReSharper disable once AssignNullToNotNullAttribute
          pathRoot = Path.Combine(pathRoot, "Guides");
          if (Directory.Exists(pathRoot))
-            LoadGuideFromPath(grammar, scanner, loader, pathRoot);
+            guide = LoadGuideFromPath(grammar, scanner, loader, pathRoot);
+
+         return guide;
       }
 
-      private void LoadGrammarInternal(string fileToSearch)
+      private GrammarReference FetchGrammarInternal(string fileToSearch, string grammarName = "")
       {
          var scanner = new Scanner();
          IEnumerable<GrammarReference> grammars;
@@ -576,33 +606,35 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                ErrorStackTrace = ex.StackTrace
             };
             errorDisplay.ShowDialog();
-            return;
+            return null;
          }
 
          var selectableGrammars = grammars as GrammarReference[] ?? grammars.ToArray();
+         if (!string.IsNullOrEmpty(grammarName))
+            selectableGrammars = (from grammar in selectableGrammars where grammar.GrammarName == grammarName select grammar).ToArray();
          var grammarCount = selectableGrammars.Length;
-         GrammarReference grammarToLoad;
+         GrammarReference foundGrammar;
 
          switch (grammarCount)
          {
             case 0:
                MessageBox.Show(string.Format(Resources.NoGrammarsFoundInAssembly, Path.GetFileName(fileToSearch)));
-               return;
+               return null;
             case 1:
-               grammarToLoad = selectableGrammars.First();
+               foundGrammar = selectableGrammars.First();
                break;
             default:
                {
                   var selector = new GrammarSelector { GrammarsToSelectFrom = selectableGrammars };
                   if (selector.ShowDialog() == DialogResult.Cancel)
-                     return;
+                     return null;
 
-                  grammarToLoad = selector.SelectedGrammar;
+                  foundGrammar = selector.SelectedGrammar;
                   break;
                }
          }
 
-         SetGrammar(grammarToLoad);
+         return foundGrammar;
       }
 
       private void LoadGrammarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -615,10 +647,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             return;
 
          var fileToSearch = openFileDialog.FileName;
-         LoadGrammarInternal(fileToSearch);
+         var grammar = FetchGrammarInternal(fileToSearch);
+         if (grammar != null)
+            SetGrammar(grammar);
       }
 
-      private bool LoadGuideFromPath(GrammarReference grammar, Scanner scanner, Loader loader, string pathRoot)
+      private EditorGuideReference LoadGuideFromPath(GrammarReference grammar, Scanner scanner, Loader loader, string pathRoot)
       {
          var guideReferences = scanner.LocateAllEditorGuides(pathRoot ?? throw new InvalidOperationException());
          foreach (var reference in guideReferences)
@@ -627,16 +661,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             if (guide != null && guide.GrammarName == grammar.GrammarName)
             {
                _EditorGuide = guide;
-               return true;
+               return reference;
             }
          }
 
-         return false;
+         return null;
       }
 
       private void LoadParserRules()
       {
-         CmbRules.DataSource = _ParserRules.OrderBy(x => x).Distinct().ToList();
+         var rules = _Grammar == null ? new List<string>() : _Grammar.ParserRules;
+         var currentRule = CmbRules.SelectedItem as string;
+         CmbRules.DataSource = rules.OrderBy(x => x).Distinct().ToList();
+         if (!string.IsNullOrEmpty(currentRule))
+         {
+            var index = CmbRules.FindStringExact(currentRule);
+            CmbRules.SelectedIndex = index != -1 ? index : 0;
+         }
          CmbRules.Refresh();
       }
 
@@ -744,6 +785,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (_Viewer == null)
             return;
 
+         if (_Grammar == null)
+            return;
+
          if (tree == null)
             return;
 
@@ -752,7 +796,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          try
          {
-            var graph = _Grapher.CreateGraph(tree, _ParserRules);
+            var graph = _Grapher.CreateGraph(tree, _Grammar.ParserRules);
             graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
             _Viewer.SuspendLayout();
             _Viewer.Graph = graph;

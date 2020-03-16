@@ -159,4 +159,7 @@
   <data name="AppconfigFile" xml:space="preserve">
     <value>Grun.Net.config</value>
   </data>
+  <data name="CannotLoadDefaultRuleForNonexistentGrammarMessage" xml:space="preserve">
+    <value>You cannot set a default rule when a grammar is not loaded</value>
+  </data>
 </root>

@@ -44,6 +44,7 @@ using Antlr4.Runtime;
 using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Common;
+using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {

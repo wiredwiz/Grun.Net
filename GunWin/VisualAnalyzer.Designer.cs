@@ -633,7 +633,7 @@
          // 
          this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.StripLabelGrammar.Name = "StripLabelGrammar";
-         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
+         this.StripLabelGrammar.Size = new System.Drawing.Size(69, 17);
          this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName
