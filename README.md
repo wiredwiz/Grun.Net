@@ -56,7 +56,9 @@ GrunWin is a replacement for the gui parse tree viewer that the standard test ri
 GrunWin Features
 - Can be run as a stand-alone application
 - Features a robust code editor window to use for grammar testing.
+- Features a heuristic syntax highlighter.
 - Features a graphical parse tree viewer.
+- Features a trace event window.
 - Features a parser message window that displays parser errors.
 - Features a token viewer that displays detailed information about lexer tokens.
 
