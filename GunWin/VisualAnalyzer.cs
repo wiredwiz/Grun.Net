@@ -410,6 +410,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseTreeView.ResumeLayout();
       }
 
+      private void SetNewWorkingDirectoryUsingFile(string fileName)
+      {
+         if (!string.IsNullOrEmpty(fileName))
+         {
+            var directory = Path.GetDirectoryName(fileName);
+            if (!string.IsNullOrEmpty(directory))
+               Environment.CurrentDirectory = directory;
+         }
+      }
+
       private void CodeEditor_DragDrop(object sender, DragEventArgs e)
       {
          if (e.Data.GetDataPresent(DataFormats.Text))
@@ -419,6 +429,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          else if (e.Data.GetDataPresent(DataFormats.FileDrop))
             if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
             {
+               SetNewWorkingDirectoryUsingFile(files[0]);
                var assemblyFiles = (from file in files where file.EndsWith(".dll") select file).ToList();
                var otherFiles = (from file in files where !file.EndsWith(".dll") select file).ToList();
                if (assemblyFiles.Count > 1 || (assemblyFiles.Count + otherFiles.Count > 2))
@@ -681,17 +692,34 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void LoadGrammarToolStripMenuItem_Click(object sender, EventArgs e)
       {
-         openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-         openFileDialog.Filter = Resources.AssemblyFileFilter;
-         openFileDialog.DefaultExt = "dll";
+         try
+         {
+            openFileDialog.InitialDirectory = Environment.CurrentDirectory;
+            openFileDialog.Filter = Resources.AssemblyFileFilter;
+            openFileDialog.DefaultExt = "dll";
 
-         if (openFileDialog.ShowDialog() == DialogResult.Cancel)
-            return;
+            if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+               return;
 
-         var fileToSearch = openFileDialog.FileName;
-         var grammar = FetchGrammarInternal(fileToSearch);
-         if (grammar != null)
-            SetGrammar(grammar);
+            var fileToSearch = openFileDialog.FileName;
+            if (!string.IsNullOrEmpty(fileToSearch))
+            {
+               SetNewWorkingDirectoryUsingFile(fileToSearch);
+               var grammar = FetchGrammarInternal(fileToSearch);
+               if (grammar != null)
+                  SetGrammar(grammar);
+            }
+         }
+         catch (Exception ex)
+         {
+            var errorDisplay = new ErrorDisplay
+            {
+               Text = Resources.GrammarLoadErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
+            errorDisplay.ShowDialog();
+         }
       }
 
       private EditorGuideReference LoadGuideFromPath(GrammarReference grammar, Scanner scanner, Loader loader, string pathRoot)
@@ -751,14 +779,28 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void LoadSourceToolStripMenuItem_Click(object sender, EventArgs e)
       {
-         openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-         openFileDialog.Filter = Resources.AllFilesFilter;
+         try
+         {
+            openFileDialog.InitialDirectory = Environment.CurrentDirectory;
+            openFileDialog.Filter = Resources.AllFilesFilter;
 
-         if (openFileDialog.ShowDialog() == DialogResult.Cancel)
-            return;
+            if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+               return;
 
-         var fileToLoad = openFileDialog.FileName;
-         LoadSourceFileInternal(fileToLoad);
+            var fileToLoad = openFileDialog.FileName;
+            SetNewWorkingDirectoryUsingFile(fileToLoad);
+            LoadSourceFileInternal(fileToLoad);
+         }
+         catch (Exception ex)
+         {
+            var errorDisplay = new ErrorDisplay
+            {
+               Text = Resources.GrammarLoadErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
+            errorDisplay.ShowDialog();
+         }
       }
 
       private void Menu_GraphFromHere_Click(object sender, EventArgs e)
