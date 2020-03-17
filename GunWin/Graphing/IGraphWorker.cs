@@ -79,6 +79,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       int CurrentMillisecondDelayBetweenGraphs { get; }
 
       /// <summary>
+      /// Gets a value indicating whether this instance has work.
+      /// </summary>
+      /// <value><c>true</c> if this instance has work; otherwise, <c>false</c>.</value>
+      bool HasWork { get; }
+
+      /// <summary>
       /// Queues the specified parse tree for graphing.
       /// </summary>
       /// <param name="grapher">The parse tree grapher.</param>

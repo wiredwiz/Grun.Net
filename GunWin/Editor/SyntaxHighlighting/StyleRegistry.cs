@@ -52,7 +52,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
    /// </summary>
    public class StyleRegistry : IStyleRegistry
    {
-      private readonly IEditorGuide _EditorGuide;
+      private readonly ISyntaxGuide _SyntaxGuide;
 
       private readonly Dictionary<string, Style> _TokenStyles;
 
@@ -60,9 +60,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 
       private Style _ErrorStyle;
 
-      public StyleRegistry([NotNull] IEditorGuide editorGuide)
+      public StyleRegistry([NotNull] ISyntaxGuide syntaxGuide)
       {
-         _EditorGuide = editorGuide ?? throw new ArgumentNullException(nameof(editorGuide));
+         _SyntaxGuide = syntaxGuide ?? throw new ArgumentNullException(nameof(syntaxGuide));
          _TokenStyles = new Dictionary<string, Style>();
          _UniqueStyles = new Dictionary<string, Style>();
       }
@@ -77,9 +77,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          if (_TokenStyles.TryGetValue(token.Type, out var style))
             return style;
 
-         var foregroundBrush = _EditorGuide.GetTokenForegroundBrush(token.Type);
-         var backgroundBrush = _EditorGuide.GetTokenBackgroundBrush(token.Type);
-         var fontStyle = _EditorGuide.GetTokenFontStyle(token.Type);
+         var foregroundBrush = _SyntaxGuide.GetTokenForegroundBrush(token.Type);
+         var backgroundBrush = _SyntaxGuide.GetTokenBackgroundBrush(token.Type);
+         var fontStyle = _SyntaxGuide.GetTokenFontStyle(token.Type);
          var key = foregroundBrush.GetHashCode().ToString() + backgroundBrush.GetHashCode() + fontStyle;
          if (_UniqueStyles.TryGetValue(key, out style))
          {
@@ -99,7 +99,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// <returns>A <see cref="Style"/> instance.</returns>
       public Style GetParseErrorStyle()
       {
-         return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, _EditorGuide.ErrorColor));
+         return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, _SyntaxGuide.ErrorColor));
       }
    }
 }

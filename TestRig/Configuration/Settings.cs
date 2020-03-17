@@ -177,10 +177,46 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
       public float EditorFontSize { get; set; }
 
       /// <summary>
+      /// Gets or sets the the editor text color.
+      /// </summary>
+      /// <value>The editor text color.</value>
+      public Color EditorTextColor { get; set; }
+
+      /// <summary>
+      /// Gets or sets the editor background color.
+      /// </summary>
+      /// <value>The editor background color.</value>
+      public Color EditorBackgroundColor { get; set; }
+
+      /// <summary>
+      /// Gets or sets the editor caret color.
+      /// </summary>
+      /// <value>The editor caret color.</value>
+      public Color EditorCaretColor { get; set; }
+
+      /// <summary>
+      /// Gets or sets the the editor line number indicator color.
+      /// </summary>
+      /// <value>The editor line number color.</value>
+      public Color EditorLineNumberColor { get; set; }
+
+      /// <summary>
+      /// Gets or sets the editor "current line" color.
+      /// </summary>
+      /// <value>The editor "current line" color.</value>
+      public Color EditorCurrentLineColor { get; set; }
+
+      /// <summary>
       /// Gets or sets a value indicating whether word wrap is enabled for the editor.
       /// </summary>
       /// <value><c>true</c> if word wrap enabled; otherwise, <c>false</c>.</value>
       public bool EditorWordWrap { get; set; }
+
+      /// <summary>
+      /// Gets or sets the editor word wrap indent.
+      /// </summary>
+      /// <value>The editor word wrap indent.</value>
+      public int EditorWordWrapIndent { get; set; }
 
       /// <summary>
       /// Gets or sets a value indicating whether automatic indent is enabled for the editor.
@@ -193,6 +229,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
       /// </summary>
       /// <value><c>true</c> if automatic brackets enabled; otherwise, <c>false</c>.</value>
       public bool EditorAutoBrackets { get; set; }
+
+      /// <summary>
+      /// Gets or sets the number of spaces to convert tabs to.
+      /// </summary>
+      /// <value>The number of spaces representing a tab.</value>
+      public int EditorTabLength { get; set; }
 
       /// <summary>
       /// Gets or sets the parser message font family.
@@ -255,11 +297,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
 
       private void LoadEditorSettings(KeyValueConfigurationCollection appSettings)
       {
-         var defFontFamily = FontFamily.GenericMonospace;
-         var defFontSize = 8f;
-         var defAutoIndent = false;
-         var defAutoBrackets = false;
-         var defWordWrap = false;
+         LoadEditorFontSettings(appSettings);
+         LoadEditorColorSettings(appSettings);
+         LoadEditorBehaviorSettings(appSettings);
+      }
+
+      private void LoadEditorFontSettings(KeyValueConfigurationCollection appSettings)
+      {
+         float defFontSize = 8f;
+         FontFamily defFontFamily = FontFamily.GenericMonospace;
 
          if (appSettings == null)
          {
@@ -282,18 +328,120 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          // Fetch EditorFontSize setting
          result = appSettings["EditorFontSize"]?.Value ?? string.Empty;
          EditorFontSize = !float.TryParse(result, out var settingValueFloat) ? defFontSize : settingValueFloat;
+      }
+
+      private void LoadEditorColorSettings(KeyValueConfigurationCollection appSettings)
+      {
+         var defTextColor = Color.Black;
+         var defCaretColor = Color.Black;
+         var defLineNumberColor = Color.Teal;
+         var defBackgroundColor = Color.White;
+         var defCurrentLineColor = Color.Transparent;
+
+         if (appSettings == null)
+         {
+            EditorTextColor = defTextColor;
+            EditorCaretColor = defCaretColor;
+            EditorBackgroundColor = defBackgroundColor;
+            EditorCurrentLineColor = defCurrentLineColor;
+            EditorLineNumberColor = defLineNumberColor;
+            return;
+         }
+
+         // Fetch EditorTextColor setting
+         var result = appSettings["EditorTextColor"]?.Value ?? string.Empty;
+         try
+         {
+            EditorTextColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : defTextColor;
+         }
+         catch (Exception)
+         {
+            EditorTextColor = defTextColor;
+         }
+
+         // Fetch EditorCaretColor setting
+         result = appSettings["EditorCaretColor"]?.Value ?? string.Empty;
+         try
+         {
+            EditorCaretColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : defCaretColor;
+         }
+         catch (Exception)
+         {
+            EditorCaretColor = defCaretColor;
+         }
+
+         // Fetch EditorBackgroundColor setting
+         result = appSettings["EditorBackgroundColor"]?.Value ?? string.Empty;
+         try
+         {
+            EditorBackgroundColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : defBackgroundColor;
+         }
+         catch (Exception)
+         {
+            EditorBackgroundColor = defBackgroundColor;
+         }
+
+         // Fetch EditorCurrentLineColor setting
+         result = appSettings["EditorCurrentLineColor"]?.Value ?? string.Empty;
+         try
+         {
+            EditorCurrentLineColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : defCurrentLineColor;
+         }
+         catch (Exception)
+         {
+            EditorCurrentLineColor = defCurrentLineColor;
+         }
+
+         // Fetch EditorLineNumberColor setting
+         result = appSettings["EditorLineNumberColor"]?.Value ?? string.Empty;
+         try
+         {
+            EditorLineNumberColor = !string.IsNullOrEmpty(result) ? ColorTranslator.FromHtml(result) : defLineNumberColor;
+         }
+         catch (Exception)
+         {
+            EditorLineNumberColor = defLineNumberColor;
+         }
+      }
+
+      [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse", Justification = "better to centralize defaults")]
+      private void LoadEditorBehaviorSettings(KeyValueConfigurationCollection appSettings)
+      {
+         var defAutoIndent = false;
+         var defAutoComplete = false;
+         var defWordWrap = false;
+         var defWordWrapIndent = 0;
+         var defTabLength = 2;
+
+         if (appSettings == null)
+         {
+            EditorAutoIndent = defAutoIndent;
+            EditorWordWrap = defWordWrap;
+            EditorAutoBrackets = defAutoComplete;
+            EditorWordWrapIndent = defWordWrapIndent;
+            EditorTabLength = defTabLength;
+            return;
+         }
 
          // Fetch EditorAutoIndent settings
-         result = appSettings["EditorAutoIndent"]?.Value ?? string.Empty;
+         var result = appSettings["EditorAutoIndent"]?.Value ?? string.Empty;
          EditorAutoIndent = !bool.TryParse(result, out var settingValueBoolean) ? defAutoIndent : settingValueBoolean;
 
          // Fetch EditorWordWrap settings
          result = appSettings["EditorWordWrap"]?.Value ?? string.Empty;
          EditorWordWrap = !bool.TryParse(result, out settingValueBoolean) ? defWordWrap : settingValueBoolean;
 
+         // Fetch EditorWordWrapIndent setting
+         result = appSettings["EditorWordWrapIndent"]?.Value ?? string.Empty;
+         EditorWordWrapIndent = !int.TryParse(result, out var settingValueInt) ? defWordWrapIndent : settingValueInt;
+
          // Fetch EditorAutoBrackets settings
          result = appSettings["EditorAutoBrackets"]?.Value ?? string.Empty;
-         EditorAutoBrackets = !bool.TryParse(result, out settingValueBoolean) ? defAutoBrackets : settingValueBoolean;
+         EditorAutoBrackets = !bool.TryParse(result, out settingValueBoolean) ? defAutoComplete : settingValueBoolean;
+
+         // Fetch EditorWordWrapIndent setting
+         result = appSettings["EditorTabLength"]?.Value ?? string.Empty;
+         EditorTabLength = !int.TryParse(result, out settingValueInt) ? defTabLength : settingValueInt;
       }
 
       private void LoadParserMessageFontSettings(KeyValueConfigurationCollection appSettings)

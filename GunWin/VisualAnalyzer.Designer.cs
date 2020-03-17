@@ -177,6 +177,7 @@
         '\'',
         '\''};
          this.CodeEditor.AutoIndent = false;
+         this.CodeEditor.AutoIndentChars = false;
          this.CodeEditor.AutoScrollMinSize = new System.Drawing.Size(27, 14);
          this.CodeEditor.BackBrush = null;
          this.CodeEditor.CharHeight = 14;

@@ -124,6 +124,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       /// <inheritdoc />
       public int CurrentMillisecondDelayBetweenGraphs => _CurrentMillisecondDelayBetweenGraphs;
 
+      public bool HasWork
+      {
+         get
+         {
+            lock (_Padlock) return QueuedWork.Count != 0;
+         }
+      }
+
       /// <inheritdoc />
       public void Graph(IParseTreeGrapher grapher, ITree tree, IList<string> parserRules)
       {

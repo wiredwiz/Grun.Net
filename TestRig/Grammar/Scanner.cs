@@ -58,8 +58,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
    /// </summary>
    public class Scanner
    {
-      // TODO: Refactor scanner class to simplify code
-
       /// <summary>
       ///    Finds the ANTLR grammar lexers in the supplied assembly.
       /// </summary>
@@ -134,13 +132,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       ///    <see cref="P:System.Reflection.ReflectionTypeLoadException.LoaderExceptions" /> property contains an exception for
       ///    each type that could not be loaded.
       /// </exception>
-      public IEnumerable<Type> FindEditorGuidesInAssembly([NotNull] Assembly assembly)
+      public IEnumerable<Type> FindSyntaxGuidesInAssembly([NotNull] Assembly assembly)
       {
          if (assembly is null)
             throw new ArgumentNullException(nameof(assembly));
 
          var result = new List<Type>();
-         var types = assembly.GetTypes().Where(t => typeof(IEditorGuide).IsAssignableFrom(t));
+         var types = assembly.GetTypes().Where(t => typeof(ISyntaxGuide).IsAssignableFrom(t));
 
          foreach (var type in types)
             // ReSharper disable once ExceptionNotDocumented
@@ -314,7 +312,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="path">The path to search.</param>
       /// <returns>A new <see cref="List{SyntaxGuideReference}"/>.</returns>
       /// <exception cref="ArgumentNullException">path is null or empty.</exception>
-      public List<EditorGuideReference> LocateAllEditorGuides([NotNull] string path)
+      public List<EditorGuideReference> LocateAllSyntaxGuides([NotNull] string path)
       {
          if (string.IsNullOrEmpty(path))
             throw new ArgumentNullException(nameof(path));
@@ -326,7 +324,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          foreach (var file in files)
          {
             var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
-            foreach (var guide in FindEditorGuidesInAssembly(assembly).ToList())
+            foreach (var guide in FindSyntaxGuidesInAssembly(assembly).ToList())
                results.Add(new EditorGuideReference(guide, file.FullName));
          }
 

@@ -88,7 +88,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
    {
       private readonly EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
 
-      private IEditorGuide _EditorGuide;
+      private ISyntaxGuide _SyntaxGuide;
 
       private GrammarReference _Grammar;
 
@@ -302,7 +302,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var guide = LoadEditorGuide(grammar);
          if (guide != null)
          {
-            _Registry = new StyleRegistry(_EditorGuide);
+            _Registry = new StyleRegistry(_SyntaxGuide);
             _GuideMonitor = new EditorGuideMonitor(guide, SynchronizationContext.Current);
             _GuideMonitor.GuideChanged += GuideAssemblyChanged;
          }
@@ -316,11 +316,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void GuideAssemblyChanged(object sender, EditorGuideReference e)
       {
          var loader = new Loader();
-         var guide = loader.LoadEditorGuide(e);
+         var guide = loader.LoadSyntaxGuide(e);
          if (guide != null)
          {
-            _EditorGuide = guide;
-            _Registry = new StyleRegistry(_EditorGuide);
+            _SyntaxGuide = guide;
+            _Registry = new StyleRegistry(_SyntaxGuide);
             DeColorExistingErrors();
             ColorizeTokens(null);
             ColorizeErrors();
@@ -670,7 +670,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (grammar == null)
             throw new ArgumentNullException(nameof(grammar));
 
-         _EditorGuide = null;
+         _SyntaxGuide = null;
 
          var scanner = new Scanner();
          var loader = new Loader();
@@ -774,13 +774,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private EditorGuideReference LoadGuideFromPath(GrammarReference grammar, Scanner scanner, Loader loader, string pathRoot)
       {
-         var guideReferences = scanner.LocateAllEditorGuides(pathRoot ?? throw new InvalidOperationException());
+         var guideReferences = scanner.LocateAllSyntaxGuides(pathRoot ?? throw new InvalidOperationException());
          foreach (var reference in guideReferences)
          {
-            var guide = loader.LoadEditorGuide(reference);
+            var guide = loader.LoadSyntaxGuide(reference);
             if (guide != null && guide.GrammarName == grammar.GrammarName)
             {
-               _EditorGuide = guide;
+               _SyntaxGuide = guide;
                return reference;
             }
          }
@@ -936,7 +936,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             _Viewer.Graph = graph;
             if (zoomFactor.HasValue)
                GraphZoomTrackBar.Value = zoomFactor.Value;
-            _Viewer.ZoomF = GraphZoomTrackBar.Value;
+            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
             _Viewer.ResumeLayout();
          }
          catch (Exception ex)
@@ -966,7 +966,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.Graph = graph;
          if (zoomFactor.HasValue)
             GraphZoomTrackBar.Value = zoomFactor.Value;
-         _Viewer.ZoomF = GraphZoomTrackBar.Value;
+         _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
          _Viewer.ResumeLayout();
       }
 
@@ -1031,10 +1031,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ConfigureGraphWorker();
          ConfigureParserMessageWindow();
 
-         CodeEditor.Font = new Font(_Settings.EditorFontFamily, _Settings.EditorFontSize);
-         CodeEditor.AutoIndent = _Settings.EditorAutoIndent;
-         CodeEditor.WordWrap = _Settings.EditorWordWrap;
-         CodeEditor.AutoCompleteBrackets = _Settings.EditorAutoBrackets;
+         ConfigureEditorSettings();
          ParseMessageListView.Font = new Font(_Settings.ParserMessageFontFamily, _Settings.ParserMessageFontSize);
 
          // Handle initial parse and coloring on load
@@ -1042,6 +1039,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // No reason to de-color existing errors since there should be none
          ColorizeTokens(null);
          ColorizeErrors();
+      }
+
+      private void ConfigureEditorSettings()
+      {
+         CodeEditor.Font = new Font(_Settings.EditorFontFamily, _Settings.EditorFontSize);
+         CodeEditor.ForeColor = _Settings.EditorTextColor;
+         CodeEditor.CaretColor = _Settings.EditorCaretColor;
+         CodeEditor.BackColor = _Settings.EditorBackgroundColor;
+         CodeEditor.CurrentLineColor = _Settings.EditorCurrentLineColor;
+         CodeEditor.AutoIndent = _Settings.EditorAutoIndent;
+         CodeEditor.WordWrapIndent = _Settings.EditorWordWrapIndent;
+         CodeEditor.WordWrap = _Settings.EditorWordWrap;
+         CodeEditor.AutoCompleteBrackets = _Settings.EditorAutoBrackets;
+         CodeEditor.TabLength = _Settings.EditorTabLength;
+         CodeEditor.LineNumberColor = _Settings.EditorLineNumberColor;
       }
 
       private void ConfigureParserMessageWindow()

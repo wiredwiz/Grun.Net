@@ -38,61 +38,13 @@ using System.Drawing;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Editor
 {
-   public interface IEditorGuide
+   public interface ISyntaxGuide
    {
       /// <summary>
       /// Gets the name of the grammar.
       /// </summary>
       /// <value>The name of the grammar.</value>
       string GrammarName { get; }
-
-      /// <summary>
-      /// Gets a value indicating whether to enable automatic indent.
-      /// </summary>
-      /// <value><c>true</c> if automatic indentation enabled; otherwise, <c>false</c>.</value>
-      bool EnableAutoIndent { get; }
-
-      /// <summary>
-      /// Gets a value indicating whether to enable bracket autocomplete.
-      /// </summary>
-      /// <value><c>true</c> if bracket autocomplete is enabled; otherwise, <c>false</c>.</value>
-      bool EnableBracketAutocomplete { get; }
-
-      /// <summary>
-      /// Gets a value indicating whether to enable word wrap.
-      /// </summary>
-      /// <value><c>true</c> if word wrap is enabled; otherwise, <c>false</c>.</value>
-      bool EnableWordWrap { get; }
-
-      /// <summary>
-      /// Gets the color of the line number.
-      /// </summary>
-      /// <value>The color of the line number.</value>
-      Color LineNumberColor { get; }
-
-      /// <summary>
-      /// Gets the color of the foreground text.
-      /// </summary>
-      /// <value>The color of the foreground text.</value>
-      Color ForeColor { get; }
-
-      /// <summary>
-      /// Gets the color of the background.
-      /// </summary>
-      /// <value>The color of the background.</value>
-      Color BackColor { get; }
-
-      /// <summary>
-      /// Gets the color of the caret.
-      /// </summary>
-      /// <value>The color of the caret.</value>
-      Color CaretColor { get; }
-
-      /// <summary>
-      /// Gets the color of the selected text blocks.
-      /// </summary>
-      /// <value>The color of the selected text blocks.</value>
-      Color SelectionColor { get; }
 
       /// <summary>
       /// Gets the color to use for parsing errors.
