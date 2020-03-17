@@ -39,12 +39,14 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
+using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
 using BrightIdeasSoftware;
@@ -108,6 +110,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private EditorGuideMonitor _GuideMonitor;
 
+      private List<IToken> _HighlightedErrors;
+
       #region Constructors And Finalizers
 
       /// <summary>
@@ -118,6 +122,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          InitializeComponent();
 
          LoadApplicationSettings();
+         _HighlightedErrors = new List<IToken>();
       }
 
       #endregion
@@ -316,6 +321,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             _EditorGuide = guide;
             _Registry = new StyleRegistry(_EditorGuide);
+            DeColorExistingErrors();
             ColorizeTokens(null);
             ColorizeErrors();
          }
@@ -326,6 +332,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var grammar = FetchGrammarInternal(e.AssemblyPath, e.GrammarName);
          SetGrammar(grammar);
          ParseSource();
+         DeColorExistingErrors();
          ColorizeTokens(null);
          ColorizeErrors();
       }
@@ -466,9 +473,48 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          else
          {
             ParseSource();
+            DeColorExistingErrors();
             ColorizeTokens(e.ChangedRange);
             ColorizeErrors();
          }
+      }
+
+      private void DeColorExistingErrors()
+      {
+         if (_Registry == null)
+            return;
+
+         CodeEditor.BeginUpdate();
+         try
+         {
+            var errorStyle = _Registry.GetParseErrorStyle();
+            var index = CodeEditor.GetStyleIndex(errorStyle);
+            var styleIndex = (StyleIndex)index + 1;
+            foreach (var token in _HighlightedErrors)
+            {
+               var startingPlace = new Place(token.Column, token.Line - 1);
+               var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
+               var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
+               tokenRange.ClearStyle(styleIndex);
+            }
+
+            _HighlightedErrors.Clear();
+         }
+         catch (Exception ex)
+         {
+            var errorDisplay = new ErrorDisplay
+            {
+               Text = Resources.SyntaxErrorColoringErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
+            errorDisplay.ShowDialog();
+         }
+         finally
+         {
+            CodeEditor.EndUpdate();
+         }
+         
       }
 
       // ReSharper disable once TooManyDeclarations
@@ -480,6 +526,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          CodeEditor.BeginUpdate();
          try
          {
+            var errorStyle = _Registry.GetParseErrorStyle();
             foreach (var error in _ParseErrors)
             {
                var token = error.Token;
@@ -487,6 +534,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
                var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
                tokenRange.SetStyle(_Registry.GetParseErrorStyle());
+               _HighlightedErrors.Add(token);
             }
          }
          catch (Exception ex)
@@ -573,12 +621,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          if (HeuristicHighlightingtToolStripMenuItem.Checked)
          {
+            DeColorExistingErrors();
             ColorizeTokens(null);
             ColorizeErrors();
          }
          else
          {
             CodeEditor.ClearStyle(StyleIndex.All);
+            _HighlightedErrors.Clear();
          }
       }
 
@@ -795,7 +845,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             var errorDisplay = new ErrorDisplay
             {
-               Text = Resources.GrammarLoadErrorTitle,
+               Text = Resources.SourceLoadErrorTitle,
                ErrorMessage = ex.Message,
                ErrorStackTrace = ex.StackTrace
             };
@@ -979,13 +1029,25 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          InitializeGraphCanvas();
          ConfigureGraphWorker();
+         ConfigureParserMessageWindow();
 
-         CodeEditor.Font = new System.Drawing.Font(_Settings.EditorFontFamily, _Settings.EditorFontSize);
+         CodeEditor.Font = new Font(_Settings.EditorFontFamily, _Settings.EditorFontSize);
+         CodeEditor.AutoIndent = _Settings.EditorAutoIndent;
+         CodeEditor.WordWrap = _Settings.EditorWordWrap;
+         CodeEditor.AutoCompleteBrackets = _Settings.EditorAutoBrackets;
+         ParseMessageListView.Font = new Font(_Settings.ParserMessageFontFamily, _Settings.ParserMessageFontSize);
 
          // Handle initial parse and coloring on load
          ParseSource();
+         // No reason to de-color existing errors since there should be none
          ColorizeTokens(null);
          ColorizeErrors();
+      }
+
+      private void ConfigureParserMessageWindow()
+      {
+         var font = new Font(_Settings.EditorFontFamily, _Settings.EditorFontSize);
+         ParseMessageListView.Font = font;
       }
 
       private void AboutToolStripMenuItem_Click(object sender, EventArgs e)

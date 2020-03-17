@@ -177,6 +177,36 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
       public float EditorFontSize { get; set; }
 
       /// <summary>
+      /// Gets or sets a value indicating whether word wrap is enabled for the editor.
+      /// </summary>
+      /// <value><c>true</c> if word wrap enabled; otherwise, <c>false</c>.</value>
+      public bool EditorWordWrap { get; set; }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether automatic indent is enabled for the editor.
+      /// </summary>
+      /// <value><c>true</c> if automatic indent enabled; otherwise, <c>false</c>.</value>
+      public bool EditorAutoIndent { get; set; }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether automatic brackets is enabled for the editor.
+      /// </summary>
+      /// <value><c>true</c> if automatic brackets enabled; otherwise, <c>false</c>.</value>
+      public bool EditorAutoBrackets { get; set; }
+
+      /// <summary>
+      /// Gets or sets the parser message font family.
+      /// </summary>
+      /// <value>The parser message font family.</value>
+      public FontFamily ParserMessageFontFamily { get; set; }
+
+      /// <summary>
+      /// Gets or sets the size of the parser message font.
+      /// </summary>
+      /// <value>The size of the parser message font.</value>
+      public float ParserMessageFontSize { get; set; }
+
+      /// <summary>
       /// Loads the editor settings from the specified file.
       /// </summary>
       /// <param name="filePath">The file path.</param>
@@ -207,7 +237,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          LoadGraphThrottlingSettings(appSettings);
          LoadSyntaxHighlightingSettings(appSettings);
          LoadGraphingNodeColorSettings(appSettings);
-         LoadEditorFontSettings(appSettings);
+         LoadEditorSettings(appSettings);
+         LoadParserMessageFontSettings(appSettings);
       }
 
       /// <summary>
@@ -218,13 +249,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          LoadGraphThrottlingSettings(null);
          LoadSyntaxHighlightingSettings(null);
          LoadGraphingNodeColorSettings(null);
-         LoadEditorFontSettings(null);
+         LoadEditorSettings(null);
+         LoadParserMessageFontSettings(null);
       }
 
-      private void LoadEditorFontSettings(KeyValueConfigurationCollection appSettings)
+      private void LoadEditorSettings(KeyValueConfigurationCollection appSettings)
       {
          var defFontFamily = FontFamily.GenericMonospace;
          var defFontSize = 8f;
+         var defAutoIndent = false;
+         var defAutoBrackets = false;
+         var defWordWrap = false;
 
          if (appSettings == null)
          {
@@ -247,6 +282,46 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          // Fetch EditorFontSize setting
          result = appSettings["EditorFontSize"]?.Value ?? string.Empty;
          EditorFontSize = !float.TryParse(result, out var settingValueFloat) ? defFontSize : settingValueFloat;
+
+         // Fetch EditorAutoIndent settings
+         result = appSettings["EditorAutoIndent"]?.Value ?? string.Empty;
+         EditorAutoIndent = !bool.TryParse(result, out var settingValueBoolean) ? defAutoIndent : settingValueBoolean;
+
+         // Fetch EditorWordWrap settings
+         result = appSettings["EditorWordWrap"]?.Value ?? string.Empty;
+         EditorWordWrap = !bool.TryParse(result, out settingValueBoolean) ? defWordWrap : settingValueBoolean;
+
+         // Fetch EditorAutoBrackets settings
+         result = appSettings["EditorAutoBrackets"]?.Value ?? string.Empty;
+         EditorAutoBrackets = !bool.TryParse(result, out settingValueBoolean) ? defAutoBrackets : settingValueBoolean;
+      }
+
+      private void LoadParserMessageFontSettings(KeyValueConfigurationCollection appSettings)
+      {
+         var defFontFamily = FontFamily.GenericSerif;
+         var defFontSize = 8.25f;
+
+         if (appSettings == null)
+         {
+            ParserMessageFontFamily = FontFamily.GenericMonospace;
+            ParserMessageFontSize = defFontSize;
+            return;
+         }
+
+         // Fetch EditorFontFamily setting
+         var result = appSettings["ParserMessageFontFamily"]?.Value ?? string.Empty;
+         try
+         {
+            ParserMessageFontFamily = !string.IsNullOrEmpty(result) ? new FontFamily(result) : defFontFamily;
+         }
+         catch (ArgumentException)
+         {
+            ParserMessageFontFamily = defFontFamily;
+         }
+
+         // Fetch EditorFontSize setting
+         result = appSettings["ParserMessageFontSize"]?.Value ?? string.Empty;
+         ParserMessageFontSize = !float.TryParse(result, out var settingValueFloat) ? defFontSize : settingValueFloat;
       }
 
       private void LoadGraphingNodeColorSettings(KeyValueConfigurationCollection appSettings)

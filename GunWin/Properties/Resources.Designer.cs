@@ -196,6 +196,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading the source.
+        /// </summary>
+        internal static string SourceLoadErrorTitle {
+            get {
+                return ResourceManager.GetString("SourceLoadErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred while parsing the source.
         /// </summary>
         internal static string SourceParseErrorTitle {

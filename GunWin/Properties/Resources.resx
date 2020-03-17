@@ -177,4 +177,7 @@
   <data name="MillisecondsAbbreviation" xml:space="preserve">
     <value>ms</value>
   </data>
+  <data name="SourceLoadErrorTitle" xml:space="preserve">
+    <value>An error occurred while loading the source</value>
+  </data>
 </root>
