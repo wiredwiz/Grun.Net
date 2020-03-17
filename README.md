@@ -12,7 +12,7 @@ These tools are meant to supplement the need to continually test with the Antlr 
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/wiredwiz/Grun.Net/graphs/commit-activity)
 [![GitHub issues open](https://img.shields.io/github/issues/wiredwiz/Grun.Net.svg?maxAge=60)](https://github.com/wiredwiz/Grun.Net/issues)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/wiredwiz/Grun.Net.svg)](http://isitmaintained.com/project/wiredwiz/Grun.Net "Percentage of issues still open")
+[![GitHub issues-closed](https://img.shields.io/github/issues-closed/wiredwiz/Grun.Net.svg)](https://GitHub.com/wiredwiz/Grun.Net/issues?q=is%3Aissue+is%3Aclosed)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/wiredwiz/Grun.Net.svg)](http://isitmaintained.com/project/wiredwiz/Grun.Net "Average time to resolve an issue")
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
