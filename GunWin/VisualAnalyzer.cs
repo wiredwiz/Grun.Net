@@ -798,7 +798,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (!string.IsNullOrEmpty(currentRule))
          {
             var index = CmbRules.FindStringExact(currentRule);
-            CmbRules.SelectedIndex = index != -1 ? index : 0;
+            if (index != -1)
+               CmbRules.SelectedIndex = index;
          }
          CmbRules.Refresh();
       }
@@ -956,12 +957,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void RenderParseTreeGraph(Graph graph, int? zoomFactor = null)
       {
          if (_Viewer == null)
-            return;
-
-         if (graph == null)
-            return;
-
-         if (_Grapher == null)
             return;
 
          _Viewer.SuspendLayout();
