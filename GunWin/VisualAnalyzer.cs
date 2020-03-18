@@ -321,7 +321,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             _SyntaxGuide = guide;
             _Registry = new StyleRegistry(_SyntaxGuide);
-            DeColorExistingErrors();
+            //DeColorExistingErrors();
             ColorizeTokens(null);
             ColorizeErrors();
          }
@@ -332,7 +332,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var grammar = FetchGrammarInternal(e.AssemblyPath, e.GrammarName);
          SetGrammar(grammar);
          ParseSource();
-         DeColorExistingErrors();
+         //DeColorExistingErrors();
          ColorizeTokens(null);
          ColorizeErrors();
       }
@@ -430,9 +430,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void CodeEditor_DragDrop(object sender, DragEventArgs e)
       {
          if (e.Data.GetDataPresent(DataFormats.Text))
+         {
+            CodeEditor.SelectAll();
             CodeEditor.Text = e.Data.GetData(DataFormats.Text).ToString();
+         }
          else if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+         {
+            CodeEditor.SelectAll();
             CodeEditor.Text = e.Data.GetData(DataFormats.UnicodeText).ToString();
+         }
          else if (e.Data.GetDataPresent(DataFormats.FileDrop))
             if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
             {
@@ -466,25 +472,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             e.Effect = DragDropEffects.None;
       }
 
-      private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
-      {
-         if (string.IsNullOrEmpty(CodeEditor.Text))
-            CodeEditor.ClearStyle(StyleIndex.All);
-         else
-         {
-            ParseSource();
-            DeColorExistingErrors();
-            ColorizeTokens(e.ChangedRange);
-            ColorizeErrors();
-         }
-      }
-
       private void DeColorExistingErrors()
       {
          if (_Registry == null)
             return;
 
          CodeEditor.BeginUpdate();
+         var lastLineNumber = CodeEditor.LinesCount;
+         var lastColumn = CodeEditor.Lines[lastLineNumber - 1].Length;
          try
          {
             var errorStyle = _Registry.GetParseErrorStyle();
@@ -494,6 +489,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             {
                var startingPlace = new Place(token.Column, token.Line - 1);
                var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
+
+               //if (stoppingPlace.iLine >= lastLineNumber)
+               //   break;
+
+               //if (stoppingPlace.iChar >= lastColumn)
+               //   break;
+
                var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
                tokenRange.ClearStyle(styleIndex);
             }
@@ -621,7 +623,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          if (HeuristicHighlightingtToolStripMenuItem.Checked)
          {
-            DeColorExistingErrors();
+            //DeColorExistingErrors();
             ColorizeTokens(null);
             ColorizeErrors();
          }
@@ -1073,6 +1075,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          StripLabelLine.Text = (CodeEditor.Selection.Start.iLine + 1).ToString();
          StripLabelColumn.Text = (CodeEditor.Selection.Start.iChar + 1).ToString();
+      }
+
+      private void CodeEditor_TextChangedDelayed(object sender, TextChangedEventArgs e)
+      {
+         if (string.IsNullOrEmpty(CodeEditor.Text))
+            CodeEditor.ClearStyle(StyleIndex.All);
+         else
+         {
+            ParseSource();
+            //DeColorExistingErrors();
+            ColorizeTokens(null);
+            ColorizeErrors();
+         }
       }
    }
 }

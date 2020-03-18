@@ -197,8 +197,8 @@
          this.CodeEditor.Size = new System.Drawing.Size(317, 398);
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
-         this.CodeEditor.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChanged);
          this.CodeEditor.SelectionChanged += new System.EventHandler(this.CodeEditor_SelectionChanged);
+         this.CodeEditor.TextChangedDelayed += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChangedDelayed);
          this.CodeEditor.DragDrop += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragDrop);
          this.CodeEditor.DragEnter += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragEnter);
          // 
