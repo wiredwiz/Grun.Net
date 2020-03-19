@@ -22,7 +22,8 @@ Grun.Net is primarily composed of two testing tools: Grun.exe and GrunWin.exe.
 Grun.exe is a command line testing tool similar to the existing Antlr TestRig.
 GrunWin.exe is a graphical testing tool with a host of testing features.
 
-Further information on the features and usage of each tool may be found in the wiki.
+Further information on the features and usage of each tool may be found 
+[in the wiki](https://github.com/wiredwiz/Grun.Net/wiki).
 
 Below is a demonstration video showing how to use these tools.
 [![Demonstration Video](http://img.youtube.com/vi/fFBz6Fey6Pk/0.jpg)](https://www.youtube.com/watch?v=fFBz6Fey6Pk)
