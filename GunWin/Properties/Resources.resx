@@ -183,4 +183,10 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="VersionMessage" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="AboutMessage" xml:space="preserve">
+    <value>About {0}</value>
+  </data>
 </root>

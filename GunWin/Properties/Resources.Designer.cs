@@ -61,6 +61,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About {0}.
+        /// </summary>
+        internal static string AboutMessage {
+            get {
+                return ResourceManager.GetString("AboutMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All files|*.*.
         /// </summary>
         internal static string AllFilesFilter {
@@ -237,6 +246,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         internal static string TokenColoringErrorTitle {
             get {
                 return ResourceManager.GetString("TokenColoringErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version {0}.
+        /// </summary>
+        internal static string VersionMessage {
+            get {
+                return ResourceManager.GetString("VersionMessage", resourceCulture);
             }
         }
         
