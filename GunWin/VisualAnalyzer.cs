@@ -177,10 +177,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// <value><c>true</c> if heuristic syntax highlighting is enabled; otherwise, <c>false</c>.</value>
       public bool UseHeuristicSyntaxHighlighting
       {
-         get => HeuristicHighlightingtToolStripMenuItem.Checked;
+         get => HeuristicHighlightingToolStripMenuItem.Checked;
          set
          {
-            HeuristicHighlightingtToolStripMenuItem.Checked = value;
+            HeuristicHighlightingToolStripMenuItem.Checked = value;
             ParseSource();
          }
       }
@@ -535,7 +535,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                var startingPlace = new Place(token.Column, token.Line - 1);
                var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
                var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
-               tokenRange.SetStyle(_Registry.GetParseErrorStyle());
+               tokenRange.SetStyle(errorStyle);
                _HighlightedErrors.Add(token);
             }
          }
@@ -619,9 +619,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             _Viewer.ZoomF = GraphZoomTrackBar.Value * 0.1 + 1.0;
       }
 
-      private void HeuristicHighlightingtToolStripMenuItem_Click(object sender, EventArgs e)
+      private void HeuristicHighlightingToolStripMenuItem_Click(object sender, EventArgs e)
       {
-         if (HeuristicHighlightingtToolStripMenuItem.Checked)
+         if (HeuristicHighlightingToolStripMenuItem.Checked)
          {
             //DeColorExistingErrors();
             ColorizeTokens(null);

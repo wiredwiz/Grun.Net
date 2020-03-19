@@ -65,7 +65,7 @@
          this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
          this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.HeuristicHighlightingtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.HeuristicHighlightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
          this.TracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.DiagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -507,7 +507,7 @@
          // optionsToolStripMenuItem
          // 
          this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.HeuristicHighlightingtToolStripMenuItem,
+            this.HeuristicHighlightingToolStripMenuItem,
             this.toolStripSeparator2,
             this.TracingToolStripMenuItem,
             this.DiagnosticsToolStripMenuItem,
@@ -516,15 +516,15 @@
          this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
          this.optionsToolStripMenuItem.Text = "&Options";
          // 
-         // HeuristicHighlightingtToolStripMenuItem
+         // HeuristicHighlightingToolStripMenuItem
          // 
-         this.HeuristicHighlightingtToolStripMenuItem.Checked = true;
-         this.HeuristicHighlightingtToolStripMenuItem.CheckOnClick = true;
-         this.HeuristicHighlightingtToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-         this.HeuristicHighlightingtToolStripMenuItem.Name = "HeuristicHighlightingtToolStripMenuItem";
-         this.HeuristicHighlightingtToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
-         this.HeuristicHighlightingtToolStripMenuItem.Text = "Heuristic Syntax Highlighting";
-         this.HeuristicHighlightingtToolStripMenuItem.Click += new System.EventHandler(this.HeuristicHighlightingtToolStripMenuItem_Click);
+         this.HeuristicHighlightingToolStripMenuItem.Checked = true;
+         this.HeuristicHighlightingToolStripMenuItem.CheckOnClick = true;
+         this.HeuristicHighlightingToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.HeuristicHighlightingToolStripMenuItem.Name = "HeuristicHighlightingToolStripMenuItem";
+         this.HeuristicHighlightingToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.HeuristicHighlightingToolStripMenuItem.Text = "Heuristic Syntax Highlighting";
+         this.HeuristicHighlightingToolStripMenuItem.Click += new System.EventHandler(this.HeuristicHighlightingToolStripMenuItem_Click);
          // 
          // toolStripSeparator2
          // 
@@ -826,7 +826,7 @@
       private System.Windows.Forms.SplitContainer splitContainer3;
       private System.Windows.Forms.TreeView ParseTreeView;
       private System.Windows.Forms.TrackBar GraphZoomTrackBar;
-      private System.Windows.Forms.ToolStripMenuItem HeuristicHighlightingtToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem HeuristicHighlightingToolStripMenuItem;
       private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
       private System.Windows.Forms.TabPage tabTrace;
       private BrightIdeasSoftware.FastObjectListView TraceListView;
