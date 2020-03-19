@@ -38,7 +38,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -59,7 +58,6 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
-using Org.Edgerunner.ANTLR4.Tools.Common;
 using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions;
@@ -74,7 +72,6 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Monitors;
 
-using Place = FastColoredTextBoxNS.Place;
 using Settings = Org.Edgerunner.ANTLR4.Tools.Testing.Configuration.Settings;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
@@ -110,8 +107,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private EditorGuideMonitor _GuideMonitor;
 
-      private List<IToken> _HighlightedErrors;
-
       #region Constructors And Finalizers
 
       /// <summary>
@@ -122,7 +117,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          InitializeComponent();
 
          LoadApplicationSettings();
-         _HighlightedErrors = new List<IToken>();
       }
 
       #endregion
@@ -423,6 +417,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
+      // ReSharper disable once TooManyDeclarations
+      // ReSharper disable once ExcessiveIndentation
       private void CodeEditor_DragDrop(object sender, DragEventArgs e)
       {
          if (e.Data.GetDataPresent(DataFormats.Text))
@@ -543,7 +539,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void GraphZoomTrackBar_ValueChanged(object sender, EventArgs e)
       {
          if (_Viewer != null)
-            _Viewer.ZoomF = GraphZoomTrackBar.Value * 0.1 + 1.0;
+            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
       }
 
       private void HeuristicHighlightingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -553,10 +549,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             ColorizeTokens(null);
          }
          else
-         {
             CodeEditor.ClearStyle(StyleIndex.All);
-            _HighlightedErrors.Clear();
-         }
       }
 
       private void InitializeGraphCanvas()

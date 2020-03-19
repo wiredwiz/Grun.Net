@@ -106,6 +106,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to load file..
         /// </summary>
         internal static string FileLoadFailedMessage {

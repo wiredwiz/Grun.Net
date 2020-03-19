@@ -180,4 +180,7 @@
   <data name="SourceLoadErrorTitle" xml:space="preserve">
     <value>An error occurred while loading the source</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
 </root>
