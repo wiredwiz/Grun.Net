@@ -865,7 +865,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             {
                var workingNode = treeNodes.First();
                ParseTreeView.SelectedNode = workingNode;
-               RenderParseTreeGraph(workingNode.Tag as ITree, 1);
+               RenderParseTreeGraph(workingNode.Tag as ITree, 0);
                ParseTreeView.Focus();
             }
          }
