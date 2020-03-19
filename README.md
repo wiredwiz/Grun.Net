@@ -24,4 +24,7 @@ GrunWin.exe is a graphical testing tool with a host of testing features.
 
 Further information on the features and usage of each tool may be found in the wiki.
 
+Below is a demonstration video showing how to use these tools.
+[![Demonstration Video](http://img.youtube.com/vi/fFBz6Fey6Pk/0.jpg)](https://www.youtube.com/watch?v=fFBz6Fey6Pk)
+
 ![Editor Sample](https://github.com/wiredwiz/Grun.Net/blob/assets/Assets/GrunWinExample.GIF?raw=true)
