@@ -18,6 +18,8 @@ These tools are meant to supplement the need to continually test with the Antlr 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/wiredwiz/Grun.Net.svg)](https://GitHub.com/wiredwiz/Grun.Net/pulls/)
 
+[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?label=Tweet%20me&style=social)](https://twitter.com/intent/tweet?screen_name=wiredwiz)
+
 Grun.Net is primarily composed of two testing tools: Grun.exe and GrunWin.exe.
 Grun.exe is a command line testing tool similar to the existing Antlr TestRig.
 GrunWin.exe is a graphical testing tool with a host of testing features.
