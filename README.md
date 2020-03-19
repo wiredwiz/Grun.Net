@@ -5,10 +5,7 @@ These tools are meant to supplement the need to continually test with the Antlr 
 
 ![.Net Framework CI](https://github.com/wiredwiz/Grun.Net/workflows/.Net%20Framework%20CI/badge.svg)
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://raw.githubusercontent.com/antlr/antlr4/master/LICENSE.txt)
-![version](https://img.shields.io/badge/version-1.0.20073-blue)
-<!---
 [![GitHub release](https://img.shields.io/github/release/wiredwiz/Grun.Net.svg)](https://github.com/wiredwiz/Grun.Net/releases/)
---->
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/wiredwiz/Grun.Net/graphs/commit-activity)
 [![GitHub issues open](https://img.shields.io/github/issues/wiredwiz/Grun.Net.svg?maxAge=60)](https://github.com/wiredwiz/Grun.Net/issues)
