@@ -100,6 +100,7 @@
     <Compile Include="Dialogs\GrammarSelector.Designer.cs">
       <DependentUpon>GrammarSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\PlaceExtensions.cs" />
     <Compile Include="Graphing\GraphingResult.cs" />
     <Compile Include="Graphing\GraphingWorkItem.cs" />
     <Compile Include="Graphing\GraphWorker.cs" />
@@ -180,5 +181,6 @@
   <ItemGroup>
     <Content Include="grun.net.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

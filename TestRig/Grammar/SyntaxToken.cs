@@ -66,7 +66,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
          var spot = parserToken.GetEndPlace();
          EndingLineNumber = spot.Line;
-         EndingColumnPosition = spot.Position + 1;
+         EndingColumnPosition = spot.Position;
       }
 
       /// <summary>

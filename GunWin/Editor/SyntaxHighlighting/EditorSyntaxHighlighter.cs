@@ -41,10 +41,14 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 
+using Antlr4.Runtime;
+
 using FastColoredTextBoxNS;
 
+using Org.Edgerunner.ANTLR4.Tools.Testing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 
 using Place = FastColoredTextBoxNS.Place;
@@ -64,7 +68,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// <param name="editor">The editor.</param>
       /// <param name="registry">The registry.</param>
       /// <param name="tokens">The tokens.</param>
-      public void ColorizeTokens(FastColoredTextBox editor, IStyleRegistry registry, IList<SyntaxToken> tokens)
+      /// <param name="errorTokens">The error tokens.</param>
+      public void ColorizeTokens(FastColoredTextBox editor, IStyleRegistry registry, IList<SyntaxToken> tokens, IList<IToken> errorTokens)
       {
          int coloring = Interlocked.Exchange(ref _TokenColoringInProgress, 1);
          if (coloring != 0) 
@@ -85,6 +90,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
                          tokenRange.ClearStyle(StyleIndex.All);
                          var style = registry.GetTokenStyle(token);
                          tokenRange.SetStyle(style);
+                      }
+                      foreach (var token in errorTokens)
+                      {
+                         var startingPlace = new Place(token.Column, token.Line - 1);
+                         var stoppingPlace = token.GetEndPlace().ConvertToFctbPlace();
+                         var tokenRange = editor.GetRange(startingPlace, stoppingPlace);
+                         tokenRange.SetStyle(registry.GetParseErrorStyle());
                       }
                    }
                    // ReSharper disable once CatchAllClause

@@ -321,9 +321,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             _SyntaxGuide = guide;
             _Registry = new StyleRegistry(_SyntaxGuide);
-            //DeColorExistingErrors();
             ColorizeTokens(null);
-            ColorizeErrors();
          }
       }
 
@@ -332,9 +330,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var grammar = FetchGrammarInternal(e.AssemblyPath, e.GrammarName);
          SetGrammar(grammar);
          ParseSource();
-         //DeColorExistingErrors();
          ColorizeTokens(null);
-         ColorizeErrors();
       }
 
       /// <summary>
@@ -472,87 +468,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             e.Effect = DragDropEffects.None;
       }
 
-      private void DeColorExistingErrors()
+      private List<IToken> GetErrorTokens()
       {
-         if (_Registry == null)
-            return;
+         var result = new List<IToken>();
 
-         CodeEditor.BeginUpdate();
-         var lastLineNumber = CodeEditor.LinesCount;
-         var lastColumn = CodeEditor.Lines[lastLineNumber - 1].Length;
-         try
-         {
-            var errorStyle = _Registry.GetParseErrorStyle();
-            var index = CodeEditor.GetStyleIndex(errorStyle);
-            var styleIndex = (StyleIndex)index + 1;
-            foreach (var token in _HighlightedErrors)
-            {
-               var startingPlace = new Place(token.Column, token.Line - 1);
-               var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
+         if (_ParseErrors == null)
+            return result;
 
-               //if (stoppingPlace.iLine >= lastLineNumber)
-               //   break;
+         foreach (var error in _ParseErrors)
+            if (error.Token != null)
+               result.Add(error.Token);
 
-               //if (stoppingPlace.iChar >= lastColumn)
-               //   break;
-
-               var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
-               tokenRange.ClearStyle(styleIndex);
-            }
-
-            _HighlightedErrors.Clear();
-         }
-         catch (Exception ex)
-         {
-            var errorDisplay = new ErrorDisplay
-            {
-               Text = Resources.SyntaxErrorColoringErrorTitle,
-               ErrorMessage = ex.Message,
-               ErrorStackTrace = ex.StackTrace
-            };
-            errorDisplay.ShowDialog();
-         }
-         finally
-         {
-            CodeEditor.EndUpdate();
-         }
-         
-      }
-
-      // ReSharper disable once TooManyDeclarations
-      private void ColorizeErrors()
-      {
-         if (_Registry == null)
-            return;
-
-         CodeEditor.BeginUpdate();
-         try
-         {
-            var errorStyle = _Registry.GetParseErrorStyle();
-            foreach (var error in _ParseErrors)
-            {
-               var token = error.Token;
-               var startingPlace = new Place(token.Column, token.Line - 1);
-               var stoppingPlace = new Place(token.Column + token.Text.Length, token.Line - 1);
-               var tokenRange = CodeEditor.GetRange(startingPlace, stoppingPlace);
-               tokenRange.SetStyle(errorStyle);
-               _HighlightedErrors.Add(token);
-            }
-         }
-         catch (Exception ex)
-         {
-            var errorDisplay = new ErrorDisplay
-            {
-               Text = Resources.SyntaxErrorColoringErrorTitle,
-               ErrorMessage = ex.Message,
-               ErrorStackTrace = ex.StackTrace
-            };
-            errorDisplay.ShowDialog();
-         }
-         finally
-         {
-            CodeEditor.EndUpdate();
-         }
+         return result;
       }
 
       private void ColorizeTokens(Range range)
@@ -561,7 +488,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             return;
 
          var tokensToColor = range == null ? _Tokens : FindTokensInRange(_Tokens, range);
-         _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor);
+         _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor, GetErrorTokens());
       }
 
       private void ConfigureGraphWorker()
@@ -623,9 +550,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          if (HeuristicHighlightingToolStripMenuItem.Checked)
          {
-            //DeColorExistingErrors();
             ColorizeTokens(null);
-            ColorizeErrors();
          }
          else
          {
@@ -1033,9 +958,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          // Handle initial parse and coloring on load
          ParseSource();
-         // No reason to de-color existing errors since there should be none
          ColorizeTokens(null);
-         ColorizeErrors();
       }
 
       private void ConfigureEditorSettings()
@@ -1079,9 +1002,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          else
          {
             ParseSource();
-            //DeColorExistingErrors();
             ColorizeTokens(null);
-            ColorizeErrors();
          }
       }
    }

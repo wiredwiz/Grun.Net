@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="TokenInterfaceExtensionMethods.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// <copyright file="PlaceExtensions.cs" company="Edgerunner.org">
+// Copyright 2020 
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2020, 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -34,57 +34,22 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using System;
-
-using Antlr4.Runtime;
-
-using JetBrains.Annotations;
-
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.Extensions
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
 {
-   /// <summary>
-   /// Class containing extension methods for the token interface.
-   /// </summary>
-   public static class TokenInterfaceExtensionMethods
+   public static class PlaceExtensions
    {
       /// <summary>
-      /// Gets the place within the source representing the end of the token.
+      /// Converts to a token <see cref="Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Place"/> to a <see cref="FastColoredTextBoxNS.Place"/> place.
       /// </summary>
-      /// <param name="token">The token.</param>
-      /// <returns>A new <see cref="Place"/>.</returns>
-      /// <exception cref="T:System.ArgumentNullException"><paramref name="token"/> is <see langword="null"/></exception>
-      public static Place GetEndPlace([NotNull] this IToken token)
+      /// <param name="place">The place to convert.</param>
+      /// <returns>A new <see cref="FastColoredTextBoxNS.Place"/>.</returns>
+      /// <remarks>The Fast Colored Text Box placement begins line indexes at index 0 so we must reduce the grammar placement by 1.</remarks>
+      // ReSharper disable once IdentifierTypo
+      public static FastColoredTextBoxNS.Place ConvertToFctbPlace(this Place place)
       {
-         if (token is null)
-            throw new ArgumentNullException(nameof(token));
-
-         var positionShift = 0;
-         var lineShift = 0;
-         var lineTerminationMode = false;
-
-         foreach (char item in token.Text)
-         {
-            if (item == '\r' || item == '\n')
-            {
-               lineTerminationMode = true;
-               positionShift++;
-            }
-            else
-            {
-               if (lineTerminationMode)
-               {
-                  lineShift++;
-                  positionShift = 0;
-                  lineTerminationMode = false;
-               }
-               else
-                  positionShift++;
-            }
-         }
-
-         return new Place(token.Line + lineShift, (lineShift == 0) ? token.Column + positionShift : positionShift);
+         return new FastColoredTextBoxNS.Place(place.Position, place.Line - 1);
       }
    }
 }
