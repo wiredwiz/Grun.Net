@@ -232,7 +232,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          try
          {
-            _GraphWorker?.Graph(_Grapher, analyzer.ParseContext, _Grammar.ParserRules);
+            _GraphWorker?.Graph(_Grapher, analyzer.ParserContext, _Grammar.ParserRules);
          }
          catch (Exception ex)
          {

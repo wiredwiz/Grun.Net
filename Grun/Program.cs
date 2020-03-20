@@ -44,6 +44,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
+using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 
 using CommandLine;
@@ -59,6 +60,9 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
+
+using Parser = CommandLine.Parser;
 
 // ReSharper disable RedundantNameQualifier
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
@@ -132,10 +136,50 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                             }
                             else
                             {
+                               var analyzer = new Analyzer();
+                               var builder = new StringBuilder();
+                               var currentLine = Console.CursorTop;
                                Console.WriteLine(Resources.ReadingFromStandardInputPromptMessage);
-                               string line;
-                               while ((line = Console.ReadLine()) != null)
-                                  data += line + Environment.NewLine;
+                               while (true)
+                               {
+                                  var typed = Console.ReadKey(true);
+
+                                  if ((typed.Modifiers & ConsoleModifiers.Control) == ConsoleModifiers.Control
+                                      && typed.Key == ConsoleKey.Z)
+                                  {
+                                     Console.Write("^Z");
+                                     break;
+                                  }
+
+                                  if (typed.Key == ConsoleKey.Enter)
+                                  {
+                                     Console.WriteLine();
+                                     builder.Append("\r\n");
+                                  }
+                                  else if (typed.Key == ConsoleKey.Backspace)
+                                  {
+                                     if (Console.CursorLeft > 0)
+                                     {
+                                        Console.Write(typed.KeyChar);
+                                        Console.Write(' ');
+                                        Console.Write(typed.KeyChar);
+                                        builder.Remove(builder.Length - 1, 1);
+                                     }
+                                  }
+                                  else
+                                  {
+                                     Console.Write(typed.KeyChar);
+                                     builder.Append(typed.KeyChar);
+                                  }
+
+                                  var grammarParser = analyzer.BuildParserWithOptions(grammar, data, ParseOption.None);
+                                  grammarParser.RemoveErrorListeners();
+                                  analyzer.ExecuteParsing(grammarParser, o.RuleName);
+                                  HighlightSyntaxInConsole(currentLine, analyzer, null);
+                               }
+
+                               Console.WriteLine();
+                               data = builder.ToString();
                             }
 
                             // If tokens are the only option we've received, we don't need to parse
@@ -153,7 +197,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                analyzer.ExecuteParsing(grammarParser, o.RuleName);
 
                                if (showParseTree)
-                                  Console.WriteLine(analyzer.ParseContext.ToStringTree(grammarParser));
+                                  Console.WriteLine(analyzer.ParserContext.ToStringTree(grammarParser));
 
                                if (writeSvg)
                                {
@@ -164,7 +208,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
                                      BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
                                      TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
                                   };
-                                  var graph = grapher.CreateGraph(analyzer.ParseContext, rules.ToList());
+                                  var graph = grapher.CreateGraph(analyzer.ParserContext, rules.ToList());
                                   graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
                                   GraphRenderer renderer = new GraphRenderer(graph);
                                   renderer.CalculateLayout();
@@ -204,6 +248,39 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
             Console.WriteLine(Resources.PressAnyKeyMessage);
             Console.ReadKey();
 #endif
+         }
+      }
+
+      private static void HighlightSyntaxInConsole(int lineOffset, Analyzer analyzer, IStyleRegistry registry)
+      {
+         return; 
+
+         if (analyzer?.ParserContext == null)
+            return;
+
+         if (registry == null)
+            return;
+
+         var cursorRow = Console.CursorTop;
+         var cursorColumn = Console.CursorLeft;
+         foreach (var token in analyzer.DisplayTokens)
+            ColorToken(token, lineOffset, registry);
+
+         Console.SetCursorPosition(cursorColumn, cursorRow);
+      }
+
+      private static void ColorToken(SyntaxToken token, int lineOffset, IStyleRegistry registry)
+      {
+         var startLine = token.LineNumber + lineOffset;
+         var endLine = token.EndingLineNumber + lineOffset;
+         for (int ln = startLine; ln < endLine + 1; ln++)
+         {
+            for (int col = token.ColumnPosition; col < token.EndingColumnPosition + 1; col++)
+            {
+               Console.SetCursorPosition(col, ln);
+
+               // TODO: add syntax highlight logic.
+            }
          }
       }
 

@@ -65,10 +65,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       public IList<SyntaxToken> DisplayTokens { get; private set; }
 
       /// <summary>
-      /// Gets the parse context.
+      /// Gets the parser context.
       /// </summary>
-      /// <value>The parse context.</value>
-      public ParserRuleContext ParseContext { get; private set; }
+      /// <value>The parser context.</value>
+      public ParserRuleContext ParserContext { get; private set; }
 
       /// <summary>
       /// Gets a Lisp-style parse tree.
@@ -183,7 +183,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          if (methodInfo == null)
             throw new GrammarException($"No parser rule with name \"{parserRule}\" found.");
 
-         ParseContext = methodInfo.Invoke(parser, null) as ParserRuleContext;
+         ParserContext = methodInfo.Invoke(parser, null) as ParserRuleContext;
          IsParsed = true;
       }
 
