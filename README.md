@@ -1,4 +1,4 @@
-# Grun.Net (BETA)
+# Grun.Net
 
 A set of tools written in C# for testing Antlr4 generated C# grammar assemblies. 
 These tools are meant to supplement the need to continually test with the Antlr java TestRig assembly.
