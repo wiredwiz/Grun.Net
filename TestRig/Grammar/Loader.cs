@@ -43,8 +43,7 @@ using Antlr4.Runtime;
 
 using JetBrains.Annotations;
 
-using Org.Edgerunner.ANTLR4.Tools.Common;
-using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
+using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
@@ -96,21 +95,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       }
 
       /// <summary>
-      /// Loads an <see cref="ISyntaxGuide"/> instance for the referenced grammar.
+      /// Loads an <see cref="ISyntaxHighlightingGuide"/> instance for the referenced grammar.
       /// </summary>
       /// <param name="reference">The syntax guide reference.</param>
-      /// <returns>A new <see cref="ISyntaxGuide" />.</returns>
+      /// <returns>A new <see cref="ISyntaxHighlightingGuide" />.</returns>
       /// <exception cref="ArgumentNullException"><paramref name="reference"/> is <see langword="null"/></exception>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="reference" /> is <see langword="null" /></exception>
       /// <exception cref="T:System.IO.FileLoadException">A file that was found could not be loaded.</exception>
       /// <exception cref="T:System.IO.FileNotFoundException">The assembly path is an empty string ("") or does not exist.</exception>
       /// <exception cref="T:System.BadImageFormatException">The assembly path is not a valid assembly.</exception>
-      public ISyntaxGuide LoadSyntaxGuide([NotNull] EditorGuideReference reference)
+      public ISyntaxHighlightingGuide LoadSyntaxGuide([NotNull] SyntaxHighlightingGuideReference reference)
       {
          if (reference is null) throw new ArgumentNullException(nameof(reference));
 
          Assembly.Load(File.ReadAllBytes(reference.AssemblyPath));
-         var guide = Activator.CreateInstance(reference.GuideType) as ISyntaxGuide;
+         var guide = Activator.CreateInstance(reference.GuideType) as ISyntaxHighlightingGuide;
          return guide;
       }
 
@@ -123,12 +122,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <exception cref="T:System.IO.FileLoadException">A file that was found could not be loaded.</exception>
       /// <exception cref="T:System.IO.FileNotFoundException">The assembly path is an empty string ("") or does not exist.</exception>
       /// <exception cref="T:System.BadImageFormatException">The assembly path is not a valid assembly.</exception>
-      public IEnumerable<ISyntaxGuide> LoadAllSyntaxGuides([NotNull] IEnumerable<EditorGuideReference> references)
+      public IEnumerable<ISyntaxHighlightingGuide> LoadAllSyntaxGuides([NotNull] IEnumerable<SyntaxHighlightingGuideReference> references)
       {
          if (references == null)
             throw new ArgumentNullException(nameof(references));
 
-         var results = new List<ISyntaxGuide>();
+         var results = new List<ISyntaxHighlightingGuide>();
 
          foreach (var guideReference in references)
             results.Add(LoadSyntaxGuide(guideReference));

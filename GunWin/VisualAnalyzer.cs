@@ -58,10 +58,12 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
-using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs;
@@ -85,7 +87,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
    {
       private readonly EditorSyntaxHighlighter _Highlighter = new EditorSyntaxHighlighter();
 
-      private ISyntaxGuide _SyntaxGuide;
+      private ISyntaxHighlightingGuide _SyntaxGuide;
 
       private GrammarReference _Grammar;
 
@@ -245,9 +247,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             errorDisplay.ShowDialog();
          }
 
-         _Tokens = analyzer.DisplayTokens;
+         _Tokens = analyzer.SyntaxTokens;
          _ParseErrors = errorListener.Errors;
-         PopulateTokens(analyzer.DisplayTokens);
+         PopulateTokens(analyzer.SyntaxTokens);
          PopulateParserMessages(_ParseErrors);
          PopulateTraceEvents(parseTreeListener);
       }
@@ -293,21 +295,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _GrammarMonitor.GrammarChanged += GrammarAssemblyChanged;
 
          // Now try to load an IEditorGuide instance for the specified Grammar
-         var guide = LoadEditorGuide(grammar);
-         if (guide != null)
+         var guideResult = grammar.LoadSyntaxHighlightingGuide();
+         if (guideResult != null)
          {
-            _Registry = new StyleRegistry(_SyntaxGuide);
-            _GuideMonitor = new EditorGuideMonitor(guide, SynchronizationContext.Current);
+            _SyntaxGuide = guideResult.Item2;
+            _Registry = new StyleRegistry(guideResult.Item2);
+            _GuideMonitor = new EditorGuideMonitor(guideResult.Item1, SynchronizationContext.Current);
             _GuideMonitor.GuideChanged += GuideAssemblyChanged;
          }
          else
          {
+            _SyntaxGuide = null;
             _GuideMonitor = null;
-            _Registry = new HeuristicStyleRegistry(_Settings);
+            _Registry = new StyleRegistry(new HeuristicSyntaxHighlightingGuide(_Settings));
          }
       }
 
-      private void GuideAssemblyChanged(object sender, EditorGuideReference e)
+      private void GuideAssemblyChanged(object sender, SyntaxHighlightingGuideReference e)
       {
          var loader = new Loader();
          var guide = loader.LoadSyntaxGuide(e);
@@ -585,33 +589,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Settings.LoadDefaults();
       }
 
-      private EditorGuideReference LoadEditorGuide([NotNull] GrammarReference grammar)
-      {
-         if (grammar == null)
-            throw new ArgumentNullException(nameof(grammar));
-
-         _SyntaxGuide = null;
-
-         var scanner = new Scanner();
-         var loader = new Loader();
-
-         // First try loading a guide from the target assembly's directory
-         var pathRoot = Path.GetDirectoryName(grammar.AssemblyPath);
-         var guide = LoadGuideFromPath(grammar, scanner, loader, pathRoot);
-         if (guide != null)
-            return guide;
-
-         // Now try loading a guide from the Grun.Net Guides folder
-         pathRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
-
-         // ReSharper disable once AssignNullToNotNullAttribute
-         pathRoot = Path.Combine(pathRoot, "Guides");
-         if (Directory.Exists(pathRoot))
-            guide = LoadGuideFromPath(grammar, scanner, loader, pathRoot);
-
-         return guide;
-      }
-
       private GrammarReference FetchGrammarInternal(string fileToSearch, string grammarName = "")
       {
          var scanner = new Scanner();
@@ -690,22 +667,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             };
             errorDisplay.ShowDialog();
          }
-      }
-
-      private EditorGuideReference LoadGuideFromPath(GrammarReference grammar, Scanner scanner, Loader loader, string pathRoot)
-      {
-         var guideReferences = scanner.LocateAllSyntaxGuides(pathRoot ?? throw new InvalidOperationException());
-         foreach (var reference in guideReferences)
-         {
-            var guide = loader.LoadSyntaxGuide(reference);
-            if (guide != null && guide.GrammarName == grammar.GrammarName)
-            {
-               _SyntaxGuide = guide;
-               return reference;
-            }
-         }
-
-         return null;
       }
 
       private void LoadParserRules()

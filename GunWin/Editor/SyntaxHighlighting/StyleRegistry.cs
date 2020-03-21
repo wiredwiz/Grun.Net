@@ -36,14 +36,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 using FastColoredTextBoxNS;
 
 using JetBrains.Annotations;
 
-using Org.Edgerunner.ANTLR4.Tools.Common;
-using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 {
@@ -52,19 +52,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
    /// </summary>
    public class StyleRegistry : IStyleRegistry
    {
-      private readonly ISyntaxGuide _SyntaxGuide;
+      private readonly ISyntaxHighlightingGuide _SyntaxGuide;
 
       private readonly Dictionary<string, Style> _TokenStyles;
 
-      private readonly Dictionary<string, Style> _UniqueStyles;
+      private readonly Dictionary<int, Style> _UniqueStyles;
 
       private Style _ErrorStyle;
 
-      public StyleRegistry([NotNull] ISyntaxGuide syntaxGuide)
+      public StyleRegistry([NotNull] ISyntaxHighlightingGuide syntaxGuide)
       {
          _SyntaxGuide = syntaxGuide ?? throw new ArgumentNullException(nameof(syntaxGuide));
          _TokenStyles = new Dictionary<string, Style>();
-         _UniqueStyles = new Dictionary<string, Style>();
+         _UniqueStyles = new Dictionary<int, Style>();
       }
 
       /// <summary>
@@ -77,17 +77,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          if (_TokenStyles.TryGetValue(token.Type, out var style))
             return style;
 
-         var foregroundBrush = _SyntaxGuide.GetTokenForegroundBrush(token.Type);
-         var backgroundBrush = _SyntaxGuide.GetTokenBackgroundBrush(token.Type);
-         var fontStyle = _SyntaxGuide.GetTokenFontStyle(token.Type);
-         var key = foregroundBrush.GetHashCode().ToString() + backgroundBrush.GetHashCode() + fontStyle;
+         var foregroundColor = _SyntaxGuide.GetTokenForegroundColor(token);
+         var backgroundColor = _SyntaxGuide.GetTokenBackgroundColor(token);
+         var fontStyle = _SyntaxGuide.GetTokenFontStyle(token);
+         var key = GetKey(foregroundColor, backgroundColor, fontStyle);
          if (_UniqueStyles.TryGetValue(key, out style))
          {
             _TokenStyles[token.Type] = style;
             return style;
          }
 
-         style = new TextStyle(foregroundBrush, backgroundBrush, fontStyle);
+         var foreBrush = new SolidBrush(foregroundColor);
+         var backBrush = new SolidBrush(backgroundColor);
+         style = new TextStyle(foreBrush, backBrush, fontStyle);
          _UniqueStyles[key] = style;
          _TokenStyles[token.Type] = style;
          return style;
@@ -99,7 +101,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// <returns>A <see cref="Style"/> instance.</returns>
       public Style GetParseErrorStyle()
       {
-         return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, _SyntaxGuide.ErrorColor));
+         return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, _SyntaxGuide.GetErrorIndicatorColor()));
+      }
+
+      private int GetKey(Color foreground, Color background, FontStyle style)
+      {
+         return (((foreground.GetHashCode() * 397) ^ background.GetHashCode()) * 397) ^ style.GetHashCode();
       }
    }
 }

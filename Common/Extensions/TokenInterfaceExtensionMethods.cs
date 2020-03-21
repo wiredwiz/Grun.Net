@@ -40,9 +40,9 @@ using Antlr4.Runtime;
 
 using JetBrains.Annotations;
 
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.Extensions
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
 {
    /// <summary>
    /// Class containing extension methods for the token interface.

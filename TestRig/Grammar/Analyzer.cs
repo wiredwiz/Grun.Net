@@ -42,6 +42,7 @@ using Antlr4.Runtime.Tree;
 
 using JetBrains.Annotations;
 
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 
@@ -59,10 +60,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       public IList<IToken> Tokens { get; private set; }
 
       /// <summary>
-      /// Gets the display tokens.
+      /// Gets the syntax tokens.
       /// </summary>
-      /// <value>The display tokens.</value>
-      public IList<SyntaxToken> DisplayTokens { get; private set; }
+      /// <value>The syntax tokens.</value>
+      public IList<SyntaxToken> SyntaxTokens { get; private set; }
 
       /// <summary>
       /// Gets the parser context.
@@ -103,10 +104,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var loader = new Grammar.Loader();
          var inputStream = new AntlrInputStream(inputText);
          var lexer = loader.LoadLexer(grammar, inputStream);
+         lexer.RemoveErrorListeners();
          var commonTokenStream = new CommonTokenStream(lexer);
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
-         DisplayTokens = ConvertTokensForDisplay(lexer, Tokens);
+         SyntaxTokens = ConvertTokensToSyntaxTokens(lexer, Tokens);
          return Tokens;
       }
 
@@ -136,7 +138,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
-         DisplayTokens = ConvertTokensForDisplay(lexer, Tokens);
+         SyntaxTokens = ConvertTokensToSyntaxTokens(lexer, Tokens);
 
          if (option.HasFlag(ParseOption.Tokens))
             foreach (var token in Tokens)
@@ -187,16 +189,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          IsParsed = true;
       }
 
-      private IList<SyntaxToken> ConvertTokensForDisplay([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
+      private IList<SyntaxToken> ConvertTokensToSyntaxTokens([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
       {
          if (lexer is null) throw new ArgumentNullException(nameof(lexer));
          if (tokens is null) throw new ArgumentNullException(nameof(tokens));
 
-         var viewTokens = new List<SyntaxToken>();
+         var syntaxTokens = new List<SyntaxToken>();
          foreach (var token in tokens)
-            viewTokens.Add(new SyntaxToken(lexer, token));
+            syntaxTokens.Add(new SyntaxToken(lexer, token));
 
-         return viewTokens;
+         return syntaxTokens;
       }
    }
 }

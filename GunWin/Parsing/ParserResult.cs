@@ -38,6 +38,7 @@ using System.Collections.Generic;
 
 using Antlr4.Runtime;
 
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;

@@ -36,9 +36,9 @@
 
 using Antlr4.Runtime;
 
-using Org.Edgerunner.ANTLR4.Tools.Testing.Extensions;
+using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
 {
    /// <summary>
    /// Struct that represents a lightweight view model for IToken instances

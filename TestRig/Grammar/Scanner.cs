@@ -46,8 +46,7 @@ using Antlr4.Runtime;
 
 using JetBrains.Annotations;
 
-using Org.Edgerunner.ANTLR4.Tools.Common;
-using Org.Edgerunner.ANTLR4.Tools.Common.Editor;
+using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Types;
 
@@ -138,7 +137,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             throw new ArgumentNullException(nameof(assembly));
 
          var result = new List<Type>();
-         var types = assembly.GetTypes().Where(t => typeof(ISyntaxGuide).IsAssignableFrom(t));
+         var types = assembly.GetTypes().Where(t => typeof(ISyntaxHighlightingGuide).IsAssignableFrom(t));
 
          foreach (var type in types)
             // ReSharper disable once ExceptionNotDocumented
@@ -312,20 +311,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="path">The path to search.</param>
       /// <returns>A new <see cref="List{SyntaxGuideReference}"/>.</returns>
       /// <exception cref="ArgumentNullException">path is null or empty.</exception>
-      public List<EditorGuideReference> LocateAllSyntaxGuides([NotNull] string path)
+      public List<SyntaxHighlightingGuideReference> LocateAllSyntaxGuides([NotNull] string path)
       {
          if (string.IsNullOrEmpty(path))
             throw new ArgumentNullException(nameof(path));
 
          var di = new DirectoryInfo(path);
          var files = di.GetFiles("*.dll");
-         var results = new List<EditorGuideReference>();
+         var results = new List<SyntaxHighlightingGuideReference>();
 
          foreach (var file in files)
          {
             var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
             foreach (var guide in FindSyntaxGuidesInAssembly(assembly).ToList())
-               results.Add(new EditorGuideReference(guide, file.FullName));
+               results.Add(new SyntaxHighlightingGuideReference(guide, file.FullName));
          }
 
          return results;

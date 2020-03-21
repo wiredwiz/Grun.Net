@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -36,6 +36,9 @@
     <Reference Include="Antlr4.Runtime, Version=4.6.0.0, Culture=neutral, PublicKeyToken=09abb75b9ed49849, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr4.Runtime.4.6.6\lib\net45\Antlr4.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Colorful.Console, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Colorful.Console.1.2.10\lib\net461\Colorful.Console.dll</HintPath>
+    </Reference>
     <Reference Include="CommandLine, Version=2.7.82.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>..\packages\CommandLineParser.2.7.82\lib\net461\CommandLine.dll</HintPath>
     </Reference>
@@ -61,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HighlightingTokenCache.cs" />
     <Compile Include="Options.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -84,6 +88,10 @@
     <ProjectReference Include="..\Code Grapher\Code Grapher.csproj">
       <Project>{ec6f674c-4d48-40c4-b28b-85627c1ea3ce}</Project>
       <Name>Code Grapher</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{8bd992fd-a3b3-4af9-9371-5aa14ddfda68}</Project>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\GunWin\GunWin.csproj">
       <Project>{a3568fa3-d6b3-4165-af95-cdb78d86f416}</Project>

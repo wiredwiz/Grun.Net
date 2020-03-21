@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="IEditorGuide.cs" company="Edgerunner.org">
-// Copyright 2020 
+// <copyright file="Place.cs" company="Edgerunner.org">
+// Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, 
+// Copyright (c) 2020, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -34,43 +34,35 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using System.Drawing;
-
-namespace Org.Edgerunner.ANTLR4.Tools.Common.Editor
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
 {
-   public interface ISyntaxGuide
+   /// <summary>
+   /// Struct representing a placement within some source.
+   /// </summary>
+   public struct Place
    {
       /// <summary>
-      /// Gets the name of the grammar.
+      /// Initializes a new instance of the <see cref="Place"/> struct.
       /// </summary>
-      /// <value>The name of the grammar.</value>
-      string GrammarName { get; }
+      /// <param name="line">The line number.</param>
+      /// <param name="position">The position.</param>
+      public Place(int line, int position)
+      {
+         Line = line;
+         Position = position;
+      }
 
       /// <summary>
-      /// Gets the color to use for parsing errors.
+      /// Gets the line number.
       /// </summary>
-      /// <value>The color of the error.</value>
-      Color ErrorColor { get; }
+      /// <value>The line number.</value>
+      public int Line { get; }
 
       /// <summary>
-      /// Gets the foreground brush to use for the token.
+      /// Gets the position within the line.
       /// </summary>
-      /// <param name="tokenTypeName">Name of the token type.</param>
-      /// <returns>The <see cref="Brush"/> to use.</returns>
-      Brush GetTokenForegroundBrush(string tokenTypeName);
-
-      /// <summary>
-      /// Gets the background brush to use for the token.
-      /// </summary>
-      /// <param name="tokenTypeName">Name of the token type.</param>
-      /// <returns>The <see cref="Brush"/> to use.</returns>
-      Brush GetTokenBackgroundBrush(string tokenTypeName);
-
-      /// <summary>
-      /// Gets the FontStyle to use for the token.
-      /// </summary>
-      /// <param name="tokenTypeName">Name of the token type.</param>
-      /// <returns>The <see cref="FontStyle"/> to use.</returns>
-      FontStyle GetTokenFontStyle(string tokenTypeName);
+      /// <value>The position.</value>
+      /// <remarks>The position is 0 index based.</remarks>
+      public int Position { get; }
    }
 }

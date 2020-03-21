@@ -34,6 +34,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
@@ -41,7 +42,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
    public static class PlaceExtensions
    {
       /// <summary>
-      /// Converts to a token <see cref="Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Place"/> to a <see cref="FastColoredTextBoxNS.Place"/> place.
+      /// Converts to a token <see cref="Place"/> to a <see cref="FastColoredTextBoxNS.Place"/> place.
       /// </summary>
       /// <param name="place">The place to convert.</param>
       /// <returns>A new <see cref="FastColoredTextBoxNS.Place"/>.</returns>

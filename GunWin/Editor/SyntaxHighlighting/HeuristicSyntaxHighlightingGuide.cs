@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="HeuristicStyleRegistry.cs" company="Edgerunner.org">
+// <copyright file="HeuristicSyntaxHighlightGuide.cs" company="Edgerunner.org">
 // Copyright 2020 
 // </copyright>
 // 
@@ -37,10 +37,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-using FastColoredTextBoxNS;
-
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 {
@@ -49,97 +48,49 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
    /// Implements the <see cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting.IStyleRegistry" />
    /// </summary>
    /// <seealso cref="Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting.IStyleRegistry" />
-   public class HeuristicStyleRegistry : IStyleRegistry
+   public class HeuristicSyntaxHighlightingGuide : ISyntaxHighlightingGuide
    {
-      private readonly Style _LiteralStyle;
+      private readonly Settings _Settings;
 
-      private readonly Style _CommentStyle;
+      private readonly Dictionary<string, Color> _ForegroundColors;
 
-      private readonly Style _KeywordStyle;
+      private readonly Dictionary<string, Color> _BackgroundColors;
 
-      private readonly Style _DefaultStyle;
-
-      private readonly Dictionary<string, Style> _InternalRegistry;
-
-      private Style _ErrorStyle;
+      private readonly Dictionary<string, FontStyle> _FontStyles;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="HeuristicStyleRegistry" /> class.
+      /// Initializes a new instance of the <see cref="HeuristicSyntaxHighlightingGuide" /> class.
       /// </summary>
       /// <param name="settings">The settings.</param>
-      public HeuristicStyleRegistry(Settings settings)
+      public HeuristicSyntaxHighlightingGuide(Settings settings)
       {
-         var keywordForeBrush = new SolidBrush(settings.KeywordTokenColor);
-         var keywordBackBrush = new SolidBrush(settings.KeywordTokenBackgroundColor);
-         var literalForeBrush = new SolidBrush(settings.LiteralTokenColor);
-         var literalBackBrush = new SolidBrush(settings.LiteralTokenBackgroundColor);
-         var commentForeBrush = new SolidBrush(settings.CommentTokenColor);
-         var commentBackBrush = new SolidBrush(settings.CommentTokenBackgroundColor);
-         var defaultForeBrush = new SolidBrush(settings.DefaultTokenColor);
-         var defaultBackBrush = new SolidBrush(settings.DefaultTokenBackgroundColor);
-         _KeywordStyle = new TextStyle(keywordForeBrush, keywordBackBrush, settings.KeywordTokenFontStyle);
-         _LiteralStyle = new TextStyle(literalForeBrush, literalBackBrush, settings.LiteralTokenFontStyle);
-         _CommentStyle = new TextStyle(commentForeBrush, commentBackBrush, settings.CommentTokenFontStyle);
-         _DefaultStyle = new TextStyle(defaultForeBrush, defaultBackBrush, settings.DefaultTokenFontStyle);
-         _InternalRegistry = new Dictionary<string, Style>();
-      }
-
-      /// <inheritdoc/>
-      public Style GetTokenStyle(SyntaxToken token)
-      {
-         if (_InternalRegistry.TryGetValue(token.TypeUpperCase, out var style))
-            return style;
-
-         if (IsKeyword(token))
-         {
-            _InternalRegistry[token.TypeUpperCase] = _KeywordStyle;
-            return _KeywordStyle;
-         }
-
-         if (IsLiteral(token))
-         {
-            _InternalRegistry[token.TypeUpperCase] = _LiteralStyle;
-            return _LiteralStyle;
-         }
-
-         if (IsComment(token))
-         {
-            _InternalRegistry[token.TypeUpperCase] = _CommentStyle;
-            return _CommentStyle;
-         }
-
-         _InternalRegistry[token.TypeUpperCase] = _DefaultStyle;
-         return _DefaultStyle;
-      }
-
-      /// <inheritdoc/>
-      public Style GetParseErrorStyle()
-      {
-         return _ErrorStyle ?? (_ErrorStyle = new WavyLineStyle(240, Color.Red));
+         _Settings = settings;
+         _ForegroundColors = new Dictionary<string, Color>();
+         _BackgroundColors = new Dictionary<string, Color>();
+         _FontStyles = new Dictionary<string, FontStyle>();
       }
 
       private bool IsLiteral(SyntaxToken token)
       {
-         var type = token.TypeUpperCase;
-         if (type.Contains("LITERAL"))
+         if (token.TypeUpperCase.Contains("LITERAL"))
             return true;
-         if (type.EndsWith("_LIT"))
+         if (token.TypeUpperCase.EndsWith("_LIT"))
             return true;
-         if (type.Contains("NUMBER"))
+         if (token.TypeUpperCase.Contains("NUMBER"))
             return true;
-         if (type.Contains("FLOAT"))
+         if (token.TypeUpperCase.Contains("FLOAT"))
             return true;
-         if (type.Contains("INTEGER"))
+         if (token.TypeUpperCase.Contains("INTEGER"))
             return true;
-         if (type.Contains("DOUBLE"))
+         if (token.TypeUpperCase.Contains("DOUBLE"))
             return true;
-         if (type.Contains("LONG"))
+         if (token.TypeUpperCase.Contains("LONG"))
             return true;
-         if (type.Contains("STRING"))
+         if (token.TypeUpperCase.Contains("STRING"))
             return true;
-         if (type.Contains("CHARACTER"))
+         if (token.TypeUpperCase.Contains("CHARACTER"))
             return true;
-         if (type.Contains("HEX"))
+         if (token.TypeUpperCase.Contains("HEX"))
             return true;
 
          return false;
@@ -353,8 +304,95 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 
       private bool IsComment(SyntaxToken token)
       {
-         var type = token.TypeUpperCase;
-         return type.Contains("COMMENT");
+         return token.TypeUpperCase.Contains("COMMENT");
+      }
+
+      public string GrammarName { get; set; }
+
+      public Color GetErrorIndicatorColor()
+      {
+         return Color.Red;
+      }
+
+      public Color GetTokenForegroundColor(SyntaxToken token)
+      {
+         if (_ForegroundColors.TryGetValue(token.TypeUpperCase, out var style))
+            return style;
+
+         if (IsKeyword(token))
+         {
+            _ForegroundColors[token.TypeUpperCase] = _Settings.KeywordTokenColor;
+            return _Settings.KeywordTokenColor;
+         }
+
+         if (IsLiteral(token))
+         {
+            _ForegroundColors[token.TypeUpperCase] = _Settings.LiteralTokenColor;
+            return _Settings.LiteralTokenColor;
+         }
+
+         if (IsComment(token))
+         {
+            _ForegroundColors[token.TypeUpperCase] = _Settings.CommentTokenColor;
+            return _Settings.CommentTokenColor;
+         }
+
+         _ForegroundColors[token.TypeUpperCase] = _Settings.DefaultTokenColor;
+         return _Settings.DefaultTokenColor;
+      }
+
+      public Color GetTokenBackgroundColor(SyntaxToken token)
+      {
+         if (_BackgroundColors.TryGetValue(token.TypeUpperCase, out var style))
+            return style;
+
+         if (IsKeyword(token))
+         {
+            _BackgroundColors[token.TypeUpperCase] = _Settings.KeywordTokenBackgroundColor;
+            return _Settings.KeywordTokenBackgroundColor;
+         }
+
+         if (IsLiteral(token))
+         {
+            _BackgroundColors[token.TypeUpperCase] = _Settings.LiteralTokenBackgroundColor;
+            return _Settings.LiteralTokenBackgroundColor;
+         }
+
+         if (IsComment(token))
+         {
+            _BackgroundColors[token.TypeUpperCase] = _Settings.CommentTokenBackgroundColor;
+            return _Settings.CommentTokenBackgroundColor;
+         }
+
+         _BackgroundColors[token.TypeUpperCase] = _Settings.DefaultTokenBackgroundColor;
+         return _Settings.DefaultTokenBackgroundColor;
+      }
+
+      public FontStyle GetTokenFontStyle(SyntaxToken token)
+      {
+         if (_FontStyles.TryGetValue(token.TypeUpperCase, out var style))
+            return style;
+
+         if (IsKeyword(token))
+         {
+            _FontStyles[token.TypeUpperCase] = _Settings.KeywordTokenFontStyle;
+            return _Settings.KeywordTokenFontStyle;
+         }
+
+         if (IsLiteral(token))
+         {
+            _FontStyles[token.TypeUpperCase] = _Settings.KeywordTokenFontStyle;
+            return _Settings.KeywordTokenFontStyle;
+         }
+
+         if (IsComment(token))
+         {
+            _FontStyles[token.TypeUpperCase] = _Settings.CommentTokenFontStyle;
+            return _Settings.CommentTokenFontStyle;
+         }
+
+         _FontStyles[token.TypeUpperCase] = _Settings.DefaultTokenFontStyle;
+         return _Settings.DefaultTokenFontStyle;
       }
    }
 }

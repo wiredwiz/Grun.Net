@@ -44,7 +44,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
-using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 
 using CommandLine;
@@ -54,14 +53,18 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
 
+using Console = Colorful.Console;
 using Parser = CommandLine.Parser;
 
 // ReSharper disable RedundantNameQualifier
@@ -74,214 +77,270 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
    {
       private static Settings _Settings;
 
+      private static HighlightingTokenCache _Cache = new HighlightingTokenCache();
+
+      private static int _ScrollFadeCount = 0;
+
       #region Static
 
       [STAThread]
       // ReSharper disable once MethodTooLong
       private static void Main(string[] args)
       {
-         try
-         {
-            LoadApplicationSettings();
+         //try
+         //{
+         LoadApplicationSettings();
+         Console.BackgroundColor = _Settings.EditorBackgroundColor;
+         Console.ForegroundColor = _Settings.EditorTextColor;
+         FillCurrentLineBackground();
 
-            var parser = new Parser(with => with.HelpWriter = null);
-            var parserResult = parser.ParseArguments<Options>(args);
-            parserResult
-                      .WithParsed(o =>
+         var parser = new Parser(with => with.HelpWriter = null);
+         var parserResult = parser.ParseArguments<Options>(args);
+         parserResult
+                   .WithParsed(o =>
+                      {
+                         var options = Grammar.ParseOption.None;
+                         var loadGui = false;
+                         var showParseTree = false;
+                         var writeSvg = false;
+                         ISyntaxHighlightingGuide guide = null;
+
+                         if (o.Tokens) options |= Grammar.ParseOption.Tokens;
+                         if (o.Diagnostics) options |= Grammar.ParseOption.Diagnostics;
+                         if (o.Trace) options |= Grammar.ParseOption.Trace;
+                         if (o.Tree)
                          {
-                            var options = Grammar.ParseOption.None;
-                            var loadGui = false;
-                            var showParseTree = false;
-                            var writeSvg = false;
+                            options |= Grammar.ParseOption.Tree;
+                            showParseTree = true;
+                         }
 
-                            if (o.Tokens) options |= Grammar.ParseOption.Tokens;
-                            if (o.Diagnostics) options |= Grammar.ParseOption.Diagnostics;
-                            if (o.Trace) options |= Grammar.ParseOption.Trace;
-                            if (o.Tree)
+                         if (!string.IsNullOrEmpty(o.SvgFileName))
+                         {
+                            writeSvg = true;
+                            options |= Grammar.ParseOption.Tree;
+                         }
+
+                         if (o.Sll) options |= Grammar.ParseOption.Sll;
+                         if (o.Gui)
+                         {
+                            loadGui = true;
+                            options |= Grammar.ParseOption.Tree;
+                         }
+
+                         var workingDirectory = Environment.CurrentDirectory;
+                         var scanner = new Grammar.Scanner();
+
+                         var grammar = scanner.LocateGrammar(workingDirectory, o.GrammarName);
+                         if (grammar == null)
+                         {
+                            Console.WriteLine(Resources.GrammarNotFoundErrorMessage, o.GrammarName);
+                            return;
+                         }
+
+                         var guideResult = grammar.LoadSyntaxHighlightingGuide();
+                         guide = guideResult != null ? guideResult.Item2 : new HeuristicSyntaxHighlightingGuide(_Settings);
+
+                         var data = string.Empty;
+
+                         if (!string.IsNullOrEmpty(o.FileName))
+                         {
+                            var encodingToUse = !string.IsNullOrEmpty(o.EncodingName) ? Encoding.GetEncoding(o.EncodingName) : Encoding.Default;
+                            using (var reader = new StreamReader(o.FileName, encodingToUse))
+                               data = reader.ReadToEnd();
+                         }
+                         else
+                         {
+                            var analyzer = new Analyzer();
+                            var builder = new StringBuilder();
+                            Console.WriteLine(Resources.ReadingFromStandardInputPromptMessage);
+                            var currentLine = Console.CursorTop;
+                            var keepReading = true;
+                            while (keepReading)
                             {
-                               options |= Grammar.ParseOption.Tree;
-                               showParseTree = true;
-                            }
-
-                            if (!string.IsNullOrEmpty(o.SvgFileName))
-                            {
-                               writeSvg = true;
-                               options |= Grammar.ParseOption.Tree;
-                            }
-
-                            if (o.Sll) options |= Grammar.ParseOption.Sll;
-                            if (o.Gui)
-                            {
-                               loadGui = true;
-                               options |= Grammar.ParseOption.Tree;
-                            }
-
-                            var workingDirectory = Environment.CurrentDirectory;
-                            var scanner = new Grammar.Scanner();
-
-                            var grammar = scanner.LocateGrammar(workingDirectory, o.GrammarName);
-                            if (grammar == null)
-                            {
-                               Console.WriteLine(Resources.GrammarNotFoundErrorMessage, o.GrammarName);
-                               return;
-                            }
-
-                            var data = string.Empty;
-
-                            if (!string.IsNullOrEmpty(o.FileName))
-                            {
-                               var encodingToUse = !string.IsNullOrEmpty(o.EncodingName) ? Encoding.GetEncoding(o.EncodingName) : Encoding.Default;
-                               using (var reader = new StreamReader(o.FileName, encodingToUse))
-                                  data = reader.ReadToEnd();
-                            }
-                            else
-                            {
-                               var analyzer = new Analyzer();
-                               var builder = new StringBuilder();
-                               var currentLine = Console.CursorTop;
-                               Console.WriteLine(Resources.ReadingFromStandardInputPromptMessage);
-                               while (true)
+                               if (Console.KeyAvailable)
                                {
-                                  var typed = Console.ReadKey(true);
+                                  while (Console.KeyAvailable)
+                                  {
+                                     var typed = Console.ReadKey(true);
 
-                                  if ((typed.Modifiers & ConsoleModifiers.Control) == ConsoleModifiers.Control
-                                      && typed.Key == ConsoleKey.Z)
-                                  {
-                                     Console.Write("^Z");
-                                     break;
-                                  }
+                                     if ((typed.Modifiers & ConsoleModifiers.Control) == ConsoleModifiers.Control
+                                         && typed.Key == ConsoleKey.Z)
+                                     {
+                                        Console.Write("^Z");
+                                        keepReading = false;
+                                        break;
+                                     }
 
-                                  if (typed.Key == ConsoleKey.Enter)
-                                  {
-                                     Console.WriteLine();
-                                     builder.Append("\r\n");
-                                  }
-                                  else if (typed.Key == ConsoleKey.Backspace)
-                                  {
-                                     if (Console.CursorLeft > 0)
+                                     if (typed.Key == ConsoleKey.Enter)
+                                     {
+                                        if (Console.CursorTop == Console.BufferHeight - 1)
+                                           _ScrollFadeCount++;
+                                        Console.WriteLine();
+                                        FillCurrentLineBackground();
+                                        builder.Append("\r\n");
+                                     }
+                                     else if (typed.Key == ConsoleKey.Tab)
+                                     {
+                                        var spaces = new string(' ', _Settings.EditorTabLength);
+                                        Console.Write(spaces);
+                                        builder.Append(spaces);
+                                     }
+                                     else if (typed.Key == ConsoleKey.Backspace)
+                                     {
+                                        if (Console.CursorLeft > 0)
+                                        {
+                                           Console.Write(typed.KeyChar);
+                                           Console.Write(' ');
+                                           Console.Write(typed.KeyChar);
+                                           builder.Remove(builder.Length - 1, 1);
+                                           _Cache.FlushTokensForLine(currentLine - (_ScrollFadeCount + 1));
+                                        }
+                                     }
+                                     else
                                      {
                                         Console.Write(typed.KeyChar);
-                                        Console.Write(' ');
-                                        Console.Write(typed.KeyChar);
-                                        builder.Remove(builder.Length - 1, 1);
+                                        builder.Append(typed.KeyChar);
                                      }
                                   }
-                                  else
-                                  {
-                                     Console.Write(typed.KeyChar);
-                                     builder.Append(typed.KeyChar);
-                                  }
 
-                                  var grammarParser = analyzer.BuildParserWithOptions(grammar, data, ParseOption.None);
-                                  grammarParser.RemoveErrorListeners();
-                                  analyzer.ExecuteParsing(grammarParser, o.RuleName);
-                                  HighlightSyntaxInConsole(currentLine, analyzer, null);
+                                  //analyzer.Tokenize(grammar, builder.ToString());
+                                  //HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
                                }
-
-                               Console.WriteLine();
-                               data = builder.ToString();
                             }
 
-                            // If tokens are the only option we've received, we don't need to parse
-                            if (options == Grammar.ParseOption.Tokens)
+                            Console.WriteLine();
+                            data = builder.ToString();
+                         }
+
+                         // If tokens are the only option we've received, we don't need to parse
+                         if (options == Grammar.ParseOption.Tokens)
+                         {
+                            DisplayTokens(grammar, data);
+                            return;
+                         }
+
+                         // Now we attempt to parse, but still handle a lexer-only grammar.
+                         if (grammar.Parser != null)
+                         {
+                            var analyzer = new Analyzer();
+                            var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options);
+                            analyzer.ExecuteParsing(grammarParser, o.RuleName);
+
+                            if (showParseTree)
+                               Console.WriteLine(analyzer.ParserContext.ToStringTree(grammarParser));
+
+                            if (writeSvg)
                             {
-                               DisplayTokens(grammar, data);
-                               return;
-                            }
-
-                            // Now we attempt to parse, but still handle a lexer-only grammar.
-                            if (grammar.Parser != null)
-                            {
-                               var analyzer = new Analyzer();
-                               var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options);
-                               analyzer.ExecuteParsing(grammarParser, o.RuleName);
-
-                               if (showParseTree)
-                                  Console.WriteLine(analyzer.ParserContext.ToStringTree(grammarParser));
-
-                               if (writeSvg)
+                               var rules = scanner.GetParserRulesForGrammarParser(grammar.Parser);
+                               var grapher = new ParseTreeGrapher()
                                {
-                                  var rules = scanner.GetParserRulesForGrammarParser(grammar.Parser);
-                                  var grapher = new ParseTreeGrapher()
-                                  {
-                                     BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
-                                     BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
-                                     TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
-                                  };
-                                  var graph = grapher.CreateGraph(analyzer.ParserContext, rules.ToList());
-                                  graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
-                                  GraphRenderer renderer = new GraphRenderer(graph);
-                                  renderer.CalculateLayout();
-                                  graph.EscapeNodesForSvg();
-                                  SvgGraphWriter.Write(graph, o.SvgFileName, null, null, 4);
-                               }
+                                  BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
+                                  BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
+                                  TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
+                               };
+                               var graph = grapher.CreateGraph(analyzer.ParserContext, rules.ToList());
+                               graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
+                               GraphRenderer renderer = new GraphRenderer(graph);
+                               renderer.CalculateLayout();
+                               graph.EscapeNodesForSvg();
+                               SvgGraphWriter.Write(graph, o.SvgFileName, null, null, 4);
                             }
-                            else
-                            {
-                               if (options.HasFlag(ParseOption.Tokens))
-                                  DisplayTokens(grammar, data);
+                         }
+                         else
+                         {
+                            if (options.HasFlag(ParseOption.Tokens))
+                               DisplayTokens(grammar, data);
 
-                               if (showParseTree || writeSvg)
-                                  Console.WriteLine(Resources.GrammarHasNoParserErrorMessage, grammar.GrammarName);
-                               if (showParseTree)
-                                  Console.WriteLine(Resources.UnableToDisplayParseTree);
-                               if (writeSvg)
-                                  Console.WriteLine(Resources.SvgWritingAbortedErrorMessage);
-                            }
+                            if (showParseTree || writeSvg)
+                               Console.WriteLine(Resources.GrammarHasNoParserErrorMessage, grammar.GrammarName);
+                            if (showParseTree)
+                               Console.WriteLine(Resources.UnableToDisplayParseTree);
+                            if (writeSvg)
+                               Console.WriteLine(Resources.SvgWritingAbortedErrorMessage);
+                         }
 
-                            if (loadGui)
-                               LoadGui(data, grammar, o.RuleName);
-                         })
-                      .WithNotParsed(errs => DisplayHelp(parserResult, errs));
+                         if (loadGui)
+                            LoadGui(data, grammar, o.RuleName);
+                      })
+                   .WithNotParsed(errs => DisplayHelp(parserResult, errs));
 
 #if DEBUG
-            Console.WriteLine(Resources.PressAnyKeyMessage);
-            Console.ReadKey();
+         Console.WriteLine(Resources.PressAnyKeyMessage);
+         Console.ReadKey();
 #endif
-         }
-         // ReSharper disable once CatchAllClause
-         catch (Exception ex)
-         {
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
-#if DEBUG
-            Console.WriteLine(Resources.PressAnyKeyMessage);
-            Console.ReadKey();
-#endif
-         }
+         //         }
+         //         // ReSharper disable once CatchAllClause
+         //         catch (Exception ex)
+         //         {
+         //            Console.WriteLine(ex.Message);
+         //            Console.WriteLine(ex.StackTrace);
+         //#if DEBUG
+         //            Console.WriteLine(Resources.PressAnyKeyMessage);
+         //            Console.ReadKey();
+         //#endif
+         //         }
       }
 
-      private static void HighlightSyntaxInConsole(int lineOffset, Analyzer analyzer, IStyleRegistry registry)
+      private static void HighlightSyntaxInConsole(int lineOffset, Analyzer analyzer, ISyntaxHighlightingGuide guide)
       {
-         return; 
-
-         if (analyzer?.ParserContext == null)
+         if (analyzer == null)
             return;
 
-         if (registry == null)
+         if (guide == null)
             return;
 
          var cursorRow = Console.CursorTop;
          var cursorColumn = Console.CursorLeft;
-         foreach (var token in analyzer.DisplayTokens)
-            ColorToken(token, lineOffset, registry);
+         foreach (var token in analyzer.SyntaxTokens)
+         {
+            if (!_Cache.IsKnown(token))
+            {
+               ColorToken(token, lineOffset, guide);
+               _Cache.RegisterToken(token);
+            }
+         }
 
          Console.SetCursorPosition(cursorColumn, cursorRow);
       }
 
-      private static void ColorToken(SyntaxToken token, int lineOffset, IStyleRegistry registry)
+      private static void ColorToken(SyntaxToken token, int lineOffset, ISyntaxHighlightingGuide guide)
       {
+         if (token.ChannelId != 0)
+            return;
+
+         if (token.Text == "<EOF>")
+            return;
+
          var startLine = token.LineNumber + lineOffset;
          var endLine = token.EndingLineNumber + lineOffset;
+
+         if (startLine < 0)
+            if (endLine < 0)
+               return;
+
+         var index = 0;
+         Console.ForegroundColor = guide.GetTokenForegroundColor(token);
+
          for (int ln = startLine; ln < endLine + 1; ln++)
          {
             for (int col = token.ColumnPosition; col < token.EndingColumnPosition + 1; col++)
             {
-               Console.SetCursorPosition(col, ln);
-
-               // TODO: add syntax highlight logic.
+               Console.SetCursorPosition(col - 1, ln);
+               Console.Write(token.Text[index++]);
             }
          }
+
+         Console.ForegroundColor = _Settings.EditorTextColor;
+      }
+
+      private static void FillCurrentLineBackground()
+      {
+         var cursorRow = Console.CursorTop;
+         var cursorColumn = Console.CursorLeft;
+         Console.SetCursorPosition(0, cursorRow);
+         var filler = new string(' ', Console.BufferWidth);
+         Console.Write(filler);
+         Console.SetCursorPosition(cursorColumn, cursorRow);
       }
 
       private static void DisplayTokens(GrammarReference grammar, string data)
@@ -347,6 +406,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
          }
 
          _Settings.LoadDefaults();
+      }
+
+      private static int MakeTokenKey(SyntaxToken token)
+      {
+         return $"{token.LineNumber}-{token.ColumnPosition}-{token.Text}".GetHashCode();
       }
 
       #endregion

@@ -1,12 +1,11 @@
 ﻿#region BSD 3-Clause License
-
-// <copyright file="IStyleRegistry.cs" company="Edgerunner.org">
-// Copyright  
+// <copyright file="HighlightingTokenCache.cs" company="Edgerunner.org">
+// Copyright 2020 
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) , 
+// Copyright (c) 2020, 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -33,29 +32,45 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
 
-using FastColoredTextBoxNS;
+using System.Collections.Generic;
 
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
 {
-   public interface IStyleRegistry
+   public class HighlightingTokenCache
    {
-      /// <summary>
-      /// Gets the style for a given token.
-      /// </summary>
-      /// <param name="token">The token.</param>
-      /// <returns>A <see cref="Style"/> instance.</returns>
-      Style GetTokenStyle(SyntaxToken token);
+      private readonly Dictionary<int, Dictionary<int, int>> _KnownTokens;
 
-      /// <summary>
-      /// Gets the style for a parse error .
-      /// </summary>
-      /// <returns>A <see cref="Style"/> instance.</returns>
-      Style GetParseErrorStyle();
+      public HighlightingTokenCache()
+      {
+         _KnownTokens = new Dictionary<int, Dictionary<int, int>>();
+      }
+
+      public bool IsKnown(SyntaxToken token)
+      {
+         if (_KnownTokens.TryGetValue(token.LineNumber, out var lineCache))
+            if (lineCache.TryGetValue(token.ColumnPosition, out var hash))
+               if (hash == token.GetHashCode())
+                  return true;
+
+         return false;
+      }
+
+      public void RegisterToken(SyntaxToken token)
+      {
+         if (_KnownTokens.TryGetValue(token.LineNumber, out var lineCache))
+            lineCache[token.ColumnPosition] = token.GetHashCode();
+         else
+            _KnownTokens[token.LineNumber] = new Dictionary<int, int> { { token.ColumnPosition, token.GetHashCode() } };
+      }
+
+      public void FlushTokensForLine(int lineNumber)
+      {
+         if (_KnownTokens.TryGetValue(lineNumber, out var lineCache))
+            lineCache.Clear();
+      }
    }
 }

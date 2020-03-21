@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="Place.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// <copyright file="ISyntaxHighlightingGuide.cs" company="Edgerunner.org">
+// Copyright 2020 
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2020, 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -34,35 +34,45 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
+using System.Drawing;
+
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
+
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Syntax
 {
-   /// <summary>
-   /// Struct representing a placement within some source.
-   /// </summary>
-   public struct Place
+   public interface ISyntaxHighlightingGuide
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="Place"/> struct.
+      /// Gets the name of the grammar.
       /// </summary>
-      /// <param name="line">The line number.</param>
-      /// <param name="position">The position.</param>
-      public Place(int line, int position)
-      {
-         Line = line;
-         Position = position;
-      }
+      /// <value>The name of the grammar.</value>
+      string GrammarName { get; }
 
       /// <summary>
-      /// Gets the line number.
+      /// Gets the error indicator color.
       /// </summary>
-      /// <value>The line number.</value>
-      public int Line { get; }
+      /// <returns>The <see cref="Color"/> to use.</returns>
+      Color GetErrorIndicatorColor();
 
       /// <summary>
-      /// Gets the position within the line.
+      /// Gets the foreground color to use for the token.
       /// </summary>
-      /// <value>The position.</value>
-      /// <remarks>The position is 0 index based.</remarks>
-      public int Position { get; }
+      /// <param name="token">The token.</param>
+      /// <returns>The <see cref="Color"/> to use.</returns>
+      Color GetTokenForegroundColor(SyntaxToken token);
+
+      /// <summary>
+      /// Gets the background color to use for the token.
+      /// </summary>
+      /// <param name="token">The token.</param>
+      /// <returns>The <see cref="Color"/> to use.</returns>
+      Color GetTokenBackgroundColor(SyntaxToken token);
+
+      /// <summary>
+      /// Gets the FontStyle to use for the token.
+      /// </summary>
+      /// <param name="token">The token.</param>
+      /// <returns>The <see cref="FontStyle"/> to use.</returns>
+      FontStyle GetTokenFontStyle(SyntaxToken token);
    }
 }

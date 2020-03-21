@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="EditorGuideReference.cs" company="Edgerunner.org">
+// <copyright file="SyntaxHighlightingGuideReference.cs" company="Edgerunner.org">
 // Copyright 2020 
 // </copyright>
 // 
@@ -40,10 +40,10 @@ using JetBrains.Annotations;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
-   public class EditorGuideReference
+   public class SyntaxHighlightingGuideReference
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="EditorGuideReference"/> class.
+      /// Initializes a new instance of the <see cref="SyntaxHighlightingGuideReference"/> class.
       /// </summary>
       /// <param name="guideType">Type of the guide.</param>
       /// <param name="assemblyPath">The assembly.</param>
@@ -52,7 +52,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// or
       /// assembly are null.
       /// </exception>
-      public EditorGuideReference([NotNull] Type guideType, [NotNull] string assemblyPath)
+      public SyntaxHighlightingGuideReference([NotNull] Type guideType, [NotNull] string assemblyPath)
       {
          if (string.IsNullOrEmpty(assemblyPath)) 
             throw new ArgumentNullException(nameof(assemblyPath));

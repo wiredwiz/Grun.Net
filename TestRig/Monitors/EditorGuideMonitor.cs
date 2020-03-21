@@ -70,7 +70,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Monitors
       ///    guide assembly.
       /// </exception>
       /// <exception cref="T:System.UnauthorizedAccessException">Access to the guide assembly is denied.</exception>
-      public EditorGuideMonitor([NotNull] EditorGuideReference guide, [NotNull] SynchronizationContext synchronizationContext)
+      public EditorGuideMonitor([NotNull] SyntaxHighlightingGuideReference guide, [NotNull] SynchronizationContext synchronizationContext)
       {
          Guide = guide ?? throw new ArgumentNullException(nameof(guide));
          _SynchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
@@ -84,12 +84,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Monitors
       /// Gets the editor guide reference.
       /// </summary>
       /// <value>The editor guide reference.</value>
-      public EditorGuideReference Guide { get; }
+      public SyntaxHighlightingGuideReference Guide { get; }
 
       /// <summary>
       ///    Occurs when the editor guide is changed.
       /// </summary>
-      public event EventHandler<EditorGuideReference> GuideChanged;
+      public event EventHandler<SyntaxHighlightingGuideReference> GuideChanged;
 
       private FileSystemWatcher CreateAssemblyWatcher(FileInfo assembly)
       {
@@ -134,7 +134,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Monitors
 
       private void PostGuideChangedEvent(object state)
       {
-         GuideChanged?.Invoke(this, state as EditorGuideReference);
+         GuideChanged?.Invoke(this, state as SyntaxHighlightingGuideReference);
       }
    }
 }

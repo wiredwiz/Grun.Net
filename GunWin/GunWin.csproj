@@ -100,11 +100,11 @@
     <Compile Include="Dialogs\GrammarSelector.Designer.cs">
       <DependentUpon>GrammarSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\SyntaxHighlighting\HeuristicSyntaxHighlightingGuide.cs" />
     <Compile Include="Extensions\PlaceExtensions.cs" />
     <Compile Include="Graphing\GraphingResult.cs" />
     <Compile Include="Graphing\GraphingWorkItem.cs" />
     <Compile Include="Graphing\GraphWorker.cs" />
-    <Compile Include="Editor\SyntaxHighlighting\HeuristicStyleRegistry.cs" />
     <Compile Include="Graphing\IGraphWorker.cs" />
     <Compile Include="Parsing\IParseWorker.cs" />
     <Compile Include="Editor\SyntaxHighlighting\IStyleRegistry.cs" />
