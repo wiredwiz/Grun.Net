@@ -38,7 +38,7 @@ using System.Collections.Generic;
 
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 {
    public class HighlightingTokenCache
    {
