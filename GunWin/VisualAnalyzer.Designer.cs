@@ -253,6 +253,7 @@
          this.ParseTreeView.Size = new System.Drawing.Size(140, 357);
          this.ParseTreeView.TabIndex = 0;
          this.ParseTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ParseTreeView_AfterSelect);
+         this.ParseTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ParseTreeView_NodeMouseClick);
          // 
          // PnlGraph
          // 

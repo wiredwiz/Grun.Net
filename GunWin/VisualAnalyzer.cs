@@ -778,6 +778,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
+      private void ParseTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+      {
+         if (sender is TreeView viewer)
+         {
+            if (viewer.SelectedNode == e.Node)
+               // Now we graph and display just the selected branch
+               if (e.Node.Tag is ITree selected)
+               {
+                  RenderParseTreeGraph(selected);
+                  CodeEditor.SelectSource(selected);
+               }
+         }
+      }
+
       private void PopulateParserMessages(List<ParseMessage> listenerErrors)
       {
          ParseMessageListView.SetObjects(listenerErrors);
@@ -939,7 +953,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
       {
          var aboutBox = new AboutBox();
-         
+
          aboutBox.ShowDialog(this);
       }
 
