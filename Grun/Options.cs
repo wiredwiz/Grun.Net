@@ -36,7 +36,7 @@
 
 using CommandLine;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 {
    /// <summary>
    /// Class that represents command line options.

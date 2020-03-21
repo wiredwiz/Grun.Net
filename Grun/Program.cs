@@ -60,7 +60,7 @@ using Org.Edgerunner.ANTLR4.Tools.Graphing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
-using Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet.Properties;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Grun.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
 
@@ -68,7 +68,7 @@ using Console = Colorful.Console;
 using Parser = CommandLine.Parser;
 
 // ReSharper disable RedundantNameQualifier
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 {
    /// <summary>
    /// Class that represents the entry point into the program.
@@ -87,8 +87,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
       // ReSharper disable once MethodTooLong
       private static void Main(string[] args)
       {
-         //try
-         //{
+         try
+         {
          LoadApplicationSettings();
          Console.BackgroundColor = _Settings.EditorBackgroundColor;
          Console.ForegroundColor = _Settings.EditorTextColor;
@@ -268,17 +268,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet
          Console.WriteLine(Resources.PressAnyKeyMessage);
          Console.ReadKey();
 #endif
-         //         }
-         //         // ReSharper disable once CatchAllClause
-         //         catch (Exception ex)
-         //         {
-         //            Console.WriteLine(ex.Message);
-         //            Console.WriteLine(ex.StackTrace);
-         //#if DEBUG
-         //            Console.WriteLine(Resources.PressAnyKeyMessage);
-         //            Console.ReadKey();
-         //#endif
-         //         }
+                  }
+                  // ReSharper disable once CatchAllClause
+                  catch (Exception ex)
+                  {
+                     Console.WriteLine(ex.Message);
+                     Console.WriteLine(ex.StackTrace);
+         #if DEBUG
+                     Console.WriteLine(Resources.PressAnyKeyMessage);
+                     Console.ReadKey();
+         #endif
+                  }
       }
 
       private static void HighlightSyntaxInConsole(int lineOffset, Analyzer analyzer, ISyntaxHighlightingGuide guide)

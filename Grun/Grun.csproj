@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B614368A-F4C9-409F-8896-CB1DA204AD6D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Org.Edgerunner.ANTLR4.Tools.Testing.GrunDotNet</RootNamespace>
+    <RootNamespace>Org.Edgerunner.ANTLR4.Tools.Testing.Grun</RootNamespace>
     <AssemblyName>Grun</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -64,7 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HighlightingTokenCache.cs" />
+    <Compile Include="SyntaxHighlighting\ConsoleWrapperColor.cs" />
+    <Compile Include="SyntaxHighlighting\HighlightingTokenCache.cs" />
     <Compile Include="Options.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -75,6 +76,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SyntaxHighlighting\ConsoleWrapperText.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Grun.Net.config">
@@ -109,5 +111,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
