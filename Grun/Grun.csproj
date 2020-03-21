@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SyntaxHighlighting\ConsoleReader.cs" />
     <Compile Include="SyntaxHighlighting\ConsoleWrapperColor.cs" />
     <Compile Include="SyntaxHighlighting\HighlightingTokenCache.cs" />
     <Compile Include="Options.cs">
@@ -99,9 +100,9 @@
       <Project>{a3568fa3-d6b3-4165-af95-cdb78d86f416}</Project>
       <Name>GunWin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestRig\TestRig.csproj">
+    <ProjectReference Include="..\TestRig\Utilities.csproj">
       <Project>{4e020f1d-27bf-4853-8573-474d7edb4e72}</Project>
-      <Name>TestRig</Name>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -173,9 +173,9 @@
       <Project>{8bd992fd-a3b3-4af9-9371-5aa14ddfda68}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestRig\TestRig.csproj">
+    <ProjectReference Include="..\TestRig\Utilities.csproj">
       <Project>{4e020f1d-27bf-4853-8573-474d7edb4e72}</Project>
-      <Name>TestRig</Name>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

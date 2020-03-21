@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grun", "Grun\Grun.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GunWin", "GunWin\GunWin.csproj", "{A3568FA3-D6B3-4165-AF95-CDB78D86F416}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRig", "TestRig\TestRig.csproj", "{4E020F1D-27BF-4853-8573-474D7EDB4E72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "TestRig\Utilities.csproj", "{4E020F1D-27BF-4853-8573-474D7EDB4E72}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B8535ED-1440-4F63-9F90-A086FD870EF3}"
 	ProjectSection(SolutionItems) = preProject
@@ -63,16 +63,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1CB1A18-09C5-4D7F-916D-2346D29A8563}
-	EndGlobalSection
-	GlobalSection(AutomaticVersions) = postSolution
-		UpdateAssemblyVersion = True
-		UpdateAssemblyFileVersion = True
-		UpdateAssemblyInfoVersion = True
-		AssemblyVersionSettings = None.None.DateStamp.IncrementWithResetOnIncrease
-		AssemblyFileVersionSettings = None.None.DateStamp.IncrementWithResetOnIncrease
-		AssemblyInfoVersionSettings = None.None.DateStamp.IncrementWithResetOnIncrease
-		UpdatePackageVersion = False
-		AssemblyInfoVersionType = SettingsVersion
-		InheritWinAppVersionFrom = None
 	EndGlobalSection
 EndGlobal

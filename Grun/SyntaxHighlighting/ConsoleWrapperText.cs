@@ -106,6 +106,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun.SyntaxHighlighting
          Colorful.Console.SetCursorPosition(left, top);
       }
 
+      public static void BackSpace()
+      {
+         
+      }
+
       public static void Write(string value)
       {
          if (value.EndsWith("\r\n") || value.EndsWith("\n"))
