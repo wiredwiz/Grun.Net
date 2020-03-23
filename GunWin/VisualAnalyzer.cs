@@ -491,6 +491,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (_Registry == null)
             return;
 
+         if (CodeEditor.Handle == IntPtr.Zero)
+            return;
+         
          var tokensToColor = range == null ? _Tokens : FindTokensInRange(_Tokens, range);
          _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor, GetErrorTokens());
       }
