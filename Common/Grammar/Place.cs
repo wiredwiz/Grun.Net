@@ -64,5 +64,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       /// <value>The position.</value>
       /// <remarks>The position is 0 index based.</remarks>
       public int Position { get; }
+
+      /// <summary>
+      /// Returns the representation of an empty source placement.
+      /// </summary>
+      /// <value>The empty placement.</value>
+      public static Place Empty => new Place(-1, -1);
    }
 }
