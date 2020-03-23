@@ -135,6 +135,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             DiagnosticsToolStripMenuItem.Checked = value;
             ParseSource();
+            ColorizeTokens(null);
          }
       }
 
@@ -150,6 +151,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             SimpleLLModeToolStripMenuItem.Checked = value;
             ParseSource();
+            ColorizeTokens(null);
          }
       }
 
@@ -164,6 +166,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             TracingToolStripMenuItem.Checked = value;
             ParseSource();
+            ColorizeTokens(null);
          }
       }
 
@@ -178,6 +181,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             HeuristicHighlightingToolStripMenuItem.Checked = value;
             ParseSource();
+            ColorizeTokens(null);
          }
       }
 
@@ -516,6 +520,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void DiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
       {
          ParseSource();
+         ColorizeTokens(null);
       }
 
       private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -765,7 +770,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
       {
          if (CmbRules.Items.Count > 0)
+         {
             ParseSource();
+            ColorizeTokens(null);
+         }
       }
 
       private void ParseTreeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -892,6 +900,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void SimpleLLModeToolStripMenuItem_Click(object sender, EventArgs e)
       {
          ParseSource();
+         ColorizeTokens(null);
       }
 
       private void TokenListView_Click(object sender, EventArgs e)
