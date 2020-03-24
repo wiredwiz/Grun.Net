@@ -84,7 +84,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
             }
          }
 
-         return new Place(token.Line + lineShift, (lineShift == 0) ? token.Column + positionShift : positionShift);
+         return new Place(token.Line + lineShift, (lineShift == 0) ? token.Column + positionShift - 1 : positionShift);
       }
    }
 }

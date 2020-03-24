@@ -69,7 +69,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          var startingPlace = new Place(context.Start.Column, context.start.Line - 1);
          var stopToken = context.Stop ?? context.Start;
          var spot = stopToken.GetEndPlace();
-         var stoppingPlace = new Place(spot.Position, spot.Line - 1);
+         var stoppingPlace = new Place(spot.Position + 1, spot.Line - 1);
          
          codeEditor.Selection = new Range(codeEditor, startingPlace, stoppingPlace);
          codeEditor.DoCaretVisible();
@@ -111,7 +111,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          if (node.Symbol.StartIndex != -1)
          {
             var spot = node.Symbol.GetEndPlace();
-            stoppingPlace = new Place(spot.Position, spot.Line - 1);
+            stoppingPlace = new Place(spot.Position + 1, spot.Line - 1);
          }
          else
             stoppingPlace = startingPlace;
@@ -136,7 +136,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
 
          var startingPlace = new Place(token.Column, token.Line - 1);
          var spot = token.GetEndPlace();
-         var stoppingPlace = new Place(spot.Position, spot.Line - 1);
+         var stoppingPlace = new Place(spot.Position + 1, spot.Line - 1);
 
          codeEditor.Selection = new Range(codeEditor, startingPlace, stoppingPlace);
          codeEditor.DoCaretVisible();
