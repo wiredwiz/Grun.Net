@@ -77,7 +77,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             throw new ArgumentNullException(nameof(assembly));
 
          var result = new List<LexerType>();
-         var types = assembly.GetTypes().Where(t => typeof(Lexer).IsAssignableFrom(t));
+         IEnumerable<Type> types = null;
+         try
+         {
+            types = assembly.GetTypes();
+         }
+         catch (ReflectionTypeLoadException)
+         {
+            types = new List<Type>();
+         }
+         types = types.Where(t => typeof(Lexer).IsAssignableFrom(t));
 
          foreach (var type in types)
             if (type.Name.EndsWith("Lexer"))
@@ -107,7 +116,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             throw new ArgumentNullException(nameof(assembly));
 
          var result = new List<ParserType>();
-         var types = assembly.GetTypes().Where(t => typeof(Parser).IsAssignableFrom(t));
+         IEnumerable<Type> types = null;
+         try
+         {
+            types = assembly.GetTypes();
+         }
+         catch (ReflectionTypeLoadException)
+         {
+            types = new List<Type>();
+         }
+         
+         types = types.Where(t => typeof(Parser).IsAssignableFrom(t));
 
          foreach (var type in types)
             if (type.Name.EndsWith("Parser"))
@@ -137,7 +156,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             throw new ArgumentNullException(nameof(assembly));
 
          var result = new List<Type>();
-         var types = assembly.GetTypes().Where(t => typeof(ISyntaxHighlightingGuide).IsAssignableFrom(t));
+         IEnumerable<Type> types = null;
+         try
+         {
+            types = assembly.GetTypes();
+         }
+         catch (ReflectionTypeLoadException)
+         {
+            types = new List<Type>();
+         }
+         types = types.Where(t => typeof(ISyntaxHighlightingGuide).IsAssignableFrom(t));
 
          foreach (var type in types)
             // ReSharper disable once ExceptionNotDocumented
@@ -230,6 +258,59 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
          foreach (var file in files)
          {
+            try
+            {
+               var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
+
+               // We make parsers an explicit list to avoid multiple enumerations
+               var parsers = FindGrammarParsersInAssembly(assembly).ToList();
+               var lexers = FindGrammarLexersInAssembly(assembly);
+               IEnumerable<LexerType> matches;
+               if (!string.IsNullOrEmpty(name))
+                  matches = from lexer in lexers
+                            where lexer.GrammarName == name
+                            select lexer;
+               else
+                  matches = lexers;
+
+               foreach (var lexer in matches)
+               {
+                  var parser = (from candidate in parsers
+                                where candidate.GrammarName == lexer.GrammarName
+                                select candidate).FirstOrDefault();
+
+                  var rules = parser.ActualType == null
+                                 ? new List<string>()
+                                 : GetParserRulesForGrammarParser(parser.ActualType).ToList();
+                  var grammarRef = new GrammarReference(
+                                                        file,
+                                                        lexer.GrammarName,
+                                                        lexer.ActualType,
+                                                        parser.ActualType,
+                                                        rules);
+                  results.Add(grammarRef);
+               }
+            }
+            catch (FileLoadException)
+            {
+               // do nothing for now, perhaps log later
+            }
+            catch (BadImageFormatException)
+            {
+               // do nothing for now, perhaps log later
+            }
+         }
+
+         return results;
+      }
+
+      private List<GrammarReference> FindGrammarsInFile([NotNull] string filePath, string name = null)
+      {
+         var file = new FileInfo(filePath);
+         var results = new List<GrammarReference>();
+
+         try
+         {
             var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
 
             // We make parsers an explicit list to avoid multiple enumerations
@@ -245,9 +326,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
             foreach (var lexer in matches)
             {
-               var parser = (from candidate in parsers
-                             where candidate.GrammarName == lexer.GrammarName
-                             select candidate).FirstOrDefault();
+               ParserType parser;
+               parser = (from candidate in parsers
+                         where candidate.GrammarName == lexer.GrammarName
+                         select candidate).FirstOrDefault();
 
                var rules = parser.ActualType == null
                               ? new List<string>()
@@ -261,45 +343,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
                results.Add(grammarRef);
             }
          }
-
-         return results;
-      }
-
-      private List<GrammarReference> FindGrammarsInFile([NotNull] string filePath, string name = null)
-      {
-         var file = new FileInfo(filePath);
-         var results = new List<GrammarReference>();
-
-         var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
-
-         // We make parsers an explicit list to avoid multiple enumerations
-         var parsers = FindGrammarParsersInAssembly(assembly).ToList();
-         var lexers = FindGrammarLexersInAssembly(assembly);
-         IEnumerable<LexerType> matches;
-         if (!string.IsNullOrEmpty(name))
-            matches = from lexer in lexers
-                      where lexer.GrammarName == name
-                      select lexer;
-         else
-            matches = lexers;
-
-         foreach (var lexer in matches)
+         catch (FileLoadException)
          {
-            ParserType parser;
-            parser = (from candidate in parsers
-                      where candidate.GrammarName == lexer.GrammarName
-                      select candidate).FirstOrDefault();
-
-            var rules = parser.ActualType == null
-                              ? new List<string>()
-                              : GetParserRulesForGrammarParser(parser.ActualType).ToList();
-            var grammarRef = new GrammarReference(
-                                                  file,
-                                                  lexer.GrammarName,
-                                                  lexer.ActualType,
-                                                  parser.ActualType,
-                                                  rules);
-            results.Add(grammarRef);
+            // do nothing for now, perhaps log later
+         }
+         catch (BadImageFormatException)
+         {
+            // do nothing for now, perhaps log later
          }
 
          return results;
@@ -322,9 +372,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
          foreach (var file in files)
          {
-            var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
-            foreach (var guide in FindSyntaxGuidesInAssembly(assembly).ToList())
-               results.Add(new SyntaxHighlightingGuideReference(guide, file.FullName));
+            try
+            {
+               var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
+               foreach (var guide in FindSyntaxGuidesInAssembly(assembly).ToList())
+                  results.Add(new SyntaxHighlightingGuideReference(guide, file.FullName));
+            }
+            catch (FileLoadException)
+            {
+               // do nothing for now, perhaps log later
+            }
+            catch (BadImageFormatException)
+            {
+               // do nothing for now, perhaps log later
+            }
          }
 
          return results;
