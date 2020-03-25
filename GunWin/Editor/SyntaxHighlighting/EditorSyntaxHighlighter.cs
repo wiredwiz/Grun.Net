@@ -38,6 +38,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -95,7 +96,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
                       foreach (var token in errorTokens)
                       {
                          var startingPlace = new Place(token.Column, token.Line - 1);
-                         var stoppingPlace = token.GetEndPlace().ConvertToFctbPlace();
+                         var endPlace = token.GetEndPlace();
+
+                         // We shift the end position one forward so that the range colors correctly.
+                         var stoppingPlace = new Place(endPlace.Position + 1, endPlace.Line - 1);
+
                          var tokenRange = editor.GetRange(startingPlace, stoppingPlace);
                          tokenRange.SetStyle(registry.GetParseErrorStyle());
                       }
