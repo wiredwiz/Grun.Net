@@ -61,6 +61,7 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.Configuration;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grun.Properties;
+using Org.Edgerunner.ANTLR4.Tools.Testing.Grun.SyntaxHighlighting;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
 
@@ -90,9 +91,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          try
          {
             LoadApplicationSettings();
-            Console.BackgroundColor = _Settings.EditorBackgroundColor;
-            Console.ForegroundColor = _Settings.EditorTextColor;
-            FillCurrentLineBackground();
+            //Console.BackgroundColor = _Settings.EditorBackgroundColor;
+            //Console.ForegroundColor = _Settings.EditorTextColor;
+            //FillCurrentLineBackground();
 
             var parser = new Parser(with => with.HelpWriter = null);
             var parserResult = parser.ParseArguments<Options>(args);
@@ -203,24 +204,24 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                         }
                                      }
 
-                                  //analyzer.Tokenize(grammar, builder.ToString());
-                                  //HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
-                               }
+                                     //analyzer.Tokenize(grammar, builder.ToString());
+                                     //HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
+                                  }
                                }
 
                                Console.WriteLine();
                                data = builder.ToString();
                             }
 
-                         // If tokens are the only option we've received, we don't need to parse
-                         if (options == Grammar.ParseOption.Tokens)
+                            // If tokens are the only option we've received, we don't need to parse
+                            if (options == Grammar.ParseOption.Tokens)
                             {
                                DisplayTokens(grammar, data);
                                return;
                             }
 
-                         // Now we attempt to parse, but still handle a lexer-only grammar.
-                         if (grammar.Parser != null)
+                            // Now we attempt to parse, but still handle a lexer-only grammar.
+                            if (grammar.Parser != null)
                             {
                                var analyzer = new Analyzer();
                                var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options);
