@@ -70,6 +70,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File &quot;{0}&quot; could not be found..
+        /// </summary>
+        internal static string FileNotFoundErrorMessage {
+            get {
+                return ResourceManager.GetString("FileNotFoundErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grammar &quot;{0}&quot; has no parser..
         /// </summary>
         internal static string GrammarHasNoParserErrorMessage {

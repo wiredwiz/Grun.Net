@@ -138,4 +138,7 @@
   <data name="UnableToDisplayParseTree" xml:space="preserve">
     <value>Cannot display parse tree.</value>
   </data>
+  <data name="FileNotFoundErrorMessage" xml:space="preserve">
+    <value>File "{0}" could not be found.</value>
+  </data>
 </root>

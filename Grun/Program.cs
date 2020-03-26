@@ -138,20 +138,27 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                return;
                             }
 
-                            var guideResult = grammar.LoadSyntaxHighlightingGuide();
-                            guide = guideResult != null ? guideResult.Item2 : new HeuristicSyntaxHighlightingGuide(_Settings);
+                            // To be used later once syntax highlighting for the console is enabled.
+                            //var guideResult = grammar.LoadSyntaxHighlightingGuide();
+                            //guide = guideResult != null ? guideResult.Item2 : new HeuristicSyntaxHighlightingGuide(_Settings);
 
-                            var data = string.Empty;
+                            string data;
 
                             if (!string.IsNullOrEmpty(o.FileName))
                             {
+                               if (!File.Exists(o.FileName))
+                               {
+                                  Console.WriteLine(Resources.FileNotFoundErrorMessage, o.FileName);
+                                  return;
+                               }
+
                                var encodingToUse = !string.IsNullOrEmpty(o.EncodingName) ? Encoding.GetEncoding(o.EncodingName) : Encoding.Default;
                                using (var reader = new StreamReader(o.FileName, encodingToUse))
                                   data = reader.ReadToEnd();
                             }
                             else
                             {
-                               var analyzer = new Analyzer();
+                               //var analyzer = new Analyzer();
                                var builder = new StringBuilder();
                                Console.WriteLine(Resources.ReadingFromStandardInputPromptMessage);
                                var currentLine = Console.CursorTop;
