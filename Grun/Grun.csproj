@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -101,7 +101,7 @@
       <Project>{a3568fa3-d6b3-4165-af95-cdb78d86f416}</Project>
       <Name>GunWin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestRig\Utilities.csproj">
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{4e020f1d-27bf-4853-8573-474d7edb4e72}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
