@@ -79,8 +79,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                         if (!string.IsNullOrEmpty(o.FileName))
                         {
                            var encodingToUse = !string.IsNullOrEmpty(o.EncodingName) ? Encoding.GetEncoding(o.EncodingName) : Encoding.Default;
-                           using (var reader = new StreamReader(o.FileName, encodingToUse))
-                              visualAnalyzer.SetSourceCode(reader.ReadToEnd());
+                           visualAnalyzer.LoadSourceFile(o.FileName, encodingToUse);
                         }
 
                         if (o.Diagnostics) visualAnalyzer.ParseWithDiagnostics = true;

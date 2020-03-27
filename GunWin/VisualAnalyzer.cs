@@ -42,6 +42,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -108,6 +109,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private GrammarMonitor _GrammarMonitor;
 
       private EditorGuideMonitor _GuideMonitor;
+
+      private string _CurrentSourceFile;
 
       #region Constructors And Finalizers
 
@@ -429,38 +432,51 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       // ReSharper disable once ExcessiveIndentation
       private void CodeEditor_DragDrop(object sender, DragEventArgs e)
       {
-         if (e.Data.GetDataPresent(DataFormats.Text))
+         try
          {
-            CodeEditor.SelectAll();
-            CodeEditor.Text = e.Data.GetData(DataFormats.Text).ToString();
-         }
-         else if (e.Data.GetDataPresent(DataFormats.UnicodeText))
-         {
-            CodeEditor.SelectAll();
-            CodeEditor.Text = e.Data.GetData(DataFormats.UnicodeText).ToString();
-         }
-         else if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
+            if (e.Data.GetDataPresent(DataFormats.Text))
             {
-               SetNewWorkingDirectoryUsingFile(files[0]);
-               var assemblyFiles = (from file in files where file.EndsWith(".dll") select file).ToList();
-               var otherFiles = (from file in files where !file.EndsWith(".dll") select file).ToList();
-               if (assemblyFiles.Count > 1 || (assemblyFiles.Count + otherFiles.Count > 2))
-               {
-                  MessageBox.Show(Resources.DragDropLoadErrorMessage);
-                  return;
-               }
-
-               if (assemblyFiles.Count != 0)
-               {
-                  var grammar = FetchGrammarInternal(assemblyFiles[0]);
-                  if (grammar != null)
-                     SetGrammar(grammar);
-               }
-
-               if (otherFiles.Count != 0)
-                  LoadSourceFileInternal(otherFiles[0]);
+               CodeEditor.SelectAll();
+               CodeEditor.Text = e.Data.GetData(DataFormats.Text).ToString();
             }
+            else if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+            {
+               CodeEditor.SelectAll();
+               CodeEditor.Text = e.Data.GetData(DataFormats.UnicodeText).ToString();
+            }
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+               if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
+               {
+                  SetNewWorkingDirectoryUsingFile(files[0]);
+                  var assemblyFiles = (from file in files where file.EndsWith(".dll") select file).ToList();
+                  var otherFiles = (from file in files where !file.EndsWith(".dll") select file).ToList();
+                  if (assemblyFiles.Count > 1 || (assemblyFiles.Count + otherFiles.Count > 2))
+                  {
+                     MessageBox.Show(Resources.DragDropLoadErrorMessage);
+                     return;
+                  }
+
+                  if (assemblyFiles.Count != 0)
+                  {
+                     var grammar = FetchGrammarInternal(assemblyFiles[0]);
+                     if (grammar != null)
+                        SetGrammar(grammar);
+                  }
+
+                  if (otherFiles.Count != 0)
+                     LoadSourceFileInternal(otherFiles[0]);
+               }
+         }
+         catch (Exception ex)
+         {
+            var errorDisplay = new ErrorDisplay
+            {
+               Text = Resources.SourceLoadErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
+            errorDisplay.ShowDialog();
+         }
       }
 
       private void CodeEditor_DragEnter(object sender, DragEventArgs e)
@@ -493,7 +509,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          if (CodeEditor.Handle == IntPtr.Zero)
             return;
-         
+
          var tokensToColor = range == null ? _Tokens : FindTokensInRange(_Tokens, range);
          _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor, GetErrorTokens());
       }
@@ -699,6 +715,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             {
                SetSourceCode(reader.ReadToEnd());
             }
+
+            _CurrentSourceFile = fileToLoad;
          }
          catch (ArgumentException)
          {
@@ -717,6 +735,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
+      public void LoadSourceFile(string fileToLoad, Encoding encoding)
+      {
+         using (var reader = new StreamReader(fileToLoad, encoding))
+         {
+            SetSourceCode(reader.ReadToEnd());
+         }
+
+         _CurrentSourceFile = fileToLoad;
+      }
+
+      public void LoadSourceFile(string fileToLoad)
+      {
+         LoadSourceFile(fileToLoad, Encoding.Default);
+      }
+      
       private void LoadSourceToolStripMenuItem_Click(object sender, EventArgs e)
       {
          try
@@ -983,6 +1016,74 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             ParseSource();
             ColorizeTokens(null);
+         }
+      }
+
+      private void GoToToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         CodeEditor.ShowGoToDialog();
+      }
+
+      private void FindToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         CodeEditor.ShowFindDialog();
+      }
+
+      private void ReplaceToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         CodeEditor.ShowReplaceDialog();
+      }
+
+      private void SaveFileToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            if (string.IsNullOrEmpty(_CurrentSourceFile))
+            {
+               saveFileDialog.InitialDirectory = Environment.CurrentDirectory;
+               saveFileDialog.Filter = Resources.AllFilesFilter;
+
+               if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
+                  return;
+            }
+
+            var fileToWrite = _CurrentSourceFile ?? saveFileDialog.FileName;
+            File.WriteAllText(fileToWrite, CodeEditor.Text);
+         }
+         catch (Exception ex)
+         {
+            var errorDisplay = new ErrorDisplay
+            {
+               Text = Resources.SourceLoadErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
+            errorDisplay.ShowDialog();
+         }
+      }
+
+      private void SaveFileAsToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            saveFileDialog.InitialDirectory = Environment.CurrentDirectory;
+            saveFileDialog.Filter = Resources.AllFilesFilter;
+
+            if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
+               return;
+
+            var fileToWrite = saveFileDialog.FileName;
+            File.WriteAllText(fileToWrite, CodeEditor.Text);
+         }
+         catch (Exception ex)
+         {
+            var errorDisplay = new ErrorDisplay
+            {
+               Text = Resources.SourceLoadErrorTitle,
+               ErrorMessage = ex.Message,
+               ErrorStackTrace = ex.StackTrace
+            };
+            errorDisplay.ShowDialog();
          }
       }
    }
