@@ -91,6 +91,13 @@
          this.StripLabelThrottling = new System.Windows.Forms.ToolStripStatusLabel();
          this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
          this.StripLabelDelay = new System.Windows.Forms.ToolStripStatusLabel();
+         this.EditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.GoToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.FindAndReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+         this.SaveFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.SaveFileAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.ShowLexerErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
@@ -460,6 +467,7 @@
          // 
          this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.EditToolStripMenuItem,
             this.optionsToolStripMenuItem,
             this.helpToolStripMenuItem});
          this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -474,6 +482,9 @@
             this.loadGrammarToolStripMenuItem,
             this.loadSourceToolStripMenuItem,
             this.toolStripSeparator1,
+            this.SaveFileToolStripMenuItem,
+            this.SaveFileAsToolStripMenuItem,
+            this.toolStripSeparator3,
             this.exitToolStripMenuItem});
          this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
          this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -482,26 +493,29 @@
          // loadGrammarToolStripMenuItem
          // 
          this.loadGrammarToolStripMenuItem.Name = "loadGrammarToolStripMenuItem";
-         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+         this.loadGrammarToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
          this.loadGrammarToolStripMenuItem.Text = "&Load Grammar";
          this.loadGrammarToolStripMenuItem.Click += new System.EventHandler(this.LoadGrammarToolStripMenuItem_Click);
          // 
          // loadSourceToolStripMenuItem
          // 
          this.loadSourceToolStripMenuItem.Name = "loadSourceToolStripMenuItem";
-         this.loadSourceToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+         this.loadSourceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+         this.loadSourceToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
          this.loadSourceToolStripMenuItem.Text = "Load Source &File";
          this.loadSourceToolStripMenuItem.Click += new System.EventHandler(this.LoadSourceToolStripMenuItem_Click);
          // 
          // toolStripSeparator1
          // 
          this.toolStripSeparator1.Name = "toolStripSeparator1";
-         this.toolStripSeparator1.Size = new System.Drawing.Size(157, 6);
+         this.toolStripSeparator1.Size = new System.Drawing.Size(222, 6);
          // 
          // exitToolStripMenuItem
          // 
          this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-         this.exitToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+         this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+         this.exitToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
          this.exitToolStripMenuItem.Text = "E&xit";
          this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
          // 
@@ -509,6 +523,7 @@
          // 
          this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.HeuristicHighlightingToolStripMenuItem,
+            this.ShowLexerErrorsToolStripMenuItem,
             this.toolStripSeparator2,
             this.TracingToolStripMenuItem,
             this.DiagnosticsToolStripMenuItem,
@@ -740,6 +755,57 @@
          this.StripLabelDelay.Size = new System.Drawing.Size(80, 15);
          this.StripLabelDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
+         // EditToolStripMenuItem
+         // 
+         this.EditToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.GoToToolStripMenuItem,
+            this.FindAndReplaceToolStripMenuItem});
+         this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
+         this.EditToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+         this.EditToolStripMenuItem.Text = "&Edit";
+         // 
+         // GoToToolStripMenuItem
+         // 
+         this.GoToToolStripMenuItem.Name = "GoToToolStripMenuItem";
+         this.GoToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+         this.GoToToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+         this.GoToToolStripMenuItem.Text = "Go To";
+         // 
+         // FindAndReplaceToolStripMenuItem
+         // 
+         this.FindAndReplaceToolStripMenuItem.Name = "FindAndReplaceToolStripMenuItem";
+         this.FindAndReplaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+         this.FindAndReplaceToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+         this.FindAndReplaceToolStripMenuItem.Text = "Find and Replace";
+         // 
+         // toolStripSeparator3
+         // 
+         this.toolStripSeparator3.Name = "toolStripSeparator3";
+         this.toolStripSeparator3.Size = new System.Drawing.Size(222, 6);
+         // 
+         // SaveFileToolStripMenuItem
+         // 
+         this.SaveFileToolStripMenuItem.Name = "SaveFileToolStripMenuItem";
+         this.SaveFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+         this.SaveFileToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+         this.SaveFileToolStripMenuItem.Text = "Save Source";
+         // 
+         // SaveFileAsToolStripMenuItem
+         // 
+         this.SaveFileAsToolStripMenuItem.Name = "SaveFileAsToolStripMenuItem";
+         this.SaveFileAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+         this.SaveFileAsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+         this.SaveFileAsToolStripMenuItem.Text = "Save Source As";
+         // 
+         // ShowLexerErrorsToolStripMenuItem
+         // 
+         this.ShowLexerErrorsToolStripMenuItem.Checked = true;
+         this.ShowLexerErrorsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.ShowLexerErrorsToolStripMenuItem.Name = "ShowLexerErrorsToolStripMenuItem";
+         this.ShowLexerErrorsToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.ShowLexerErrorsToolStripMenuItem.Text = "Show Lexer Errors";
+         // 
          // VisualAnalyzer
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -849,6 +915,13 @@
       private System.Windows.Forms.ToolStripStatusLabel StripLabelThrottling;
       private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
       private System.Windows.Forms.ToolStripStatusLabel StripLabelDelay;
+      private System.Windows.Forms.ToolStripMenuItem SaveFileToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem SaveFileAsToolStripMenuItem;
+      private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+      private System.Windows.Forms.ToolStripMenuItem EditToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem GoToToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem FindAndReplaceToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem ShowLexerErrorsToolStripMenuItem;
    }
 }
 
