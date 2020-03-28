@@ -191,12 +191,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       /// <summary>
       ///    Parses the source code.
       /// </summary>
-      /// <exception cref="T:Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions.GrammarException">
-      ///    No parser found for the current grammar
-      ///    OR
-      ///    Selected parser rule does not exist for the current grammar.
-      /// </exception>
-      /// <exception cref="T:System.ArgumentNullException">Selected parser rule is null or empty.</exception>
       public void ParseSource()
       {
          if (_Grammar == null)
@@ -345,6 +339,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       public void SetSourceCode(string code)
       {
          CodeEditor.Text = code;
+         _CurrentSourceFile = null;
       }
 
       private void GraphingFinished(object sender, GraphingResult e)
