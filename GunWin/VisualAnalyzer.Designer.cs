@@ -276,7 +276,7 @@
          // 
          this.GraphZoomTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
          this.GraphZoomTrackBar.Location = new System.Drawing.Point(3, 360);
-         this.GraphZoomTrackBar.Maximum = 200;
+         this.GraphZoomTrackBar.Maximum = 400;
          this.GraphZoomTrackBar.Name = "GraphZoomTrackBar";
          this.GraphZoomTrackBar.Size = new System.Drawing.Size(624, 45);
          this.GraphZoomTrackBar.TabIndex = 2;
@@ -557,7 +557,7 @@
          // 
          this.GoToToolStripMenuItem.Name = "GoToToolStripMenuItem";
          this.GoToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-         this.GoToToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.GoToToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
          this.GoToToolStripMenuItem.Text = "Go To";
          this.GoToToolStripMenuItem.Click += new System.EventHandler(this.GoToToolStripMenuItem_Click);
          // 
@@ -565,7 +565,7 @@
          // 
          this.FindToolStripMenuItem.Name = "FindToolStripMenuItem";
          this.FindToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-         this.FindToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.FindToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
          this.FindToolStripMenuItem.Text = "&Find";
          this.FindToolStripMenuItem.Click += new System.EventHandler(this.FindToolStripMenuItem_Click);
          // 
@@ -573,7 +573,7 @@
          // 
          this.ReplaceToolStripMenuItem.Name = "ReplaceToolStripMenuItem";
          this.ReplaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-         this.ReplaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.ReplaceToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
          this.ReplaceToolStripMenuItem.Text = "&Replace";
          this.ReplaceToolStripMenuItem.Click += new System.EventHandler(this.ReplaceToolStripMenuItem_Click);
          // 
@@ -740,7 +740,7 @@
          // 
          this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.StripLabelGrammar.Name = "StripLabelGrammar";
-         this.StripLabelGrammar.Size = new System.Drawing.Size(69, 17);
+         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
          this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName
@@ -756,7 +756,7 @@
          this.stripLabelNode.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.stripLabelNode.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
          this.stripLabelNode.Name = "stripLabelNode";
-         this.stripLabelNode.Size = new System.Drawing.Size(116, 17);
+         this.stripLabelNode.Size = new System.Drawing.Size(115, 17);
          this.stripLabelNode.Text = "Parse Tree Nodes:";
          // 
          // stripLabelNodeCount

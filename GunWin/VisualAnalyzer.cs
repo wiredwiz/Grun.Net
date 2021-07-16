@@ -373,7 +373,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void Viewer_MouseWheel(object sender, MouseEventArgs e)
       {
          var factor = Math.Max(
-            Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / 0.1), GraphZoomTrackBar.Maximum),
+            Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / 0.2), GraphZoomTrackBar.Maximum),
             GraphZoomTrackBar.Minimum);
          GraphZoomTrackBar.Value = factor;
       }
@@ -562,7 +562,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void GraphZoomTrackBar_ValueChanged(object sender, EventArgs e)
       {
          if (_Viewer != null)
-            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
+            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.2) + 1.0;
       }
 
       private void HeuristicHighlightingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -871,7 +871,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             _Viewer.Graph = graph;
             if (zoomFactor.HasValue)
                GraphZoomTrackBar.Value = zoomFactor.Value;
-            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
+            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.2) + 1.0;
             _Viewer.ResumeLayout();
          }
          catch (Exception ex)
@@ -895,7 +895,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.Graph = graph;
          if (zoomFactor.HasValue)
             GraphZoomTrackBar.Value = zoomFactor.Value;
-         _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
+         _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.2) + 1.0;
          _Viewer.ResumeLayout();
       }
 
