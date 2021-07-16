@@ -12,7 +12,7 @@ jobs:
       uses: nuget/setup-nuget@v1
     - name: Restore packages
       run: nuget restore Grun.Net.sln
-    - name: Add msbuild to PATH
+    - name: Setting up MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
     - name: Build with MSBuild
       run: msbuild  Grun.Net.sln -p:Configuration=Release
