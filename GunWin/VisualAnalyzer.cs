@@ -1018,6 +1018,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
+      private void SelectTokenFromSource(Common.Grammar.Place sourcePlace)
+      {
+         // TODO: Add code to do the selection
+      }
+
+      private void SelectParserRuleFromSource(Common.Grammar.Place sourcePlace)
+      {
+         // TODO: Add code to do the selection
+      }
+
       private void GoToToolStripMenuItem_Click(object sender, EventArgs e)
       {
          CodeEditor.ShowGoToDialog();
@@ -1084,6 +1094,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             };
             errorDisplay.ShowDialog();
          }
+      }
+
+      private void selectTokenToolStripMenuItem1_Click(object sender, EventArgs e)
+      {
+         SelectTokenFromSource(new Common.Grammar.Place(CodeEditor.Selection.Start.iLine + 1, CodeEditor.Selection.Start.iChar + 1));
+      }
+
+      private void selectParserRuleToolStripMenuItem1_Click(object sender, EventArgs e)
+      {
+         SelectParserRuleFromSource(new Common.Grammar.Place(CodeEditor.Selection.Start.iLine + 1, CodeEditor.Selection.Start.iChar + 1));
       }
    }
 }
