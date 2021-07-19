@@ -38,6 +38,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -111,6 +112,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private EditorGuideMonitor _GuideMonitor;
 
       private string _CurrentSourceFile;
+
+      private double _TrackbarZoomIncrement = 0.3;
 
       #region Constructors And Finalizers
 
@@ -373,9 +376,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void Viewer_MouseWheel(object sender, MouseEventArgs e)
       {
          var factor = Math.Max(
-            Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / 0.2), GraphZoomTrackBar.Maximum),
+            Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / _TrackbarZoomIncrement), GraphZoomTrackBar.Maximum),
             GraphZoomTrackBar.Minimum);
          GraphZoomTrackBar.Value = factor;
+         Debug.WriteLine($"Scroll zoom factor {factor}");
       }
 
       private void AddTreeBranchesAndLeaves(TreeNode treeNode, ITree tree)
@@ -562,7 +566,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void GraphZoomTrackBar_ValueChanged(object sender, EventArgs e)
       {
          if (_Viewer != null)
-            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.2) + 1.0;
+            _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackbarZoomIncrement) + 1.0;
       }
 
       private void HeuristicHighlightingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -871,7 +875,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             _Viewer.Graph = graph;
             if (zoomFactor.HasValue)
                GraphZoomTrackBar.Value = zoomFactor.Value;
-            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.2) + 1.0;
+            _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackbarZoomIncrement) + 1.0;
             _Viewer.ResumeLayout();
          }
          catch (Exception ex)
@@ -895,7 +899,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.Graph = graph;
          if (zoomFactor.HasValue)
             GraphZoomTrackBar.Value = zoomFactor.Value;
-         _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.2) + 1.0;
+         _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackbarZoomIncrement) + 1.0;
          _Viewer.ResumeLayout();
       }
 

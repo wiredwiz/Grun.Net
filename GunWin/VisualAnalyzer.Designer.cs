@@ -193,6 +193,7 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -276,7 +277,7 @@
          // 
          this.GraphZoomTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
          this.GraphZoomTrackBar.Location = new System.Drawing.Point(3, 360);
-         this.GraphZoomTrackBar.Maximum = 400;
+         this.GraphZoomTrackBar.Maximum = 200;
          this.GraphZoomTrackBar.Name = "GraphZoomTrackBar";
          this.GraphZoomTrackBar.Size = new System.Drawing.Size(624, 45);
          this.GraphZoomTrackBar.TabIndex = 2;
