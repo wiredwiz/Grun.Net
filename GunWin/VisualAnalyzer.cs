@@ -60,6 +60,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
+using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
@@ -1021,18 +1022,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void SelectTokenFromSource(Common.Grammar.Place sourcePlace)
       {
          foreach (var token in _Tokens)
-            if (token.LineNumber == sourcePlace.Line)
-               if (token.ColumnPosition <= sourcePlace.Position && token.EndingColumnPosition >= sourcePlace.Position)
-               {
-                  // We have found the related source token, now we select it in the list and source.
-                  tokenListView.SelectedObject = token;
-                  var selectedPos = tokenListView.SelectedItem.Position;
-                  int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
-                  tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
-                  CodeEditor.SelectSource(token.ActualParserToken);
-                  tabControlParse.SelectTab(1);
-                  tokenListView.Select();
-               }
+           if (token.LineNumber == sourcePlace.Line)
+           {
+             if (sourcePlace.IsWithinTokenBounds(token))
+             {
+               // We have found the related source token, now we select it in the list and source.
+               tokenListView.SelectedObject = token;
+               var selectedPos = tokenListView.SelectedItem.Position;
+               int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
+               tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
+               CodeEditor.SelectSource(token.ActualParserToken);
+               tabControlParse.SelectTab(1);
+               CodeEditor.Select();
+             }
+           }
       }
 
       private void SelectParserRuleFromSource(Common.Grammar.Place sourcePlace)
@@ -1113,7 +1116,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          SelectTokenFromSource(
             new Common.Grammar.Place(
                CodeEditor.Selection.Start.iLine + 1, 
-               CodeEditor.Selection.Start.iChar + 1));
+               CodeEditor.Selection.Start.iChar));
       }
 
       private void selectParserRuleToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1121,7 +1124,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          SelectParserRuleFromSource(
             new Common.Grammar.Place(
                CodeEditor.Selection.Start.iLine + 1, 
-               CodeEditor.Selection.Start.iChar + 1));
+               CodeEditor.Selection.Start.iChar));
       }
    }
 }

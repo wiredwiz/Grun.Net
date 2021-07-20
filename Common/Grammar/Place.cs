@@ -34,6 +34,12 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using Antlr4.Runtime;
+
+using JetBrains.Annotations;
+
+using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
+
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
 {
    /// <summary>
@@ -70,5 +76,25 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       /// </summary>
       /// <value>The empty placement.</value>
       public static Place Empty => new Place(-1, -1);
+
+      /// <summary>
+      /// Determines whether this place occurs within the bounds of the specified token.
+      /// </summary>
+      /// <param name="token">The token.</param>
+      /// <returns><c>true</c> if within the bounds; otherwise, <c>false</c>.</returns>
+      public bool IsWithinTokenBounds([NotNull] SyntaxToken token)
+      {
+         if (Line != token.LineNumber)
+            return false;
+
+         if (Position + 1 < token.ColumnPosition)
+            return false;
+
+         var end = token.ActualParserToken.GetEndPlace();
+         if (end.Line > Line)
+            return true;
+
+         return Position <= end.Position;
+      }
    }
 }
