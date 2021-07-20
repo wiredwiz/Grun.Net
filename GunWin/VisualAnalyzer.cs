@@ -1030,6 +1030,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                   int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
                   tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
                   CodeEditor.SelectSource(token.ActualParserToken);
+                  tabControlParse.SelectTab(1);
                   tokenListView.Select();
                }
       }
