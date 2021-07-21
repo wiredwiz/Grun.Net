@@ -34,6 +34,9 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using JetBrains.Annotations;
+
+using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
@@ -51,6 +54,27 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
       public static FastColoredTextBoxNS.Place ConvertToFctbPlace(this Place place)
       {
          return new FastColoredTextBoxNS.Place(place.Position, place.Line - 1);
+      }
+
+      /// <summary>
+      /// Determines whether this place occurs within the bounds of the specified token.
+      /// </summary>
+      /// <param name="place">The place to evaluate.</param>
+      /// <param name="token">The token.</param>
+      /// <returns><c>true</c> if within the bounds; otherwise, <c>false</c>.</returns>
+      public static bool IsWithinTokenBounds(this Place place, [NotNull] SyntaxToken token)
+      {
+         if (place.Line != token.LineNumber)
+            return false;
+
+         if (place.Position + 1 < token.ColumnPosition)
+            return false;
+
+         var end = token.ActualParserToken.GetEndPlace();
+         if (end.Line > place.Line)
+            return true;
+
+         return place.Position <= end.Position;
       }
    }
 }

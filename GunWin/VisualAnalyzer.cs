@@ -72,6 +72,7 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;
