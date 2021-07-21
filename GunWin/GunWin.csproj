@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -101,7 +101,13 @@
       <DependentUpon>GrammarSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\SyntaxHighlighting\HeuristicSyntaxHighlightingGuide.cs" />
+    <Compile Include="Extensions\ErrorNodeImplExtensions.cs" />
+    <Compile Include="Extensions\ITokenExtensions.cs" />
+    <Compile Include="Extensions\ITreeExtensions.cs" />
+    <Compile Include="Extensions\ParserRuleContextExtensions.cs" />
     <Compile Include="Extensions\PlaceExtensions.cs" />
+    <Compile Include="Extensions\SyntaxTokenExtensions.cs" />
+    <Compile Include="Extensions\TerminalNodeImplExtensions.cs" />
     <Compile Include="Graphing\GraphingResult.cs" />
     <Compile Include="Graphing\GraphingWorkItem.cs" />
     <Compile Include="Graphing\GraphWorker.cs" />

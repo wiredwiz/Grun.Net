@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="PlaceExtensions.cs" company="Edgerunner.org">
-// Copyright 2020 
+// <copyright file="ParserRuleContextExtensions.cs" company="Edgerunner.org">
+// Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, 
+// Copyright (c) 2021, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -34,50 +34,45 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using Antlr4.Runtime;
+
 using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
 {
    /// <summary>
-   /// Class containing extension methods for the Place struct.
+   /// Class containing extension methods for the ParserRuleContext class.
    /// </summary>
-   public static class PlaceExtensions
+   public static class ParserRuleContextExtensions
    {
       /// <summary>
-      /// Converts to a token <see cref="Place"/> to a <see cref="FastColoredTextBoxNS.Place"/> place.
+      /// Determines whether this ParserContextRule contains the specified source selection.
       /// </summary>
-      /// <param name="place">The place to convert.</param>
-      /// <returns>A new <see cref="FastColoredTextBoxNS.Place"/>.</returns>
-      /// <remarks>The Fast Colored Text Box placement begins line indexes at index 0 so we must reduce the grammar placement by 1.</remarks>
-      // ReSharper disable once IdentifierTypo
-      public static FastColoredTextBoxNS.Place ConvertToFctbPlace(this Place place)
+      /// <param name="context">The parser context rule.</param>
+      /// <param name="selectionStart">The source selection start.</param>
+      /// <param name="selectionEnd">The source selection end.</param>
+      /// <returns><c>true</c> if rule contains the specified source selection; otherwise, <c>false</c>.</returns>
+      public static bool ContainsSourceSelection([NotNull] this ParserRuleContext context, Place selectionStart, Place selectionEnd)
       {
-         return new FastColoredTextBoxNS.Place(place.Position, place.Line - 1);
-      }
+         var startToken = context.Start;
+         var stopToken = context.Stop ?? context.Start;
 
-      /// <summary>
-      /// Determines whether this place occurs within the bounds of the specified token.
-      /// </summary>
-      /// <param name="place">The place to evaluate.</param>
-      /// <param name="token">The token.</param>
-      /// <returns><c>true</c> if within the bounds; otherwise, <c>false</c>.</returns>
-      public static bool IsWithinTokenBounds(this Place place, SyntaxToken token)
-      {
-         if (place.Line != token.LineNumber)
+         if (startToken.Line == selectionStart.Line && startToken.Column > selectionStart.Position)
+            return false;
+         if (startToken.Line > selectionStart.Line)
             return false;
 
-         if (place.Position + 1 < token.ColumnPosition)
+         var tokenEnd = stopToken.GetEndPlace();
+
+         if (tokenEnd.Line == selectionEnd.Line && tokenEnd.Position < selectionEnd.Position)
+            return false;
+         if (tokenEnd.Line < selectionEnd.Line)
             return false;
 
-         var end = token.ActualParserToken.GetEndPlace();
-         if (end.Line > place.Line)
-            return true;
-
-         return place.Position <= end.Position;
+         return true;
       }
    }
 }
