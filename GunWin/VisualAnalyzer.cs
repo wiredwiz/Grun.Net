@@ -113,6 +113,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private EditorGuideMonitor _GuideMonitor;
 
+      private ITree _ParseTree;
+
       private string _CurrentSourceFile;
 
       private double _TrackBarZoomIncrement = 0.3;
@@ -237,6 +239,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             };
             errorDisplay.ShowDialog();
          }
+
+         _ParseTree = analyzer.ParserContext;
 
          try
          {
@@ -1039,9 +1043,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
            }
       }
 
-      private void SelectParserRuleFromSource(Common.Grammar.Place sourcePlace)
+      private void SelectParserRuleFromSourceSelection(Common.Grammar.Place selectionStart, Common.Grammar.Place selectionEnd)
       {
-         // TODO: Add code to do the selection
+         if (_ParseTree != null)
+         {
+            var node = _ParseTree.FindTreeNodeForSourceSelection(selectionStart, selectionEnd);
+            Debug.WriteLine($"node selected: {node}");
+         }
       }
 
       private void GoToToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1122,10 +1130,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void selectParserRuleToolStripMenuItem1_Click(object sender, EventArgs e)
       {
-         SelectParserRuleFromSource(
+         SelectParserRuleFromSourceSelection(
             new Common.Grammar.Place(
                CodeEditor.Selection.Start.iLine + 1, 
-               CodeEditor.Selection.Start.iChar));
+               CodeEditor.Selection.Start.iChar),
+            new Common.Grammar.Place(
+               CodeEditor.Selection.End.iLine + 1,
+               CodeEditor.Selection.End.iChar));
       }
    }
 }

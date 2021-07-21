@@ -88,7 +88,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
 
          if (passes)
             if (tree.ChildCount != 0)
-               for (int i = 0; i < tree.ChildCount - 1; i++)
+               for (int i = 0; i < tree.ChildCount; i++)
                {
                   var child = tree.GetChild(i);
                   var result = EvaluateNodeAndChildren(child, start, end);
