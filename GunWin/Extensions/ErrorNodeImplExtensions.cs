@@ -46,7 +46,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
    /// <summary>
    /// Class containing extension methods for the ErrorNodeImpl class.
    /// </summary>
-   public class ErrorNodeImplExtensions
+   public static class ErrorNodeImplExtensions
    {
       /// <summary>
       /// Determines whether this ErrorNodeImpl contains the specified source selection.
