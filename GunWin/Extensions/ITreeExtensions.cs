@@ -82,9 +82,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
          if (tree is ParserRuleContext context)
             passes = context.ContainsSourceSelection(start, end);
          else if (tree is ErrorNodeImpl errorTerminal)
-            errorTerminal.ContainsSourceSelection(start, end);
+            passes = errorTerminal.ContainsSourceSelection(start, end);
          else if (tree is TerminalNodeImpl terminal)
-            terminal.ContainsSourceSelection(start, end);
+            passes = terminal.ContainsSourceSelection(start, end);
 
          if (passes)
             if (tree.ChildCount != 0)
