@@ -1130,13 +1130,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void selectParserRuleToolStripMenuItem1_Click(object sender, EventArgs e)
       {
-         SelectParserRuleFromSourceSelection(
-            new Common.Grammar.Place(
-               CodeEditor.Selection.Start.iLine + 1, 
-               CodeEditor.Selection.Start.iChar),
-            new Common.Grammar.Place(
-               CodeEditor.Selection.End.iLine + 1,
-               CodeEditor.Selection.End.iChar));
+         var start = new Common.Grammar.Place(CodeEditor.Selection.Start.iLine + 1, CodeEditor.Selection.Start.iChar);
+         var end = new Common.Grammar.Place(CodeEditor.Selection.End.iLine + 1, CodeEditor.Selection.End.iChar);
+         if (end.Line < start.Line || (end.Line == start.Line && end.Position < start.Position))
+         {
+            var temp = start;
+            start = end;
+            end = temp;
+         }
+
+         SelectParserRuleFromSourceSelection(start, end);
       }
    }
 }
