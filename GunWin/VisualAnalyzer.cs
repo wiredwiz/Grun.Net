@@ -1045,17 +1045,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void SelectParserRuleFromSourceSelection(Common.Grammar.Place selectionStart, Common.Grammar.Place selectionEnd)
       {
-         if (_ParseTree != null)
+         var node = _ParseTree?.FindTreeNodeForSourceSelection(selectionStart, selectionEnd);
+         if (node != null)
          {
-            var node = _ParseTree.FindTreeNodeForSourceSelection(selectionStart, selectionEnd);
-            if (node != null)
+            var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
+            if (graphNode != null)
             {
-               var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
-               if (graphNode != null)
-               {
-                  Debug.WriteLine($"Tree node selected: {node}");
-                  Debug.WriteLine($"Graph node selected: {graphNode.LabelText}");
-               }
+               Debug.WriteLine($"Tree node selected: {node}");
+               Debug.WriteLine($"Graph node selected: {graphNode.LabelText}");
             }
          }
       }
