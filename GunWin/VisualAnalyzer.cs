@@ -1048,7 +1048,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (_ParseTree != null)
          {
             var node = _ParseTree.FindTreeNodeForSourceSelection(selectionStart, selectionEnd);
-            Debug.WriteLine($"node selected: {node}");
+            if (node != null)
+            {
+               var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
+               if (graphNode != null)
+               {
+                  Debug.WriteLine($"Tree node selected: {node}");
+                  Debug.WriteLine($"Graph node selected: {graphNode.LabelText}");
+               }
+            }
          }
       }
 
