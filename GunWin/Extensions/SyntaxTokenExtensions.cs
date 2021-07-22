@@ -58,7 +58,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
             return false;
          if (token.LineNumber == selectionStart.Line && token.ColumnPosition > selectionStart.Position + 1)
             return false;
-         if (token.EndingLineNumber == selectionEnd.Line && token.EndingColumnPosition < selectionEnd.Position + 1)
+         if (token.EndingLineNumber == selectionEnd.Line && (token.EndingColumnPosition + 1) < selectionEnd.Position)
             return false;
 
          return true;

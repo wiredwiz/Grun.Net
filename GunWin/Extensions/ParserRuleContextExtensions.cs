@@ -67,7 +67,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
 
          var tokenEnd = stopToken.GetEndPlace();
 
-         if (tokenEnd.Line == selectionEnd.Line && tokenEnd.Position < selectionEnd.Position)
+         if (tokenEnd.Line == selectionEnd.Line && (tokenEnd.Position + 1) < selectionEnd.Position)
             return false;
          if (tokenEnd.Line < selectionEnd.Line)
             return false;

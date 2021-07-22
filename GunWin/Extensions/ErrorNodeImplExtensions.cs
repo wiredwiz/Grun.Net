@@ -73,7 +73,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
             return false;
          if (nodeEnd.Line < selectionEnd.Line)
             return false;
-         if (nodeEnd.Line == selectionEnd.Line && nodeEnd.Position < selectionEnd.Position)
+         if (nodeEnd.Line == selectionEnd.Line && (nodeEnd.Position + 1) < selectionEnd.Position)
             return false;
 
          return true;
