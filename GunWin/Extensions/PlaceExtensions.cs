@@ -73,11 +73,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
          if (place.Position + 1 < token.ColumnPosition)
             return false;
 
-         var end = token.ActualParserToken.GetEndPlace();
          if (token.EndingLineNumber > place.Line)
             return true;
 
-         return place.Position <= token.EndingColumnPosition;
+         return place.Position < token.EndingColumnPosition;
       }
    }
 }
