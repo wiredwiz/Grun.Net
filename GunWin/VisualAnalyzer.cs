@@ -595,6 +595,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.LayoutAlgorithmSettingsButtonVisible = false;
          _Viewer.Click += Viewer_Click;
          _Viewer.MouseWheel += Viewer_MouseWheel;
+         _Viewer.ZoomButtonsVisible = false;
          var viewerContextMenu = new ContextMenu();
          var menuItem = viewerContextMenu.MenuItems.Add("Graph from here");
          menuItem.Click += Menu_GraphFromHere_Click;
@@ -1051,6 +1052,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
             if (graphNode != null)
             {
+               var yRatio = Convert.ToInt32(_Viewer.Graph.Height / graphNode.Height * 2);
+               var xRatio = Convert.ToInt32(_Viewer.Graph.Width / graphNode.Width * 2);
+               _Viewer.SetTransformOnScaleAndCenter(1, graphNode.GeometryNode.Center);
+               GraphZoomTrackBar.Value = Math.Min(200, Math.Max(xRatio, yRatio));
+               _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
+               _Viewer.Refresh();
+               CodeEditor.SelectSource(graphNode.UserData as ITree ?? throw new InvalidOperationException());
                Debug.WriteLine($"Tree node selected: {node}");
                Debug.WriteLine($"Graph node selected: {graphNode.LabelText}");
             }

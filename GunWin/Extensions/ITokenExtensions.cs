@@ -44,6 +44,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
    /// <summary>
    /// Class containing extension methods for the IToken interface.
    /// </summary>
+   // ReSharper disable once InconsistentNaming
    public static class ITokenExtensions
    {
       /// <summary>
