@@ -117,7 +117,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private string _CurrentSourceFile;
 
-      private double _TrackBarZoomIncrement = 0.3;
+      private double _TrackBarZoomIncrement = 0.25;
+
+      private bool _EnableTrackBarZoom = true;
 
       #region Constructors And Finalizers
 
@@ -571,8 +573,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void GraphZoomTrackBar_ValueChanged(object sender, EventArgs e)
       {
-         if (_Viewer != null)
-            _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
+         if (_EnableTrackBarZoom)
+            if (_Viewer != null)
+               _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
       }
 
       private void HeuristicHighlightingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -595,11 +598,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.LayoutAlgorithmSettingsButtonVisible = false;
          _Viewer.Click += Viewer_Click;
          _Viewer.MouseWheel += Viewer_MouseWheel;
+         _Viewer.HomeButtonPressed += _Viewer_HomeButtonPressed;
          _Viewer.ZoomButtonsVisible = false;
+         _Viewer.WindowZoomVisible = false;
          var viewerContextMenu = new ContextMenu();
          var menuItem = viewerContextMenu.MenuItems.Add("Graph from here");
          menuItem.Click += Menu_GraphFromHere_Click;
          _Viewer.ContextMenu = viewerContextMenu;
+      }
+
+      private void _Viewer_HomeButtonPressed(object sender, EventArgs e)
+      {
+         // We toggle this setting to prevent a potential crash
+         // If the setting the track bar were to set the zoom on the viewer, it can crash due to the timing of changes occurring in the graph
+         // Beyond that, setting the Zoom back to 1 would be redundant since pressing the home button has essentially done this.
+         _EnableTrackBarZoom = false;
+         GraphZoomTrackBar.Value = 0;
+         _EnableTrackBarZoom = true;
       }
 
       private void LoadApplicationSettings()
@@ -1052,10 +1067,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
             if (graphNode != null)
             {
-               var yRatio = Convert.ToInt32(_Viewer.Graph.Height / graphNode.Height * 2);
-               var xRatio = Convert.ToInt32(_Viewer.Graph.Width / graphNode.Width * 2);
+               var verticalAxisRatio = Convert.ToInt32(_Viewer.Graph.Height / graphNode.Height * 2);
+               var horizontalAxisRatio = Convert.ToInt32(_Viewer.Graph.Width / graphNode.Width * 2);
                _Viewer.SetTransformOnScaleAndCenter(1, graphNode.GeometryNode.Center);
-               GraphZoomTrackBar.Value = Math.Min(200, Math.Max(xRatio, yRatio));
+               GraphZoomTrackBar.Value = Math.Min(200, Math.Min(horizontalAxisRatio, verticalAxisRatio));
                _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
                _Viewer.Refresh();
                CodeEditor.SelectSource(graphNode.UserData as ITree ?? throw new InvalidOperationException());
