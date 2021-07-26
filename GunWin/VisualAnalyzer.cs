@@ -1073,6 +1073,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                GraphZoomTrackBar.Value = Math.Min(200, Math.Min(horizontalAxisRatio, verticalAxisRatio));
                _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
                _Viewer.Refresh();
+               tabControlParse.SelectTab(0);
+               CodeEditor.Select();
                CodeEditor.SelectSource(graphNode.UserData as ITree ?? throw new InvalidOperationException());
                Debug.WriteLine($"Tree node selected: {node}");
                Debug.WriteLine($"Graph node selected: {graphNode.LabelText}");
