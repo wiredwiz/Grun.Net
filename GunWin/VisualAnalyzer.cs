@@ -1067,13 +1067,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
             if (graphNode != null)
             {
+               tabControlParse.SelectTab(0);
                var verticalAxisRatio = Convert.ToInt32(_Viewer.Graph.Height / graphNode.Height * 2);
                var horizontalAxisRatio = Convert.ToInt32(_Viewer.Graph.Width / graphNode.Width * 2);
                _Viewer.SetTransformOnScaleAndCenter(1, graphNode.GeometryNode.Center);
                GraphZoomTrackBar.Value = Math.Min(200, Math.Min(horizontalAxisRatio, verticalAxisRatio));
                _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
                _Viewer.Refresh();
-               tabControlParse.SelectTab(0);
                CodeEditor.Select();
                CodeEditor.SelectSource(graphNode.UserData as ITree ?? throw new InvalidOperationException());
                Debug.WriteLine($"Tree node selected: {node}");
