@@ -1162,6 +1162,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          var start = new Common.Grammar.Place(CodeEditor.Selection.Start.iLine + 1, CodeEditor.Selection.Start.iChar);
          var end = new Common.Grammar.Place(CodeEditor.Selection.End.iLine + 1, CodeEditor.Selection.End.iChar);
+
+         // If we don't actually have a selection, then create a selection range extending one character past the cursor
+         if (end.Equals(start))
+            end = new Common.Grammar.Place(end.Line, end.Position + 1);
+
          if (end.Line < start.Line || (end.Line == start.Line && end.Position < start.Position))
          {
             var temp = start;
