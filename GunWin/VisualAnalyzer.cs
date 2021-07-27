@@ -321,6 +321,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             _GuideMonitor = null;
             _Registry = new StyleRegistry(new HeuristicSyntaxHighlightingGuide(_Settings));
          }
+
+         ColorizeTokens(null);
       }
 
       private void GuideAssemblyChanged(object sender, SyntaxHighlightingGuideReference e)
