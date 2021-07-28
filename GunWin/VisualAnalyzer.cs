@@ -1069,13 +1069,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
             if (graphNode != null)
             {
+               // First we select the graph tab in advance, to avoid bugs that can occur if it is selected closer to the viewer being manipulated
                tabControlParse.SelectTab(0);
                var verticalAxisRatio = Convert.ToInt32(_Viewer.Graph.Height / graphNode.Height * 2);
                var horizontalAxisRatio = Convert.ToInt32(_Viewer.Graph.Width / graphNode.Width * 2);
-               _Viewer.SetTransformOnScaleAndCenter(1, graphNode.GeometryNode.Center);
+
+               // Center the viewer on the selected node and zoom in
+               _Viewer.CenterToPoint(graphNode.GeometryNode.Center);
                GraphZoomTrackBar.Value = Math.Min(200, Math.Min(horizontalAxisRatio, verticalAxisRatio));
                _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
                _Viewer.Refresh();
+
+               // After we have refreshed the transformed view, we select the node for dragging so that it displays with a border for emphasis
+               _Viewer.SelectGraphObjectAtLocation(graphNode.GeometryNode.Center);
+
+               // Lastly we set focus back to the editor window and select the entire block of source that corresponds to the node
                CodeEditor.Select();
                CodeEditor.SelectSource(graphNode.UserData as ITree ?? throw new InvalidOperationException());
                Debug.WriteLine($"Tree node selected: {node}");
