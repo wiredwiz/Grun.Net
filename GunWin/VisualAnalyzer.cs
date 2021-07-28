@@ -1086,8 +1086,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                // Lastly we set focus back to the editor window and select the entire block of source that corresponds to the node
                CodeEditor.Select();
                CodeEditor.SelectSource(graphNode.UserData as ITree ?? throw new InvalidOperationException());
-               Debug.WriteLine($"Tree node selected: {node}");
-               Debug.WriteLine($"Graph node selected: {graphNode.LabelText}");
             }
          }
       }
