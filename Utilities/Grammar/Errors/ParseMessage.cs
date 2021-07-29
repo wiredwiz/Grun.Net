@@ -48,13 +48,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// </summary>
       /// <param name="lineNumber">The line number.</param>
       /// <param name="column">The column.</param>
+      /// <param name="source">The message source.</param>
       /// <param name="message">The message.</param>
       /// <param name="token">The token.</param>
       // ReSharper disable once TooManyDependencies
-      public ParseMessage(int lineNumber, int column, string message, IToken token)
+      public ParseMessage(int lineNumber, int column,string source, string message, IToken token)
       {
          LineNumber = lineNumber;
          Column = column;
+         Source = source;
          Message = message;
          Token = token;
       }
@@ -76,6 +78,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// </summary>
       /// <value>The message.</value>
       public string Message { get; set; }
+
+      /// <summary>
+      /// Gets or sets the mesasge source.
+      /// </summary>
+      /// <value>The source.</value>
+      public string Source { get; set; }
 
       /// <summary>
       /// Gets or sets the related token.

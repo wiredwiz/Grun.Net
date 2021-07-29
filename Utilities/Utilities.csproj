@@ -53,6 +53,7 @@
     <Compile Include="Exceptions\GrammarConflictException.cs" />
     <Compile Include="Exceptions\GrammarException.cs" />
     <Compile Include="Extensions\GrammarReferenceExtensions.cs" />
+    <Compile Include="Grammar\Errors\TestingLexerErrorListener.cs" />
     <Compile Include="Grammar\GrammarReference.cs" />
     <Compile Include="Grammar\Analyzer.cs" />
     <Compile Include="Grammar\Errors\ParseMessage.cs" />

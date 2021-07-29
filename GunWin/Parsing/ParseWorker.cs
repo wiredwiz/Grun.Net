@@ -165,7 +165,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
          var options = work.Options;
          var trace = options.HasFlag(ParseOption.Trace);
          if (trace) options ^= ParseOption.Trace;
-         var parser = analyzer.BuildParserWithOptions(work.Grammar, work.Text, options);
+         var parser = analyzer.BuildParserWithOptions(work.Grammar, work.Text, options, null);
 
          GuiTraceListener parseTreeListener = null;
          if (trace)

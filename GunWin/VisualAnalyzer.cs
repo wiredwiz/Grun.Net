@@ -217,7 +217,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             {
                if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
                if (ParseWithSllMode) options |= ParseOption.Sll;
-               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options);
+               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options, null);
                if (ParseWithTracing)
                {
                   parseTreeListener = new GuiTraceListener(parser);
@@ -229,7 +229,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                analyzer.ExecuteParsing(parser, CmbRules.SelectedItem.ToString());
             }
             else
-               analyzer.Tokenize(_Grammar, CodeEditor.Text);
+               analyzer.Tokenize(_Grammar, CodeEditor.Text, null);
          }
          catch (Exception ex)
          {

@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="TestingErrorListener.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// <copyright file="TestingLexerErrorListener.cs" company="Edgerunner.org">
+// Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2021, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -35,22 +35,20 @@
 #endregion
 
 using System.Collections.Generic;
-
 using Antlr4.Runtime;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
 {
    /// <summary>
-   /// Class for gathering ANTLR4 parsing errors during testing.
+   /// Class for gathering ANTLR4 lexer errors during testing.
    /// Implements the <see cref="IToken" />
    /// </summary>
-   /// <seealso cref="IToken" />
-   public class TestingErrorListener : Antlr4.Runtime.IAntlrErrorListener<IToken>
+   public class TestingLexerErrorListener  : Antlr4.Runtime.IAntlrErrorListener<int>
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="TestingErrorListener"/> class.
       /// </summary>
-      public TestingErrorListener()
+      public TestingLexerErrorListener()
       {
          Errors = new List<ParseMessage>();
       }
@@ -80,6 +78,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// the reporting of an error. It is null in the case where
       /// the parser was able to recover in line without exiting the
       /// surrounding rule.</param>
+      /// <exception cref="System.NotImplementedException"></exception>
       /// <remarks>Upon syntax error, notify any interested parties. This is not how to
       /// recover from errors or compute error messages.
       /// <see cref="T:Antlr4.Runtime.IAntlrErrorStrategy" />
@@ -92,17 +91,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// when we discover mismatched token errors that we can recover from
       /// in-line, without returning from the surrounding rule (via the single
       /// token insertion and deletion mechanism).</p></remarks>
-      // ReSharper disable once TooManyArguments
-      public void SyntaxError(
-         IRecognizer recognizer,
-         IToken offendingSymbol,
-         int line,
-         int charPositionInLine,
-         string msg,
+      public void SyntaxError(IRecognizer recognizer, int offendingSymbol, int line, int charPositionInLine, string msg,
          RecognitionException e)
       {
-         // TODO: add multi-lingual support for source literal
-         Errors.Add(new ParseMessage(line, charPositionInLine + 1, "Parser", msg, offendingSymbol));
+         Errors.Add(new ParseMessage(line, charPositionInLine + 1, "Lexer", msg, null));
       }
    }
 }

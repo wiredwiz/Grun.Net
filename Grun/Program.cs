@@ -231,7 +231,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             if (grammar.Parser != null)
                             {
                                var analyzer = new Analyzer();
-                               var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options);
+                               var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options, null);
                                analyzer.ExecuteParsing(grammarParser, o.RuleName);
 
                                if (showParseTree)
@@ -354,23 +354,21 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
       private static void DisplayTokens(GrammarReference grammar, string data)
       {
          var analyzer = new Grammar.Analyzer();
-         var tokens = analyzer.Tokenize(grammar, data);
+         var tokens = analyzer.Tokenize(grammar, data, null);
          foreach (var token in tokens)
             Console.WriteLine(token.ToString());
       }
 
       private static void LoadGui(string data, GrammarReference grammar, string parserRule)
       {
-         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            var visualAnalyzer = new VisualAnalyzer();
-            visualAnalyzer.SetSourceCode(data);
-            visualAnalyzer.SetGrammar(grammar);
-            if (grammar.Parser != null || !parserRule.Equals("tokens", StringComparison.InvariantCultureIgnoreCase))
-               visualAnalyzer.SetDefaultParserRule(parserRule);
-            Application.Run(visualAnalyzer);
-         }
+         Application.EnableVisualStyles();
+         Application.SetCompatibleTextRenderingDefault(false);
+         var visualAnalyzer = new VisualAnalyzer();
+         visualAnalyzer.SetSourceCode(data);
+         visualAnalyzer.SetGrammar(grammar);
+         if (grammar.Parser != null || !parserRule.Equals("tokens", StringComparison.InvariantCultureIgnoreCase))
+            visualAnalyzer.SetDefaultParserRule(parserRule);
+         Application.Run(visualAnalyzer);
       }
 
       /// <summary>

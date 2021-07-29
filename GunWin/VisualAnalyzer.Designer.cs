@@ -88,6 +88,7 @@
          this.ParseMessageListView = new BrightIdeasSoftware.ObjectListView();
          this.colLineNumber = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colPosition = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colSource = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colMessage = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
          this.StripLabelGrammar = new System.Windows.Forms.ToolStripStatusLabel();
@@ -705,10 +706,12 @@
          // 
          this.ParseMessageListView.AllColumns.Add(this.colLineNumber);
          this.ParseMessageListView.AllColumns.Add(this.colPosition);
+         this.ParseMessageListView.AllColumns.Add(this.colSource);
          this.ParseMessageListView.AllColumns.Add(this.colMessage);
          this.ParseMessageListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colLineNumber,
             this.colPosition,
+            this.colSource,
             this.colMessage});
          this.ParseMessageListView.Dock = System.Windows.Forms.DockStyle.Fill;
          this.ParseMessageListView.FullRowSelect = true;
@@ -733,6 +736,12 @@
          this.colPosition.AspectName = "Column";
          this.colPosition.CellPadding = null;
          this.colPosition.Text = "Position";
+         // 
+         // colSource
+         // 
+         this.colSource.AspectName = "Source";
+         this.colSource.CellPadding = null;
+         this.colSource.Text = "Source";
          // 
          // colMessage
          // 
@@ -969,6 +978,7 @@
       private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
       private System.Windows.Forms.ToolStripMenuItem selectTokenToolStripMenuItem1;
       private System.Windows.Forms.ToolStripMenuItem selectParserRuleToolStripMenuItem1;
+      private BrightIdeasSoftware.OLVColumn colSource;
    }
 }
 

@@ -88,13 +88,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// </summary>
       /// <param name="grammar">The grammar.</param>
       /// <param name="inputText">The input text.</param>
+      /// <param name="lexerErrorListener">The lexer error listener.</param>
       /// <returns>A new <see cref="IList{IToken}" />.</returns>
-      /// <exception cref="ArgumentNullException"><paramref name="grammar"/> is <see langword="null"/>.</exception>
-      /// <exception cref="ArgumentNullException"><paramref name="inputText"/> is <see langword="null"/> or empty.</exception>
-      /// <exception cref="T:System.IO.FileLoadException">Grammar assembly could not be loaded.</exception>
-      /// <exception cref="T:System.IO.FileNotFoundException">The grammar assembly path is an empty string ("") or does not exist.</exception>
-      /// <exception cref="T:System.BadImageFormatException">The grammar assembly path is not a valid assembly.</exception>
-      public IList<IToken> Tokenize([NotNull] GrammarReference grammar, [NotNull] string inputText)
+      /// <exception cref="ArgumentNullException">grammar</exception>
+      /// <exception cref="ArgumentNullException">inputText</exception>
+      /// <exception cref="ArgumentNullException"><paramref name="grammar" /> is <see langword="null" />.</exception>
+      /// <exception cref="T:System.IO.FileLoadException"><paramref name="inputText" /> is <see langword="null" /> or empty.</exception>
+      /// <exception cref="T:System.IO.FileNotFoundException">Grammar assembly could not be loaded.</exception>
+      /// <exception cref="T:System.BadImageFormatException">The grammar assembly path is an empty string ("") or does not exist.</exception>
+      public IList<IToken> Tokenize([NotNull] GrammarReference grammar, [NotNull] string inputText, IAntlrErrorListener<int> lexerErrorListener)
       {
          if (grammar is null)
             throw new ArgumentNullException(nameof(grammar));
@@ -105,6 +107,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var inputStream = new AntlrInputStream(inputText);
          var lexer = loader.LoadLexer(grammar, inputStream);
          lexer.RemoveErrorListeners();
+         if (lexerErrorListener != null)
+            lexer.AddErrorListener(lexerErrorListener);
          var commonTokenStream = new CommonTokenStream(lexer);
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
@@ -118,11 +122,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="grammar">The grammar to use.</param>
       /// <param name="inputText">The input text to use.</param>
       /// <param name="option">The parsing options to use.</param>
-      /// <returns>A new <see cref="Parser"/> instance.</returns>
-      /// <exception cref="GrammarException">No parser found for specified grammar.</exception>
-      /// <exception cref="ArgumentNullException"><paramref name="grammar"/> is <see langword="null" />.</exception>
-      /// <exception cref="ArgumentNullException"><paramref name="inputText"/> is <see langword="null" />.</exception>
-      public Parser BuildParserWithOptions([NotNull] GrammarReference grammar, [NotNull] string inputText, ParseOption option)
+      /// <param name="lexerErrorListener">The lexer error listener.</param>
+      /// <returns>A new <see cref="Parser" /> instance.</returns>
+      /// <exception cref="ArgumentNullException">grammar</exception>
+      /// <exception cref="ArgumentNullException">inputText</exception>
+      /// <exception cref="GrammarException">No parser found for grammar \"{grammar.GrammarName}\"</exception>
+      /// <exception cref="ArgumentNullException">No parser found for specified grammar.</exception>
+      public Parser BuildParserWithOptions([NotNull] GrammarReference grammar, [NotNull] string inputText, ParseOption option, IAntlrErrorListener<int> lexerErrorListener)
       {
          if (grammar is null)
             throw new ArgumentNullException(nameof(grammar));
@@ -134,6 +140,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var loader = new Grammar.Loader();
          var inputStream = new AntlrInputStream(inputText);
          var lexer = loader.LoadLexer(grammar, inputStream);
+         if (lexerErrorListener != null)
+            lexer.AddErrorListener(lexerErrorListener);
          var commonTokenStream = new CommonTokenStream(lexer);
 
          commonTokenStream.Fill();
