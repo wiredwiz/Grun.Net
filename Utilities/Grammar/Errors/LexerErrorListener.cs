@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="TestingLexerErrorListener.cs" company="Edgerunner.org">
+// <copyright file="LexerErrorListener.cs" company="Edgerunner.org">
 // Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
@@ -43,12 +43,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
    /// Class for gathering ANTLR4 lexer errors during testing.
    /// Implements the <see cref="IToken" />
    /// </summary>
-   public class TestingLexerErrorListener  : Antlr4.Runtime.IAntlrErrorListener<int>
+   public class LexerErrorListener  : Antlr4.Runtime.IAntlrErrorListener<int>
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="TestingErrorListener"/> class.
+      /// Initializes a new instance of the <see cref="ParserErrorListener"/> class.
       /// </summary>
-      public TestingLexerErrorListener()
+      public LexerErrorListener()
       {
          Errors = new List<ParseMessage>();
       }

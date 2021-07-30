@@ -141,7 +141,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var inputStream = new AntlrInputStream(inputText);
          var lexer = loader.LoadLexer(grammar, inputStream);
          if (lexerErrorListener != null)
+         {
+            lexer.RemoveErrorListeners();
             lexer.AddErrorListener(lexerErrorListener);
+         }
          var commonTokenStream = new CommonTokenStream(lexer);
 
          commonTokenStream.Fill();

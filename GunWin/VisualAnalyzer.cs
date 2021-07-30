@@ -207,7 +207,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          var tokensOnly = _Grammar.Parser == null || string.IsNullOrEmpty(CmbRules.SelectedItem?.ToString());
 
-         var errorListener = new TestingErrorListener();
+         var parseErrorListener = new ParserErrorListener();
+         var lexErrorListener = new LexerErrorListener();
          var analyzer = new Analyzer();
          var options = ParseOption.Tree;
          GuiTraceListener parseTreeListener = null;
@@ -217,7 +218,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             {
                if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
                if (ParseWithSllMode) options |= ParseOption.Sll;
-               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options, null);
+               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options, lexErrorListener);
                if (ParseWithTracing)
                {
                   parseTreeListener = new GuiTraceListener(parser);
@@ -225,7 +226,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                }
 
                parser.RemoveErrorListeners();
-               parser.AddErrorListener(errorListener);
+               parser.AddErrorListener(parseErrorListener);
                analyzer.ExecuteParsing(parser, CmbRules.SelectedItem.ToString());
             }
             else
@@ -260,7 +261,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
 
          _Tokens = analyzer.SyntaxTokens;
-         _ParseErrors = errorListener.Errors;
+         _ParseErrors = new List<ParseMessage>(lexErrorListener.Errors);
+         _ParseErrors.AddRange(parseErrorListener.Errors);
          PopulateTokens(analyzer.SyntaxTokens);
          PopulateParserMessages(_ParseErrors);
          PopulateTraceEvents(parseTreeListener);
@@ -817,13 +819,28 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void ParseMessageListView_Click(object sender, EventArgs e)
       {
          OLVListItem selected;
+         object rowObject = null;
          if ((selected = ParseMessageListView.SelectedItem) != null)
             if (selected.RowObject != null)
-            {
-               var message = (ParseMessage)selected.RowObject;
+               rowObject = selected.RowObject;
+
+         if (rowObject != null)
+         {
+            var message = (ParseMessage)rowObject;
+            if (message.Token != null)
                CodeEditor.SelectSource(message.Token);
-               CodeEditor.Focus();
+            else
+            {
+               CodeEditor.Selection = new Range(
+                  CodeEditor, 
+                  message.Column - 1, 
+                  message.LineNumber - 1, 
+                  message.Column -1, 
+                  message.LineNumber - 1);
+               CodeEditor.DoCaretVisible();
             }
+            CodeEditor.Focus();
+         }
       }
 
       private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)

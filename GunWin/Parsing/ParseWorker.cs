@@ -160,7 +160,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
       /// <returns>A new <see cref="ParserResult" />.</returns>
       private ParserResult HandleParsing(ParserWorkItem work)
       {
-         var errorListener = new TestingErrorListener();
+         var errorListener = new ParserErrorListener();
          var analyzer = new Analyzer();
          var options = work.Options;
          var trace = options.HasFlag(ParseOption.Trace);
