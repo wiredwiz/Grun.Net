@@ -1052,11 +1052,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          if (string.IsNullOrEmpty(CodeEditor.Text))
             CodeEditor.ClearStyle(StyleIndex.All);
-         else
-         {
-            ParseSource();
-            ColorizeTokens(null);
-         }
+         
+         ParseSource();
+         ColorizeTokens(null);
       }
 
       private void SelectTokenFromSource(Common.Grammar.Place sourcePlace)
