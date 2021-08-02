@@ -93,6 +93,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
             LoadApplicationSettings();
             //Console.BackgroundColor = _Settings.EditorBackgroundColor;
             //Console.ForegroundColor = _Settings.EditorTextColor;
+            //Console.Clear();
             //FillCurrentLineBackground();
 
             var parser = new Parser(with => with.HelpWriter = null);
@@ -211,7 +212,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                         }
                                      }
 
-                                     //analyzer.Tokenize(grammar, builder.ToString());
+                                     //analyzer.Tokenize(grammar, builder.ToString(), null);
                                      //HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
                                   }
                                }
