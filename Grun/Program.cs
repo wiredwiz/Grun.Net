@@ -45,7 +45,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using Antlr4.Runtime.Misc;
-
+using Colorful;
 using CommandLine;
 using CommandLine.Text;
 
@@ -91,10 +91,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          try
          {
             LoadApplicationSettings();
-            //Console.BackgroundColor = _Settings.EditorBackgroundColor;
-            //Console.ForegroundColor = _Settings.EditorTextColor;
-            //Console.Clear();
-            //FillCurrentLineBackground();
+            if (_Settings.EnableConsoleSyntaxHighlighting)
+            {
+               Console.BackgroundColor = _Settings.EditorBackgroundColor;
+               Console.ForegroundColor = _Settings.EditorTextColor;
+               Console.Clear();
+               //FillCurrentLineBackground();
+            }
 
             var parser = new Parser(with => with.HelpWriter = null);
             var parserResult = parser.ParseArguments<Options>(args);
@@ -140,10 +143,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             }
 
                             // To be used later once syntax highlighting for the console is enabled.
-                            //var guideResult = grammar.LoadSyntaxHighlightingGuide();
-                            //guide = guideResult != null ? guideResult.Item2 : new HeuristicSyntaxHighlightingGuide(_Settings);
+                            var guideResult = grammar.LoadSyntaxHighlightingGuide();
+                            guide = guideResult != null ? guideResult.Item2 : new HeuristicSyntaxHighlightingGuide(_Settings);
 
                             string data;
+                            var analyzer = new Analyzer();
 
                             if (!string.IsNullOrEmpty(o.FileName))
                             {
@@ -212,8 +216,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                         }
                                      }
 
-                                     //analyzer.Tokenize(grammar, builder.ToString(), null);
-                                     //HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
+                                     if (_Settings.EnableConsoleSyntaxHighlighting)
+                                     {
+                                        analyzer.Tokenize(grammar, builder.ToString(), null);
+                                        HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
+                                     }
                                   }
                                }
 
@@ -231,7 +238,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             // Now we attempt to parse, but still handle a lexer-only grammar.
                             if (grammar.Parser != null)
                             {
-                               var analyzer = new Analyzer();
+                               //var analyzer = new Analyzer();
                                var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options, null);
                                analyzer.ExecuteParsing(grammarParser, o.RuleName);
 
@@ -356,8 +363,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
       {
          var analyzer = new Grammar.Analyzer();
          var tokens = analyzer.Tokenize(grammar, data, null);
-         foreach (var token in tokens)
-            Console.WriteLine(token.ToString());
+         if (_Settings.EnableConsoleSyntaxHighlighting)
+         {
+            StyleSheet styleSheet = new StyleSheet(_Settings.EditorTextColor);
+            styleSheet.AddStyle(@"[[\]]", System.Drawing.Color.Blue);
+            styleSheet.AddStyle("@[0-9]*", System.Drawing.Color.Purple);
+            styleSheet.AddStyle(@"'[^\n]+'", System.Drawing.Color.IndianRed);
+
+            foreach (var token in tokens)
+               Console.WriteLineStyled(token.ToString(), styleSheet);
+         }
+         else
+            foreach (var token in tokens)
+               Console.WriteLine(token.ToString());
       }
 
       private static void LoadGui(string data, GrammarReference grammar, string parserRule)
