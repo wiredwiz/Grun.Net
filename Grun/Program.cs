@@ -363,19 +363,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
       {
          var analyzer = new Grammar.Analyzer();
          var tokens = analyzer.Tokenize(grammar, data, null);
-         if (_Settings.EnableConsoleSyntaxHighlighting)
-         {
-            StyleSheet styleSheet = new StyleSheet(_Settings.EditorTextColor);
-            styleSheet.AddStyle(@"[[\]]", System.Drawing.Color.Blue);
-            styleSheet.AddStyle("@[0-9]*", System.Drawing.Color.Purple);
-            styleSheet.AddStyle(@"'[^\n]+'", System.Drawing.Color.IndianRed);
-
-            foreach (var token in tokens)
-               Console.WriteLineStyled(token.ToString(), styleSheet);
-         }
-         else
-            foreach (var token in tokens)
-               Console.WriteLine(token.ToString());
+         foreach (var token in tokens)
+            Console.WriteLine(token.ToString());
       }
 
       private static void LoadGui(string data, GrammarReference grammar, string parserRule)
