@@ -41,6 +41,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -84,6 +85,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 
       #region Static
 
+      [DllImport("kernel32.dll", EntryPoint = "SetConsoleMode", SetLastError = true,
+          CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+      private static extern bool SetConsoleMode(int hConsoleHandle, int dwMode);
+
       [STAThread]
       // ReSharper disable once MethodTooLong
       private static void Main(string[] args)
@@ -91,13 +96,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          try
          {
             LoadApplicationSettings();
-            if (_Settings.EnableConsoleSyntaxHighlighting)
-            {
-               Console.BackgroundColor = _Settings.EditorBackgroundColor;
-               Console.ForegroundColor = _Settings.EditorTextColor;
-               Console.Clear();
-               //FillCurrentLineBackground();
-            }
+            //if (_Settings.EnableConsoleSyntaxHighlighting)
+            //{
+            //   Console.BackgroundColor = _Settings.EditorBackgroundColor;
+            //   Console.ForegroundColor = _Settings.EditorTextColor;
+            //   Console.Clear();
+            //}
 
             var parser = new Parser(with => with.HelpWriter = null);
             var parserResult = parser.ParseArguments<Options>(args);
@@ -163,7 +167,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             }
                             else
                             {
-                               //var analyzer = new Analyzer();
                                var builder = new StringBuilder();
                                Console.WriteLine(Resources.ReadingFromStandardInputPromptMessage);
                                var currentLine = Console.CursorTop;
@@ -216,11 +219,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                         }
                                      }
 
-                                     if (_Settings.EnableConsoleSyntaxHighlighting)
-                                     {
-                                        analyzer.Tokenize(grammar, builder.ToString(), null);
-                                        HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
-                                     }
+                                     //if (_Settings.EnableConsoleSyntaxHighlighting)
+                                     //{
+                                     //   analyzer.Tokenize(grammar, builder.ToString(), null);
+                                     //   HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
+                                     //}
                                   }
                                }
 
