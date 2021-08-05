@@ -146,9 +146,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                return;
                             }
 
-                            // To be used later once syntax highlighting for the console is enabled.
-                            var guideResult = grammar.LoadSyntaxHighlightingGuide();
-                            guide = guideResult != null ? guideResult.Item2 : new HeuristicSyntaxHighlightingGuide(_Settings);
+                            //// To be used later once syntax highlighting for the console is enabled.
+                            //var guideResult = grammar.LoadSyntaxHighlightingGuide();
+                            //guide = guideResult != null ? guideResult.Item2 : new HeuristicSyntaxHighlightingGuide(_Settings);
 
                             string data;
                             var analyzer = new Analyzer();
@@ -203,14 +203,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                         }
                                         else if (typed.Key == ConsoleKey.Backspace)
                                         {
-                                           if (Console.CursorLeft > 0)
-                                           {
-                                              Console.Write(typed.KeyChar);
-                                              Console.Write(' ');
-                                              Console.Write(typed.KeyChar);
-                                              builder.Remove(builder.Length - 1, 1);
-                                              _Cache.FlushTokensForLine(currentLine - (_ScrollFadeCount + 1));
-                                           }
+                                           if (Console.CursorLeft <= 0)
+                                              continue;
+
+                                           Console.Write(typed.KeyChar);
+                                           Console.Write(' ');
+                                           Console.Write(typed.KeyChar);
+                                           builder.Remove(builder.Length - 1, 1);
+                                           _Cache.FlushTokensForLine(currentLine - (_ScrollFadeCount + 1));
                                         }
                                         else
                                         {
