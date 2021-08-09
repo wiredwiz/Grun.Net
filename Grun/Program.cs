@@ -234,14 +234,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             // If tokens are the only option we've received, we don't need to parse
                             if (options == Grammar.ParseOption.Tokens)
                             {
-                               DisplayTokens(grammar, data);
+                               DisplayTokens(grammar, analyzer, data);
                                return;
                             }
 
                             // Now we attempt to parse, but still handle a lexer-only grammar.
                             if (grammar.Parser != null)
                             {
-                               //var analyzer = new Analyzer();
                                var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options, null);
                                analyzer.ExecuteParsing(grammarParser, o.RuleName);
 
@@ -268,7 +267,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             else
                             {
                                if (options.HasFlag(ParseOption.Tokens))
-                                  DisplayTokens(grammar, data);
+                                  DisplayTokens(grammar, analyzer, data);
 
                                if (showParseTree || writeSvg)
                                   Console.WriteLine(Resources.GrammarHasNoParserErrorMessage, grammar.GrammarName);
@@ -362,9 +361,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          Console.SetCursorPosition(cursorColumn, cursorRow);
       }
 
-      private static void DisplayTokens(GrammarReference grammar, string data)
+      private static void DisplayTokens(GrammarReference grammar, Analyzer analyzer, string data)
       {
-         var analyzer = new Grammar.Analyzer();
          var tokens = analyzer.Tokenize(grammar, data, null);
          foreach (var token in tokens)
             Console.WriteLine(token.ToString());
