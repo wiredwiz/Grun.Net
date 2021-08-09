@@ -72,12 +72,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       public ParserRuleContext ParserContext { get; private set; }
 
       /// <summary>
-      /// Gets a Lisp-style parse tree.
-      /// </summary>
-      /// <value>The string source tree.</value>
-      public string StringSourceTree { get; private set; }
-
-      /// <summary>
       /// Gets a value indicating whether this instance is parsed.
       /// </summary>
       /// <value><c>true</c> if this instance is parsed; otherwise, <c>false</c>.</value>
@@ -128,6 +122,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <exception cref="ArgumentNullException">inputText is <see langword="null" /></exception>
       /// <exception cref="GrammarException">No parser found for grammar \"{grammar.GrammarName}\"</exception>
       /// <exception cref="ArgumentNullException">No parser found for specified grammar.</exception>
+      // ReSharper disable once FlagArgument
       public Parser BuildParserWithOptions([NotNull] GrammarReference grammar, [NotNull] string inputText, ParseOption option, IAntlrErrorListener<int> lexerErrorListener)
       {
          if (grammar is null)
