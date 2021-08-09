@@ -43,10 +43,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
    /// Class for gathering ANTLR4 lexer errors during testing.
    /// Implements the <see cref="IToken" />
    /// </summary>
-   public class LexerErrorListener  : Antlr4.Runtime.IAntlrErrorListener<int>
+   public class LexerErrorListener : IAntlrErrorListener<int>
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="ParserErrorListener"/> class.
+      /// Initializes a new instance of the <see cref="LexerErrorListener"/> class.
       /// </summary>
       public LexerErrorListener()
       {
@@ -78,7 +78,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// the reporting of an error. It is null in the case where
       /// the parser was able to recover in line without exiting the
       /// surrounding rule.</param>
-      /// <exception cref="System.NotImplementedException"></exception>
       /// <remarks>Upon syntax error, notify any interested parties. This is not how to
       /// recover from errors or compute error messages.
       /// <see cref="T:Antlr4.Runtime.IAntlrErrorStrategy" />
@@ -91,8 +90,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// when we discover mismatched token errors that we can recover from
       /// in-line, without returning from the surrounding rule (via the single
       /// token insertion and deletion mechanism).</p></remarks>
-      public void SyntaxError(IRecognizer recognizer, int offendingSymbol, int line, int charPositionInLine, string msg,
-         RecognitionException e)
+      // ReSharper disable once TooManyArguments
+      public void SyntaxError(IRecognizer recognizer, int offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
       {
          Errors.Add(new ParseMessage(line, charPositionInLine + 1, "Lexer", msg, null));
       }

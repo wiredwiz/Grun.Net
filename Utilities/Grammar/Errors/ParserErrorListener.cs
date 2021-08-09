@@ -45,7 +45,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
    /// Implements the <see cref="IToken" />
    /// </summary>
    /// <seealso cref="IToken" />
-   public class ParserErrorListener : Antlr4.Runtime.IAntlrErrorListener<IToken>
+   public class ParserErrorListener : IAntlrErrorListener<IToken>
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="ParserErrorListener"/> class.
