@@ -36,21 +36,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
 
 using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Exceptions;
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 {
    /// <summary>
    /// Class that represents an ANTLR grammar analyzer.
    /// </summary>
+   [SuppressMessage("ReSharper", "RedundantNameQualifier", Justification = "Being explicit never hurts")]
    public class Analyzer
    {
       /// <summary>
@@ -90,8 +90,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="inputText">The input text.</param>
       /// <param name="lexerErrorListener">The lexer error listener.</param>
       /// <returns>A new <see cref="IList{IToken}" />.</returns>
-      /// <exception cref="ArgumentNullException">grammar</exception>
-      /// <exception cref="ArgumentNullException">inputText</exception>
+      /// <exception cref="ArgumentNullException">grammar is <see langword="null" /></exception>
+      /// <exception cref="ArgumentNullException">inputText is <see langword="null" /></exception>
       /// <exception cref="ArgumentNullException"><paramref name="grammar" /> is <see langword="null" />.</exception>
       /// <exception cref="T:System.IO.FileLoadException"><paramref name="inputText" /> is <see langword="null" /> or empty.</exception>
       /// <exception cref="T:System.IO.FileNotFoundException">Grammar assembly could not be loaded.</exception>
@@ -124,8 +124,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="option">The parsing options to use.</param>
       /// <param name="lexerErrorListener">The lexer error listener.</param>
       /// <returns>A new <see cref="Parser" /> instance.</returns>
-      /// <exception cref="ArgumentNullException">grammar</exception>
-      /// <exception cref="ArgumentNullException">inputText</exception>
+      /// <exception cref="ArgumentNullException">grammar is <see langword="null" /></exception>
+      /// <exception cref="ArgumentNullException">inputText is <see langword="null" /></exception>
       /// <exception cref="GrammarException">No parser found for grammar \"{grammar.GrammarName}\"</exception>
       /// <exception cref="ArgumentNullException">No parser found for specified grammar.</exception>
       public Parser BuildParserWithOptions([NotNull] GrammarReference grammar, [NotNull] string inputText, ParseOption option, IAntlrErrorListener<int> lexerErrorListener)
@@ -145,6 +145,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(lexerErrorListener);
          }
+
          var commonTokenStream = new CommonTokenStream(lexer);
 
          commonTokenStream.Fill();
