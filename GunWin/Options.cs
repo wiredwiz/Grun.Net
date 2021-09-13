@@ -34,6 +34,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+
 using CommandLine;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
@@ -41,6 +43,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
    /// <summary>
    /// Class that represents command line options.
    /// </summary>
+   [SuppressMessage("ReSharper", "StyleCop.SA1600", Justification = "Option attributes already describe them well enough")]
    public class Options
    {
       [Option("grammar", HelpText = "ANTLR grammar to load", Required = false)]
