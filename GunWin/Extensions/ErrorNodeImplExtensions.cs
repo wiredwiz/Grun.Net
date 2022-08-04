@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="Place.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// <copyright file="ErrorNodeImplExtensions.cs" company="Edgerunner.org">
+// Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2021, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -34,47 +34,49 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 
 using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
 {
    /// <summary>
-   /// Struct representing a placement within some source.
+   /// Class containing extension methods for the ErrorNodeImpl class.
    /// </summary>
-   public struct Place
+   public static class ErrorNodeImplExtensions
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="Place"/> struct.
+      /// Determines whether this ErrorNodeImpl contains the specified source selection.
       /// </summary>
-      /// <param name="line">The line number.</param>
-      /// <param name="position">The position.</param>
-      public Place(int line, int position)
+      /// <param name="node">The error node implementation.</param>
+      /// <param name="selectionStart">The source selection start.</param>
+      /// <param name="selectionEnd">The source selection end.</param>
+      /// <returns><c>true</c> if node contains the specified source selection; otherwise, <c>false</c>.</returns>
+      public static bool ContainsSourceSelection([NotNull] this ErrorNodeImpl node, Place selectionStart, Place selectionEnd)
       {
-         Line = line;
-         Position = position;
+         var nodeStart = new Place(node.Symbol.Column, node.Symbol.Line - 1);
+         Place nodeEnd;
+         if (node.Symbol.StartIndex != -1)
+         {
+            var spot = node.Symbol.GetEndPlace();
+            nodeEnd = new Place(spot.Position, spot.Line - 1);
+         }
+         else
+            nodeEnd = nodeStart;
+
+         if (nodeStart.Line > selectionStart.Line)
+            return false;
+         if (nodeStart.Line == selectionStart.Line && nodeStart.Position > selectionStart.Position)
+            return false;
+         if (nodeEnd.Line < selectionEnd.Line)
+            return false;
+         if (nodeEnd.Line == selectionEnd.Line && (nodeEnd.Position + 1) < selectionEnd.Position)
+            return false;
+
+         return true;
       }
-
-      /// <summary>
-      /// Gets the line number.
-      /// </summary>
-      /// <value>The line number.</value>
-      public int Line { get; }
-
-      /// <summary>
-      /// Gets the position within the line.
-      /// </summary>
-      /// <value>The position.</value>
-      /// <remarks>The position is 0 index based.</remarks>
-      public int Position { get; }
-
-      /// <summary>
-      /// Returns the representation of an empty source placement.
-      /// </summary>
-      /// <value>The empty placement.</value>
-      public static Place Empty => new Place(-1, -1);
    }
 }

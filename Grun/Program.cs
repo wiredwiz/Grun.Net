@@ -41,11 +41,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
 using Antlr4.Runtime.Misc;
-
+using Colorful;
 using CommandLine;
 using CommandLine.Text;
 
@@ -84,6 +85,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 
       #region Static
 
+      [DllImport("kernel32.dll", EntryPoint = "SetConsoleMode", SetLastError = true,
+          CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+      private static extern bool SetConsoleMode(int hConsoleHandle, int dwMode);
+
       [STAThread]
       // ReSharper disable once MethodTooLong
       private static void Main(string[] args)
@@ -91,9 +96,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          try
          {
             LoadApplicationSettings();
-            //Console.BackgroundColor = _Settings.EditorBackgroundColor;
-            //Console.ForegroundColor = _Settings.EditorTextColor;
-            //FillCurrentLineBackground();
+            //if (_Settings.EnableConsoleSyntaxHighlighting)
+            //{
+            //   Console.BackgroundColor = _Settings.EditorBackgroundColor;
+            //   Console.ForegroundColor = _Settings.EditorTextColor;
+            //   Console.Clear();
+            //}
 
             var parser = new Parser(with => with.HelpWriter = null);
             var parserResult = parser.ParseArguments<Options>(args);
@@ -138,11 +146,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                return;
                             }
 
-                            // To be used later once syntax highlighting for the console is enabled.
+                            //// To be used later once syntax highlighting for the console is enabled.
                             //var guideResult = grammar.LoadSyntaxHighlightingGuide();
                             //guide = guideResult != null ? guideResult.Item2 : new HeuristicSyntaxHighlightingGuide(_Settings);
 
                             string data;
+                            var analyzer = new Analyzer();
 
                             if (!string.IsNullOrEmpty(o.FileName))
                             {
@@ -158,7 +167,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             }
                             else
                             {
-                               //var analyzer = new Analyzer();
                                var builder = new StringBuilder();
                                Console.WriteLine(Resources.ReadingFromStandardInputPromptMessage);
                                var currentLine = Console.CursorTop;
@@ -195,14 +203,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                         }
                                         else if (typed.Key == ConsoleKey.Backspace)
                                         {
-                                           if (Console.CursorLeft > 0)
-                                           {
-                                              Console.Write(typed.KeyChar);
-                                              Console.Write(' ');
-                                              Console.Write(typed.KeyChar);
-                                              builder.Remove(builder.Length - 1, 1);
-                                              _Cache.FlushTokensForLine(currentLine - (_ScrollFadeCount + 1));
-                                           }
+                                           if (Console.CursorLeft <= 0)
+                                              continue;
+
+                                           Console.Write(typed.KeyChar);
+                                           Console.Write(' ');
+                                           Console.Write(typed.KeyChar);
+                                           builder.Remove(builder.Length - 1, 1);
+                                           _Cache.FlushTokensForLine(currentLine - (_ScrollFadeCount + 1));
                                         }
                                         else
                                         {
@@ -211,8 +219,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                         }
                                      }
 
-                                     //analyzer.Tokenize(grammar, builder.ToString());
-                                     //HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
+                                     //if (_Settings.EnableConsoleSyntaxHighlighting)
+                                     //{
+                                     //   analyzer.Tokenize(grammar, builder.ToString(), null);
+                                     //   HighlightSyntaxInConsole(currentLine - (_ScrollFadeCount + 1), analyzer, guide);
+                                     //}
                                   }
                                }
 
@@ -223,15 +234,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             // If tokens are the only option we've received, we don't need to parse
                             if (options == Grammar.ParseOption.Tokens)
                             {
-                               DisplayTokens(grammar, data);
+                               DisplayTokens(grammar, analyzer, data);
                                return;
                             }
 
                             // Now we attempt to parse, but still handle a lexer-only grammar.
                             if (grammar.Parser != null)
                             {
-                               var analyzer = new Analyzer();
-                               var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options);
+                               var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options, null);
                                analyzer.ExecuteParsing(grammarParser, o.RuleName);
 
                                if (showParseTree)
@@ -257,7 +267,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             else
                             {
                                if (options.HasFlag(ParseOption.Tokens))
-                                  DisplayTokens(grammar, data);
+                                  DisplayTokens(grammar, analyzer, data);
 
                                if (showParseTree || writeSvg)
                                   Console.WriteLine(Resources.GrammarHasNoParserErrorMessage, grammar.GrammarName);
@@ -351,26 +361,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          Console.SetCursorPosition(cursorColumn, cursorRow);
       }
 
-      private static void DisplayTokens(GrammarReference grammar, string data)
+      private static void DisplayTokens(GrammarReference grammar, Analyzer analyzer, string data)
       {
-         var analyzer = new Grammar.Analyzer();
-         var tokens = analyzer.Tokenize(grammar, data);
+         var tokens = analyzer.Tokenize(grammar, data, null);
          foreach (var token in tokens)
             Console.WriteLine(token.ToString());
       }
 
       private static void LoadGui(string data, GrammarReference grammar, string parserRule)
       {
-         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            var visualAnalyzer = new VisualAnalyzer();
-            visualAnalyzer.SetSourceCode(data);
-            visualAnalyzer.SetGrammar(grammar);
-            if (grammar.Parser != null || !parserRule.Equals("tokens", StringComparison.InvariantCultureIgnoreCase))
-               visualAnalyzer.SetDefaultParserRule(parserRule);
-            Application.Run(visualAnalyzer);
-         }
+         Application.EnableVisualStyles();
+         Application.SetCompatibleTextRenderingDefault(false);
+         var visualAnalyzer = new VisualAnalyzer();
+         visualAnalyzer.SetSourceCode(data);
+         visualAnalyzer.SetGrammar(grammar);
+         if (grammar.Parser != null || !parserRule.Equals("tokens", StringComparison.InvariantCultureIgnoreCase))
+            visualAnalyzer.SetDefaultParserRule(parserRule);
+         Application.Run(visualAnalyzer);
       }
 
       /// <summary>

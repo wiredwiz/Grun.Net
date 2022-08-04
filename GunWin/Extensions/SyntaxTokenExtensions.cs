@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="Place.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// <copyright file="SyntaxTokenExtensions.cs" company="Edgerunner.org">
+// Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2021, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -34,47 +34,34 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using Antlr4.Runtime;
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
-using JetBrains.Annotations;
-
-using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
-
-namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
 {
    /// <summary>
-   /// Struct representing a placement within some source.
+   /// Class containing extension methods for the SyntaxToken class.
    /// </summary>
-   public struct Place
+   public static class SyntaxTokenExtensions
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="Place"/> struct.
+      /// Determines whether this SyntaxToken contains the specified source selection.
       /// </summary>
-      /// <param name="line">The line number.</param>
-      /// <param name="position">The position.</param>
-      public Place(int line, int position)
+      /// <param name="token">The syntax token.</param>
+      /// <param name="selectionStart">The source selection start.</param>
+      /// <param name="selectionEnd">The source selection end.</param>
+      /// <returns><c>true</c> if token contains the specified source selection; otherwise, <c>false</c>.</returns>
+      public static bool ContainsSourceSelection(this SyntaxToken token, Place selectionStart, Place selectionEnd)
       {
-         Line = line;
-         Position = position;
+         if (token.LineNumber > selectionStart.Line)
+            return false;
+         if (token.EndingLineNumber < selectionEnd.Line)
+            return false;
+         if (token.LineNumber == selectionStart.Line && token.ColumnPosition > selectionStart.Position + 1)
+            return false;
+         if (token.EndingLineNumber == selectionEnd.Line && (token.EndingColumnPosition + 1) < selectionEnd.Position)
+            return false;
+
+         return true;
       }
-
-      /// <summary>
-      /// Gets the line number.
-      /// </summary>
-      /// <value>The line number.</value>
-      public int Line { get; }
-
-      /// <summary>
-      /// Gets the position within the line.
-      /// </summary>
-      /// <value>The position.</value>
-      /// <remarks>The position is 0 index based.</remarks>
-      public int Position { get; }
-
-      /// <summary>
-      /// Returns the representation of an empty source placement.
-      /// </summary>
-      /// <value>The empty placement.</value>
-      public static Place Empty => new Place(-1, -1);
    }
 }

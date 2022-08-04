@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="TestingErrorListener.cs" company="Edgerunner.org">
+// <copyright file="ParserErrorListener.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
 // </copyright>
 // 
@@ -45,12 +45,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
    /// Implements the <see cref="IToken" />
    /// </summary>
    /// <seealso cref="IToken" />
-   public class TestingErrorListener : Antlr4.Runtime.IAntlrErrorListener<IToken>
+   public class ParserErrorListener : IAntlrErrorListener<IToken>
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="TestingErrorListener"/> class.
+      /// Initializes a new instance of the <see cref="ParserErrorListener"/> class.
       /// </summary>
-      public TestingErrorListener()
+      public ParserErrorListener()
       {
          Errors = new List<ParseMessage>();
       }
@@ -101,7 +101,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
          string msg,
          RecognitionException e)
       {
-         Errors.Add(new ParseMessage(line, charPositionInLine + 1, msg, offendingSymbol));
+         // TODO: add multi-lingual support for source literal
+         Errors.Add(new ParseMessage(line, charPositionInLine + 1, "Parser", msg, offendingSymbol));
       }
    }
 }

@@ -237,6 +237,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
       public int EditorTabLength { get; set; }
 
       /// <summary>
+      /// Gets or sets whether syntax highlighting is enabled for the Grun console tool.
+      /// </summary>
+      /// <value>True if syntax highlighting is enabled, false otherwise.</value>
+      public bool EnableConsoleSyntaxHighlighting { get; set; }
+
+      /// <summary>
       /// Gets or sets the parser message font family.
       /// </summary>
       /// <value>The parser message font family.</value>
@@ -280,6 +286,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          LoadSyntaxHighlightingSettings(appSettings);
          LoadGraphingNodeColorSettings(appSettings);
          LoadEditorSettings(appSettings);
+         LoadConsoleSettings(appSettings);
          LoadParserMessageFontSettings(appSettings);
       }
 
@@ -292,6 +299,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          LoadSyntaxHighlightingSettings(null);
          LoadGraphingNodeColorSettings(null);
          LoadEditorSettings(null);
+         LoadConsoleSettings(null);
          LoadParserMessageFontSettings(null);
       }
 
@@ -442,6 +450,28 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          // Fetch EditorWordWrapIndent setting
          result = appSettings["EditorTabLength"]?.Value ?? string.Empty;
          EditorTabLength = !int.TryParse(result, out settingValueInt) ? defTabLength : settingValueInt;
+      }
+
+      private void LoadConsoleSettings(KeyValueConfigurationCollection appSettings)
+      {
+         var defEnableSyntaxHighlighting = false;
+
+         if (appSettings == null)
+         {
+            EnableConsoleSyntaxHighlighting = defEnableSyntaxHighlighting;
+            return;
+         }
+
+         // Fetch ConsoleTextColor setting
+         var result = appSettings["EnableConsoleSyntaxHighlighting"]?.Value ?? string.Empty;
+         try
+         {
+            EnableConsoleSyntaxHighlighting = !string.IsNullOrEmpty(result) ? Convert.ToBoolean(result) : defEnableSyntaxHighlighting;
+         }
+         catch (Exception)
+         {
+            EnableConsoleSyntaxHighlighting = defEnableSyntaxHighlighting;
+         }
       }
 
       private void LoadParserMessageFontSettings(KeyValueConfigurationCollection appSettings)

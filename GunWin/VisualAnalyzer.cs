@@ -38,6 +38,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -59,6 +60,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 
+using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
@@ -70,6 +72,7 @@ using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting;
+using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Tracing;
@@ -110,7 +113,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private EditorGuideMonitor _GuideMonitor;
 
+      private ITree _ParseTree;
+
       private string _CurrentSourceFile;
+
+      private double _TrackBarZoomIncrement = 0.25;
+
+      private bool _EnableTrackBarZoom = true;
 
       #region Constructors And Finalizers
 
@@ -198,7 +207,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          var tokensOnly = _Grammar.Parser == null || string.IsNullOrEmpty(CmbRules.SelectedItem?.ToString());
 
-         var errorListener = new TestingErrorListener();
+         var parseErrorListener = new ParserErrorListener();
+         var lexErrorListener = new LexerErrorListener();
          var analyzer = new Analyzer();
          var options = ParseOption.Tree;
          GuiTraceListener parseTreeListener = null;
@@ -208,7 +218,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             {
                if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
                if (ParseWithSllMode) options |= ParseOption.Sll;
-               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options);
+               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options, lexErrorListener);
                if (ParseWithTracing)
                {
                   parseTreeListener = new GuiTraceListener(parser);
@@ -216,11 +226,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                }
 
                parser.RemoveErrorListeners();
-               parser.AddErrorListener(errorListener);
+               parser.AddErrorListener(parseErrorListener);
                analyzer.ExecuteParsing(parser, CmbRules.SelectedItem.ToString());
             }
             else
-               analyzer.Tokenize(_Grammar, CodeEditor.Text);
+               analyzer.Tokenize(_Grammar, CodeEditor.Text, null);
          }
          catch (Exception ex)
          {
@@ -232,6 +242,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             };
             errorDisplay.ShowDialog();
          }
+
+         _ParseTree = analyzer.ParserContext;
 
          try
          {
@@ -249,7 +261,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
 
          _Tokens = analyzer.SyntaxTokens;
-         _ParseErrors = errorListener.Errors;
+         _ParseErrors = new List<ParseMessage>(lexErrorListener.Errors);
+         _ParseErrors.AddRange(parseErrorListener.Errors);
          PopulateTokens(analyzer.SyntaxTokens);
          PopulateParserMessages(_ParseErrors);
          PopulateTraceEvents(parseTreeListener);
@@ -310,6 +323,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             _GuideMonitor = null;
             _Registry = new StyleRegistry(new HeuristicSyntaxHighlightingGuide(_Settings));
          }
+
+         ColorizeTokens(null);
       }
 
       private void GuideAssemblyChanged(object sender, SyntaxHighlightingGuideReference e)
@@ -373,9 +388,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void Viewer_MouseWheel(object sender, MouseEventArgs e)
       {
          var factor = Math.Max(
-            Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / 0.1), GraphZoomTrackBar.Maximum),
+            Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / _TrackBarZoomIncrement), GraphZoomTrackBar.Maximum),
             GraphZoomTrackBar.Minimum);
          GraphZoomTrackBar.Value = factor;
+         Debug.WriteLine($"Scroll zoom factor {factor}");
       }
 
       private void AddTreeBranchesAndLeaves(TreeNode treeNode, ITree tree)
@@ -561,8 +577,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void GraphZoomTrackBar_ValueChanged(object sender, EventArgs e)
       {
-         if (_Viewer != null)
-            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
+         if (_EnableTrackBarZoom)
+            if (_Viewer != null)
+               _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
       }
 
       private void HeuristicHighlightingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -585,10 +602,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.LayoutAlgorithmSettingsButtonVisible = false;
          _Viewer.Click += Viewer_Click;
          _Viewer.MouseWheel += Viewer_MouseWheel;
+         _Viewer.HomeButtonPressed += _Viewer_HomeButtonPressed;
+         _Viewer.ZoomButtonsVisible = false;
+         _Viewer.WindowZoomVisible = false;
          var viewerContextMenu = new ContextMenu();
          var menuItem = viewerContextMenu.MenuItems.Add("Graph from here");
          menuItem.Click += Menu_GraphFromHere_Click;
          _Viewer.ContextMenu = viewerContextMenu;
+      }
+
+      private void _Viewer_HomeButtonPressed(object sender, EventArgs e)
+      {
+         // We toggle this setting to prevent a potential crash
+         // If the setting the track bar were to set the zoom on the viewer, it can crash due to the timing of changes occurring in the graph
+         // Beyond that, setting the Zoom back to 1 would be redundant since pressing the home button has essentially done this.
+         _EnableTrackBarZoom = false;
+         GraphZoomTrackBar.Value = 0;
+         _EnableTrackBarZoom = true;
       }
 
       private void LoadApplicationSettings()
@@ -789,13 +819,28 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void ParseMessageListView_Click(object sender, EventArgs e)
       {
          OLVListItem selected;
+         object rowObject = null;
          if ((selected = ParseMessageListView.SelectedItem) != null)
             if (selected.RowObject != null)
-            {
-               var message = (ParseMessage)selected.RowObject;
+               rowObject = selected.RowObject;
+
+         if (rowObject != null)
+         {
+            var message = (ParseMessage)rowObject;
+            if (message.Token != null)
                CodeEditor.SelectSource(message.Token);
-               CodeEditor.Focus();
+            else
+            {
+               CodeEditor.Selection = new Range(
+                  CodeEditor, 
+                  message.Column - 1, 
+                  message.LineNumber - 1, 
+                  message.Column -1, 
+                  message.LineNumber - 1);
+               CodeEditor.DoCaretVisible();
             }
+            CodeEditor.Focus();
+         }
       }
 
       private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
@@ -871,7 +916,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             _Viewer.Graph = graph;
             if (zoomFactor.HasValue)
                GraphZoomTrackBar.Value = zoomFactor.Value;
-            _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
+            _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
             _Viewer.ResumeLayout();
          }
          catch (Exception ex)
@@ -895,7 +940,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.Graph = graph;
          if (zoomFactor.HasValue)
             GraphZoomTrackBar.Value = zoomFactor.Value;
-         _Viewer.ZoomF = (GraphZoomTrackBar.Value * 0.1) + 1.0;
+         _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
          _Viewer.ResumeLayout();
       }
 
@@ -1007,10 +1052,56 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          if (string.IsNullOrEmpty(CodeEditor.Text))
             CodeEditor.ClearStyle(StyleIndex.All);
-         else
+         
+         ParseSource();
+         ColorizeTokens(null);
+      }
+
+      private void SelectTokenFromSource(Common.Grammar.Place sourcePlace)
+      {
+         foreach (var token in _Tokens)
+           if (token.LineNumber == sourcePlace.Line)
+           {
+             if (sourcePlace.IsWithinTokenBounds(token))
+             {
+               // We have found the related source token, now we select it in the list and source.
+               tokenListView.SelectedObject = token;
+               var selectedPos = tokenListView.SelectedItem.Position;
+               int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
+               tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
+               CodeEditor.SelectSource(token.ActualParserToken);
+               tabControlParse.SelectTab(1);
+               CodeEditor.Select();
+             }
+           }
+      }
+
+      private void SelectParserRuleFromSourceSelection(Common.Grammar.Place selectionStart, Common.Grammar.Place selectionEnd)
+      {
+         var node = _ParseTree?.FindTreeNodeForSourceSelection(selectionStart, selectionEnd);
+         if (node != null)
          {
-            ParseSource();
-            ColorizeTokens(null);
+            var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
+            if (graphNode != null)
+            {
+               // First we select the graph tab in advance, to avoid bugs that can occur if it is selected closer to the viewer being manipulated
+               tabControlParse.SelectTab(0);
+               var verticalAxisRatio = Convert.ToInt32(_Viewer.Graph.Height / graphNode.Height * 2);
+               var horizontalAxisRatio = Convert.ToInt32(_Viewer.Graph.Width / graphNode.Width * 2);
+
+               // Center the viewer on the selected node and zoom in
+               _Viewer.CenterToPoint(graphNode.GeometryNode.Center);
+               GraphZoomTrackBar.Value = Math.Min(200, Math.Min(horizontalAxisRatio, verticalAxisRatio));
+               _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
+               _Viewer.Refresh();
+
+               // After we have refreshed the transformed view, we select the node for dragging so that it displays with a border for emphasis
+               _Viewer.SelectGraphObjectAtLocation(graphNode.GeometryNode.Center);
+
+               // Lastly we set focus back to the editor window and select the entire block of source that corresponds to the node
+               CodeEditor.Select();
+               CodeEditor.SelectSource(graphNode.UserData as ITree ?? throw new InvalidOperationException());
+            }
          }
       }
 
@@ -1080,6 +1171,33 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             };
             errorDisplay.ShowDialog();
          }
+      }
+
+      private void selectTokenToolStripMenuItem1_Click(object sender, EventArgs e)
+      {
+         SelectTokenFromSource(
+            new Common.Grammar.Place(
+               CodeEditor.Selection.Start.iLine + 1, 
+               CodeEditor.Selection.Start.iChar));
+      }
+
+      private void selectParserRuleToolStripMenuItem1_Click(object sender, EventArgs e)
+      {
+         var start = new Common.Grammar.Place(CodeEditor.Selection.Start.iLine + 1, CodeEditor.Selection.Start.iChar);
+         var end = new Common.Grammar.Place(CodeEditor.Selection.End.iLine + 1, CodeEditor.Selection.End.iChar);
+
+         // If we don't actually have a selection, then create a selection range extending one character past the cursor
+         if (end.Equals(start))
+            end = new Common.Grammar.Place(end.Line, end.Position + 1);
+
+         if (end.Line < start.Line || (end.Line == start.Line && end.Position < start.Position))
+         {
+            var temp = start;
+            start = end;
+            end = temp;
+         }
+
+         SelectParserRuleFromSourceSelection(start, end);
       }
    }
 }

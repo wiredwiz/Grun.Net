@@ -71,6 +71,9 @@
          this.GoToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.FindToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.ReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+         this.selectTokenToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+         this.selectParserRuleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
          this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.HeuristicHighlightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.ShowLexerErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +88,7 @@
          this.ParseMessageListView = new BrightIdeasSoftware.ObjectListView();
          this.colLineNumber = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colPosition = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+         this.colSource = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.colMessage = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
          this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
          this.StripLabelGrammar = new System.Windows.Forms.ToolStripStatusLabel();
@@ -548,7 +552,10 @@
          this.EditToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.GoToToolStripMenuItem,
             this.FindToolStripMenuItem,
-            this.ReplaceToolStripMenuItem});
+            this.ReplaceToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.selectTokenToolStripMenuItem1,
+            this.selectParserRuleToolStripMenuItem1});
          this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
          this.EditToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
          this.EditToolStripMenuItem.Text = "&Edit";
@@ -557,7 +564,7 @@
          // 
          this.GoToToolStripMenuItem.Name = "GoToToolStripMenuItem";
          this.GoToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-         this.GoToToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.GoToToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
          this.GoToToolStripMenuItem.Text = "Go To";
          this.GoToToolStripMenuItem.Click += new System.EventHandler(this.GoToToolStripMenuItem_Click);
          // 
@@ -565,7 +572,7 @@
          // 
          this.FindToolStripMenuItem.Name = "FindToolStripMenuItem";
          this.FindToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-         this.FindToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.FindToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
          this.FindToolStripMenuItem.Text = "&Find";
          this.FindToolStripMenuItem.Click += new System.EventHandler(this.FindToolStripMenuItem_Click);
          // 
@@ -573,9 +580,30 @@
          // 
          this.ReplaceToolStripMenuItem.Name = "ReplaceToolStripMenuItem";
          this.ReplaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-         this.ReplaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.ReplaceToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
          this.ReplaceToolStripMenuItem.Text = "&Replace";
          this.ReplaceToolStripMenuItem.Click += new System.EventHandler(this.ReplaceToolStripMenuItem_Click);
+         // 
+         // toolStripSeparator4
+         // 
+         this.toolStripSeparator4.Name = "toolStripSeparator4";
+         this.toolStripSeparator4.Size = new System.Drawing.Size(204, 6);
+         // 
+         // selectTokenToolStripMenuItem1
+         // 
+         this.selectTokenToolStripMenuItem1.Name = "selectTokenToolStripMenuItem1";
+         this.selectTokenToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+         this.selectTokenToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+         this.selectTokenToolStripMenuItem1.Text = "Select &Token";
+         this.selectTokenToolStripMenuItem1.Click += new System.EventHandler(this.selectTokenToolStripMenuItem1_Click);
+         // 
+         // selectParserRuleToolStripMenuItem1
+         // 
+         this.selectParserRuleToolStripMenuItem1.Name = "selectParserRuleToolStripMenuItem1";
+         this.selectParserRuleToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+         this.selectParserRuleToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+         this.selectParserRuleToolStripMenuItem1.Text = "Select Parser &Rule";
+         this.selectParserRuleToolStripMenuItem1.Click += new System.EventHandler(this.selectParserRuleToolStripMenuItem1_Click);
          // 
          // optionsToolStripMenuItem
          // 
@@ -678,10 +706,12 @@
          // 
          this.ParseMessageListView.AllColumns.Add(this.colLineNumber);
          this.ParseMessageListView.AllColumns.Add(this.colPosition);
+         this.ParseMessageListView.AllColumns.Add(this.colSource);
          this.ParseMessageListView.AllColumns.Add(this.colMessage);
          this.ParseMessageListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colLineNumber,
             this.colPosition,
+            this.colSource,
             this.colMessage});
          this.ParseMessageListView.Dock = System.Windows.Forms.DockStyle.Fill;
          this.ParseMessageListView.FullRowSelect = true;
@@ -706,6 +736,12 @@
          this.colPosition.AspectName = "Column";
          this.colPosition.CellPadding = null;
          this.colPosition.Text = "Position";
+         // 
+         // colSource
+         // 
+         this.colSource.AspectName = "Source";
+         this.colSource.CellPadding = null;
+         this.colSource.Text = "Source";
          // 
          // colMessage
          // 
@@ -740,7 +776,7 @@
          // 
          this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.StripLabelGrammar.Name = "StripLabelGrammar";
-         this.StripLabelGrammar.Size = new System.Drawing.Size(69, 17);
+         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
          this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName
@@ -756,7 +792,7 @@
          this.stripLabelNode.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.stripLabelNode.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
          this.stripLabelNode.Name = "stripLabelNode";
-         this.stripLabelNode.Size = new System.Drawing.Size(116, 17);
+         this.stripLabelNode.Size = new System.Drawing.Size(115, 17);
          this.stripLabelNode.Text = "Parse Tree Nodes:";
          // 
          // stripLabelNodeCount
@@ -939,6 +975,10 @@
       private System.Windows.Forms.ToolStripMenuItem ShowLexerErrorsToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem ReplaceToolStripMenuItem;
       private System.Windows.Forms.SaveFileDialog saveFileDialog;
+      private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+      private System.Windows.Forms.ToolStripMenuItem selectTokenToolStripMenuItem1;
+      private System.Windows.Forms.ToolStripMenuItem selectParserRuleToolStripMenuItem1;
+      private BrightIdeasSoftware.OLVColumn colSource;
    }
 }
 

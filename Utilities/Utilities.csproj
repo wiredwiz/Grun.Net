@@ -53,13 +53,14 @@
     <Compile Include="Exceptions\GrammarConflictException.cs" />
     <Compile Include="Exceptions\GrammarException.cs" />
     <Compile Include="Extensions\GrammarReferenceExtensions.cs" />
+    <Compile Include="Grammar\Errors\LexerErrorListener.cs" />
     <Compile Include="Grammar\GrammarReference.cs" />
     <Compile Include="Grammar\Analyzer.cs" />
     <Compile Include="Grammar\Errors\ParseMessage.cs" />
     <Compile Include="Grammar\Loader.cs" />
     <Compile Include="Grammar\ParseOption.cs" />
     <Compile Include="Grammar\Scanner.cs" />
-    <Compile Include="Grammar\Errors\TestingErrorListener.cs" />
+    <Compile Include="Grammar\Errors\ParserErrorListener.cs" />
     <Compile Include="Grammar\SyntaxHighlightingGuideReference.cs" />
     <Compile Include="Monitors\EditorGuideMonitor.cs" />
     <Compile Include="Monitors\GrammarMonitor.cs" />

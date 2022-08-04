@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="ParseMessage.cs" company="Edgerunner.org">
-// Copyright 2020 Thaddeus Ryker
+// <copyright file="ITokenExtensions.cs" company="Edgerunner.org">
+// Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2020, Thaddeus Ryker
+// Copyright (c) 2021, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -36,59 +36,38 @@
 
 using Antlr4.Runtime;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
+using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
+
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
 {
    /// <summary>
-   /// Struct that represents a parsing error.
+   /// Class containing extension methods for the IToken interface.
    /// </summary>
-   public struct ParseMessage
+   // ReSharper disable once InconsistentNaming
+   public static class ITokenExtensions
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="ParseMessage" /> struct.
+      /// Determines whether this IToken contains the specified source selection.
       /// </summary>
-      /// <param name="lineNumber">The line number.</param>
-      /// <param name="column">The column.</param>
-      /// <param name="source">The message source.</param>
-      /// <param name="message">The message.</param>
-      /// <param name="token">The token.</param>
-      // ReSharper disable once TooManyDependencies
-      public ParseMessage(int lineNumber, int column, string source, string message, IToken token)
+      /// <param name="token">The token interface.</param>
+      /// <param name="selectionStart">The source selection start.</param>
+      /// <param name="selectionEnd">The source selection end.</param>
+      /// <returns><c>true</c> if token contains the specified source selection; otherwise, <c>false</c>.</returns>
+      public static bool ContainsSourceSelection(this IToken token, Place selectionStart, Place selectionEnd)
       {
-         LineNumber = lineNumber;
-         Column = column;
-         Source = source;
-         Message = message;
-         Token = token;
+         if (token.Line > selectionStart.Line)
+            return false;
+         if (token.Line == selectionStart.Line && token.Column > selectionStart.Position)
+            return false;
+
+         var tokenEnd = token.GetEndPlace();
+         if (tokenEnd.Line < selectionEnd.Line)
+            return false;
+         if (tokenEnd.Line == selectionEnd.Line && (tokenEnd.Position + 1) < selectionEnd.Position)
+            return false;
+
+         return true;
       }
-
-      /// <summary>
-      /// Gets or sets the line number.
-      /// </summary>
-      /// <value>The line number.</value>
-      public int LineNumber { get; set; }
-
-      /// <summary>
-      /// Gets or sets the column position.
-      /// </summary>
-      /// <value>The column position.</value>
-      public int Column { get; set; }
-
-      /// <summary>
-      /// Gets or sets the message.
-      /// </summary>
-      /// <value>The message.</value>
-      public string Message { get; set; }
-
-      /// <summary>
-      /// Gets or sets the message source.
-      /// </summary>
-      /// <value>The source.</value>
-      public string Source { get; set; }
-
-      /// <summary>
-      /// Gets or sets the related token.
-      /// </summary>
-      /// <value>The related token.</value>
-      public IToken Token { get; set; }
    }
 }
