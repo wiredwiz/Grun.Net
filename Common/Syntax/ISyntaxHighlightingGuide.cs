@@ -34,6 +34,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Collections.Generic;
 using System.Drawing;
 
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
@@ -47,6 +48,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Syntax
       /// </summary>
       /// <value>The name of the grammar.</value>
       string GrammarName { get; }
+
+      /// <summary>Gets all grammar names this syntax highlighting guide supports.</summary>
+      /// <value>All grammar names.</value>
+      /// <remarks>Usually used for a cluster of grammar variants that share structure.</remarks>
+      IList<string> AllGrammarNames { get; }
 
       /// <summary>
       /// Gets the error indicator color.

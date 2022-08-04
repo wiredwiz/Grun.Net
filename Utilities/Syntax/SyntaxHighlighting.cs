@@ -37,7 +37,8 @@
 #endregion
 
 using System;
-
+using System.Collections;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
@@ -89,7 +90,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Syntax
          foreach (var reference in guideReferences)
          {
             var guide = loader.LoadSyntaxGuide(reference);
-            if (guide != null && guide.GrammarName == grammar.GrammarName)
+            if (guide != null && (guide.GrammarName == grammar.GrammarName || guide.AllGrammarNames.Contains(grammar.GrammarName)))
                return new Tuple<SyntaxHighlightingGuideReference, ISyntaxHighlightingGuide>(reference, guide);
          }
 

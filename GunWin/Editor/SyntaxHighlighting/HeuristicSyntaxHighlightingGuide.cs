@@ -64,6 +64,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// <param name="settings">The settings.</param>
       public HeuristicSyntaxHighlightingGuide(Settings settings)
       {
+         AllGrammarNames = new List<string>();
          _Settings = settings;
          _ForegroundColors = new Dictionary<string, Color>();
          _BackgroundColors = new Dictionary<string, Color>();
@@ -151,6 +152,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "EXCEPT":
             case "CATCH":
             case "FINALLY":
+            case "ENDTRY":
             case "THROW":
             case "RAISE":
 
@@ -308,6 +310,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       }
 
       public string GrammarName { get; set; }
+      public IList<string> AllGrammarNames { get; }
 
       public Color GetErrorIndicatorColor()
       {
