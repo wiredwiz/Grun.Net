@@ -52,11 +52,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
       /// <returns><c>true</c> if token contains the specified source selection; otherwise, <c>false</c>.</returns>
       public static bool ContainsSourceSelection(this SyntaxToken token, Place selectionStart, Place selectionEnd)
       {
-         if (token.LineNumber > selectionStart.Line)
+         if (token.Line > selectionStart.Line)
             return false;
          if (token.EndingLineNumber < selectionEnd.Line)
             return false;
-         if (token.LineNumber == selectionStart.Line && token.ColumnPosition > selectionStart.Position + 1)
+         if (token.Line == selectionStart.Line && token.ColumnPosition > selectionStart.Position + 1)
             return false;
          if (token.EndingLineNumber == selectionEnd.Line && (token.EndingColumnPosition + 1) < selectionEnd.Position)
             return false;

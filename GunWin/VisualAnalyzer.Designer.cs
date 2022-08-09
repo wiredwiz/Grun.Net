@@ -197,6 +197,7 @@
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -334,22 +335,22 @@
          // 
          // colText
          // 
-         this.colText.AspectName = "Text";
+         this.colText.AspectName = "DisplayText";
          this.colText.CellPadding = null;
          this.colText.Groupable = false;
-         this.colText.Text = "Text";
+         this.colText.Text = "DisplayText";
          this.colText.Width = 102;
          // 
          // colType
          // 
-         this.colType.AspectName = "Type";
+         this.colType.AspectName = "TypeName";
          this.colType.CellPadding = null;
-         this.colType.Text = "Type";
+         this.colType.Text = "TypeName";
          this.colType.Width = 119;
          // 
          // colLine
          // 
-         this.colLine.AspectName = "LineNumber";
+         this.colLine.AspectName = "Line";
          this.colLine.CellPadding = null;
          this.colLine.Text = "Line";
          // 
@@ -363,20 +364,20 @@
          // 
          // colChannel
          // 
-         this.colChannel.AspectName = "ChannelId";
+         this.colChannel.AspectName = "Channel";
          this.colChannel.CellPadding = null;
          this.colChannel.Text = "Channel";
          this.colChannel.Width = 76;
          // 
          // colStart
          // 
-         this.colStart.AspectName = "StartPosition";
+         this.colStart.AspectName = "StartIndex";
          this.colStart.CellPadding = null;
          this.colStart.Text = "Start";
          // 
          // colStop
          // 
-         this.colStop.AspectName = "StopPosition";
+         this.colStop.AspectName = "StopIndex";
          this.colStop.CellPadding = null;
          this.colStop.Text = "Stop";
          // 
@@ -428,9 +429,9 @@
          // 
          // colTraceType
          // 
-         this.colTraceType.AspectName = "Type";
+         this.colTraceType.AspectName = "TypeName";
          this.colTraceType.CellPadding = null;
-         this.colTraceType.Text = "Event Type";
+         this.colTraceType.Text = "Event TypeName";
          this.colTraceType.Width = 134;
          // 
          // colTraceTokenText
@@ -624,7 +625,7 @@
          this.HeuristicHighlightingToolStripMenuItem.CheckOnClick = true;
          this.HeuristicHighlightingToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
          this.HeuristicHighlightingToolStripMenuItem.Name = "HeuristicHighlightingToolStripMenuItem";
-         this.HeuristicHighlightingToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.HeuristicHighlightingToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
          this.HeuristicHighlightingToolStripMenuItem.Text = "Heuristic Syntax Highlighting";
          this.HeuristicHighlightingToolStripMenuItem.Click += new System.EventHandler(this.HeuristicHighlightingToolStripMenuItem_Click);
          // 
@@ -633,19 +634,19 @@
          this.ShowLexerErrorsToolStripMenuItem.Checked = true;
          this.ShowLexerErrorsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
          this.ShowLexerErrorsToolStripMenuItem.Name = "ShowLexerErrorsToolStripMenuItem";
-         this.ShowLexerErrorsToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.ShowLexerErrorsToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
          this.ShowLexerErrorsToolStripMenuItem.Text = "Show Lexer Errors";
          // 
          // toolStripSeparator2
          // 
          this.toolStripSeparator2.Name = "toolStripSeparator2";
-         this.toolStripSeparator2.Size = new System.Drawing.Size(225, 6);
+         this.toolStripSeparator2.Size = new System.Drawing.Size(226, 6);
          // 
          // TracingToolStripMenuItem
          // 
          this.TracingToolStripMenuItem.CheckOnClick = true;
          this.TracingToolStripMenuItem.Name = "TracingToolStripMenuItem";
-         this.TracingToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.TracingToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
          this.TracingToolStripMenuItem.Text = "Tracing";
          this.TracingToolStripMenuItem.Click += new System.EventHandler(this.TracingToolStripMenuItem_Click);
          // 
@@ -653,7 +654,7 @@
          // 
          this.DiagnosticsToolStripMenuItem.CheckOnClick = true;
          this.DiagnosticsToolStripMenuItem.Name = "DiagnosticsToolStripMenuItem";
-         this.DiagnosticsToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.DiagnosticsToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
          this.DiagnosticsToolStripMenuItem.Text = "Diagnostics";
          this.DiagnosticsToolStripMenuItem.Click += new System.EventHandler(this.DiagnosticsToolStripMenuItem_Click);
          // 
@@ -661,7 +662,7 @@
          // 
          this.SimpleLLModeToolStripMenuItem.CheckOnClick = true;
          this.SimpleLLModeToolStripMenuItem.Name = "SimpleLLModeToolStripMenuItem";
-         this.SimpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+         this.SimpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
          this.SimpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
          this.SimpleLLModeToolStripMenuItem.Click += new System.EventHandler(this.SimpleLLModeToolStripMenuItem_Click);
          // 
@@ -727,7 +728,7 @@
          // 
          // colLineNumber
          // 
-         this.colLineNumber.AspectName = "LineNumber";
+         this.colLineNumber.AspectName = "Line";
          this.colLineNumber.CellPadding = null;
          this.colLineNumber.Text = "Line";
          // 
@@ -833,7 +834,7 @@
          // 
          this.toolStripStatusLabel1.Margin = new System.Windows.Forms.Padding(40, 3, 0, 2);
          this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-         this.toolStripStatusLabel1.Size = new System.Drawing.Size(65, 15);
+         this.toolStripStatusLabel1.Size = new System.Drawing.Size(64, 15);
          this.toolStripStatusLabel1.Text = "Throttling?";
          // 
          // StripLabelThrottling

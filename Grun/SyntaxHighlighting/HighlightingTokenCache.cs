@@ -51,7 +51,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 
       public bool IsKnown(SyntaxToken token)
       {
-         if (_KnownTokens.TryGetValue(token.LineNumber, out var lineCache))
+         if (_KnownTokens.TryGetValue(token.Line, out var lineCache))
             if (lineCache.TryGetValue(token.ColumnPosition, out var hash))
                if (hash == token.GetHashCode())
                   return true;
@@ -61,10 +61,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 
       public void RegisterToken(SyntaxToken token)
       {
-         if (_KnownTokens.TryGetValue(token.LineNumber, out var lineCache))
+         if (_KnownTokens.TryGetValue(token.Line, out var lineCache))
             lineCache[token.ColumnPosition] = token.GetHashCode();
          else
-            _KnownTokens[token.LineNumber] = new Dictionary<int, int> { { token.ColumnPosition, token.GetHashCode() } };
+            _KnownTokens[token.Line] = new Dictionary<int, int> { { token.ColumnPosition, token.GetHashCode() } };
       }
 
       public void FlushTokensForLine(int lineNumber)

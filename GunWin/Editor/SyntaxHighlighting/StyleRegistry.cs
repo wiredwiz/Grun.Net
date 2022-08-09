@@ -74,7 +74,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// <returns>A <see cref="Style"/> instance.</returns>
       public Style GetTokenStyle(SyntaxToken token)
       {
-         if (_TokenStyles.TryGetValue(token.Type, out var style))
+         if (_TokenStyles.TryGetValue(token.TypeName, out var style))
             return style;
 
          var foregroundColor = _SyntaxGuide.GetTokenForegroundColor(token);
@@ -83,7 +83,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          var key = GetKey(foregroundColor, backgroundColor, fontStyle);
          if (_UniqueStyles.TryGetValue(key, out style))
          {
-            _TokenStyles[token.Type] = style;
+            _TokenStyles[token.TypeName] = style;
             return style;
          }
 
@@ -91,7 +91,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          var backBrush = new SolidBrush(backgroundColor);
          style = new TextStyle(foreBrush, backBrush, fontStyle);
          _UniqueStyles[key] = style;
-         _TokenStyles[token.Type] = style;
+         _TokenStyles[token.TypeName] = style;
          return style;
       }
 

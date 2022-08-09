@@ -108,16 +108,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun.SyntaxHighlighting
 
       private static void ColorToken(SyntaxToken token, int lineOffset, ISyntaxHighlightingGuide guide)
       {
-         if (token.ChannelId != 0)
+         if (token.Channel != 0)
             return;
 
-         if (token.Text == "<EOF>")
+         if (token.DisplayText == "<EOF>")
             return;
 
          var defaultForeGround = Console.ForegroundColor;
          var defaultBackground = Console.BackgroundColor;
 
-         var startLine = token.LineNumber + lineOffset;
+         var startLine = token.Line + lineOffset;
          var endLine = token.EndingLineNumber + lineOffset;
 
          if (startLine < 0)
@@ -133,7 +133,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun.SyntaxHighlighting
             for (int col = token.ColumnPosition; col < token.EndingColumnPosition + 1; col++)
             {
                Console.SetCursorPosition(col - 1, ln);
-               Console.Write(token.Text[index++]);
+               Console.Write(token.DisplayText[index++]);
             }
          }
 

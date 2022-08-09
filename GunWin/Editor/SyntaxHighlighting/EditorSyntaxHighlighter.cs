@@ -86,7 +86,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
                    {
                       foreach (var token in tokens)
                       {
-                         var startingPlace = new Place(token.ActualParserToken.Column, token.ActualParserToken.Line - 1);
+                         var startingPlace = new Place(token.Column, token.Line - 1);
                          var stoppingPlace = new Place(token.EndingColumnPosition, token.EndingLineNumber - 1);
                          var tokenRange = editor.GetRange(startingPlace, stoppingPlace);
                          tokenRange.ClearStyle(StyleIndex.All);

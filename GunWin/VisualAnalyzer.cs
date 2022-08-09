@@ -566,7 +566,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          foreach (var token in tokens)
          {
-            if (token.LineNumber < startLine || token.LineNumber > stopLine)
+            if (token.Line < startLine || token.Line > stopLine)
                continue;
 
             results.Add(token);
@@ -968,7 +968,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                var traceEvent = (TraceEvent)selected.RowObject;
                CodeEditor.SelectSource(traceEvent.Token);
                var model =
-                  (from token in _Tokens where token.ActualParserToken == traceEvent.Token select token).First();
+                  (from token in _Tokens where token == traceEvent.Token select token).First();
                tokenListView.SelectObject(model);
             }
       }
@@ -986,7 +986,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             if (selected.RowObject != null)
             {
                var tokenView = (SyntaxToken)selected.RowObject;
-               CodeEditor.SelectSource(tokenView.ActualParserToken);
+               CodeEditor.SelectSource(tokenView);
             }
       }
 
@@ -1060,7 +1060,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void SelectTokenFromSource(Common.Grammar.Place sourcePlace)
       {
          foreach (var token in _Tokens)
-           if (token.LineNumber == sourcePlace.Line)
+           if (token.Line == sourcePlace.Line)
            {
              if (sourcePlace.IsWithinTokenBounds(token))
              {
@@ -1069,7 +1069,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                var selectedPos = tokenListView.SelectedItem.Position;
                int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
                tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
-               CodeEditor.SelectSource(token.ActualParserToken);
+               CodeEditor.SelectSource(token);
                tabControlParse.SelectTab(1);
                CodeEditor.Select();
              }

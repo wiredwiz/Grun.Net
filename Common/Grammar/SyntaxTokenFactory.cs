@@ -37,6 +37,7 @@
 using System;
 
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 
 // ReSharper disable TooManyArguments
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
@@ -48,15 +49,28 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
    /// <seealso cref="Antlr4.Runtime.ITokenFactory" />
    public class SyntaxTokenFactory : ITokenFactory
    {
+      /// <summary>
+      /// The default static instance factory.
+      /// </summary>
+      public static readonly ITokenFactory Instance = new SyntaxTokenFactory();
+
       IToken ITokenFactory.Create(Tuple<ITokenSource, ICharStream> source, int type, string text, int channel, int start, int stop, int line, int charPositionInLine)
       {
-         throw new NotImplementedException();
+         return Create(source, type, text, channel, start, stop, line, charPositionInLine);
       }
 
       IToken ITokenFactory.Create(int type, string text)
       {
-         throw new NotImplementedException();
+         return Create(type, text);
       }
+
+      /// <summary>
+      /// Creates the specified type.
+      /// </summary>
+      /// <param name="type">The type.</param>
+      /// <param name="text">The text.</param>
+      /// <returns>A new SyntaxToken.</returns>
+      public virtual SyntaxToken Create(int type, string text) => new SyntaxToken(type, text);
 
       /// <summary>
       /// Creates the specified source.
@@ -72,7 +86,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       /// <returns>A new SyntaxToken instance.</returns>
       public SyntaxToken Create(Tuple<ITokenSource, ICharStream> source, int type, string text, int channel, int start, int stop, int line, int charPositionInLine)
       {
-         throw new NotImplementedException();
+         SyntaxToken token =
+            new SyntaxToken(source, type, channel, start, stop) { Line = line, Column = charPositionInLine };
+         if (text != null)
+            token.Text = text;
+         else if (source.Item2 != null)
+            token.Text = source.Item2.GetText(Interval.Of(start, stop));
+         return token;
       }
    }
 }

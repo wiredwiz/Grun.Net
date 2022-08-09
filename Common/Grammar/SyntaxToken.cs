@@ -34,7 +34,10 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
+
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 
 using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 
@@ -44,55 +47,79 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
    /// Struct that represents a lightweight view model for IToken instances
    /// </summary>
    /// <seealso cref="Antlr4.Runtime.IToken"/>
-   public struct SyntaxToken
+   public class SyntaxToken : CommonToken
    {
-      /// <summary>
-      /// Initializes a new instance of the <see cref="SyntaxToken"/> struct.
-      /// </summary>
-      /// <param name="lexer">The lexer.</param>
-      /// <param name="parserToken">The token.</param>
-      public SyntaxToken(Lexer lexer, IToken parserToken)
-      {
-         ActualParserToken = parserToken;
-         Text = FormatTokenText(parserToken);
-         Type = parserToken.Type > -1 ? lexer.Vocabulary.GetDisplayName(parserToken.Type) : string.Empty;
-         TypeUpperCase = Type.ToUpperInvariant();
-         LineNumber = parserToken.Line;
-         ColumnPosition = parserToken.Column + 1;
-         ChannelId = parserToken.Channel;
-         Length = parserToken.StopIndex - parserToken.StartIndex + 1;
-         StartPosition = parserToken.StartIndex;
-         StopPosition = parserToken.StopIndex;
+      private string _DisplayText;
+      private string _TypeNameUpperCase;
+      private int? _EndingLineNumber;
+      private int? _EndingColumnPosition;
+      private Place? _EndPlace;
 
-         var spot = parserToken.GetEndPlace();
-         EndingLineNumber = spot.Line;
-         EndingColumnPosition = spot.Position + 1;
+      private string _TypeName;
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
+      /// </summary>
+      /// <param name="source">The source.</param>
+      /// <param name="type">The type.</param>
+      /// <param name="channel">The channel.</param>
+      /// <param name="start">The start.</param>
+      /// <param name="stop">The stop.</param>
+      public SyntaxToken([NotNull] Tuple<ITokenSource, ICharStream> source, int type, int channel, int start, int stop)
+         : base(source, type, channel, start, stop)
+      {
+         ColumnPosition = charPositionInLine + 1;
+         Length = stop - start + 1;
+
+         //TypeName = parserToken.Type > -1 ? lexer.Vocabulary.GetDisplayName(parserToken.Type) : string.Empty;
+         //TypeNameUpperCase = TypeName.ToUpperInvariant();
       }
 
       /// <summary>
-      /// Gets the token text.
+      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
       /// </summary>
-      /// <value>The token text.</value>
-      public string Text { get; }
+      /// <param name="type">The type.</param>
+      /// <param name="text">The text.</param>
+      public SyntaxToken(int type, string text)
+         : base(type, text)
+      {
+      }
 
       /// <summary>
-      /// Gets the token type.
+      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
       /// </summary>
-      /// <value>The token type.</value>
-      public string Type { get; }
+      /// <param name="type">The type.</param>
+      public SyntaxToken(int type)
+         : base(type)
+      {
+      }
 
       /// <summary>
-      /// Gets the upper case type.
+      /// Gets the token display text.
       /// </summary>
-      /// <value>The upper case type.</value>
-      /// <remarks>Exists solely to avoid repeated upper casing of the Type property.</remarks>
-      public string TypeUpperCase { get; }
+      /// <value>The token display text.</value>
+      public string DisplayText => _DisplayText ?? (_DisplayText = FormatTokenText(Text));
 
       /// <summary>
-      /// Gets the line number where the token occurs.
+      /// Gets or sets the token type.
       /// </summary>
-      /// <value>The line number.</value>
-      public int LineNumber { get; }
+      /// <value>The token type name.</value>
+      public string TypeName
+      {
+         get => _TypeName;
+         set
+         {
+            _TypeNameUpperCase = null;
+            _TypeName = value;
+         }
+      }
+
+      /// <summary>
+      /// Gets the upper case type name.
+      /// </summary>
+      /// <value>The upper case type name.</value>
+      /// <remarks>Exists solely to avoid repeated upper casing of the TypeName property.</remarks>
+      public string TypeNameUpperCase => _TypeNameUpperCase ?? (_TypeNameUpperCase = TypeName.ToUpperInvariant());
 
       /// <summary>
       /// Gets the column position of the token within the source line.
@@ -110,48 +137,50 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       /// Gets the line number for the end of token.
       /// </summary>
       /// <value>The ending line number.</value>
-      public int EndingLineNumber { get; }
+      public int EndingLineNumber
+      {
+         get
+         {
+            if (!_EndingLineNumber.HasValue)
+            {
+               if (!_EndPlace.HasValue)
+                  _EndPlace = this.GetEndPlace();
+               _EndingLineNumber = _EndPlace.Value.Line;
+            }
+
+            return _EndingLineNumber.Value;
+         }
+      }
 
       /// <summary>
       /// Gets the column position for the end of the token.
       /// </summary>
       /// <value>The ending column position.</value>
-      public int EndingColumnPosition { get; }
-
-      /// <summary>
-      /// Gets the start position of the token within the source.
-      /// </summary>
-      /// <value>The start position.</value>
-      public int StartPosition { get; }
-
-      /// <summary>
-      /// Gets the stop position of the token within the source.
-      /// </summary>
-      /// <value>The stop position.</value>
-      public int StopPosition { get; }
-
-      /// <summary>
-      /// Gets the channel id for the token.
-      /// </summary>
-      /// <value>The channel id.</value>
-      public int ChannelId { get; }
-
-      /// <summary>
-      /// Gets the actual parser token.
-      /// </summary>
-      /// <value>The actual parser token.</value>
-      public IToken ActualParserToken { get; }
-
-      private static string FormatTokenText(IToken token)
+      public int EndingColumnPosition
       {
-         switch (token.Text)
+         get
+         {
+            if (!_EndingColumnPosition.HasValue)
+            {
+               if (!_EndPlace.HasValue)
+                  _EndPlace = this.GetEndPlace();
+               _EndingColumnPosition = _EndPlace.Value.Position + 1;
+            }
+
+            return _EndingColumnPosition.Value;
+         }
+      }
+
+      private static string FormatTokenText(string text)
+      {
+         switch (text)
          {
             case "\r": return "\\r";
             case "\n": return "\\n";
             case "\t": return "\\t";
          }
 
-         return token.Text;
+         return text;
       }
    }
 }

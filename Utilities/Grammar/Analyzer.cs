@@ -100,13 +100,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var loader = new Grammar.Loader();
          var inputStream = new AntlrInputStream(inputText);
          var lexer = loader.LoadLexer(grammar, inputStream);
+         lexer.TokenFactory = SyntaxTokenFactory.Instance;
          lexer.RemoveErrorListeners();
          if (lexerErrorListener != null)
             lexer.AddErrorListener(lexerErrorListener);
          var commonTokenStream = new CommonTokenStream(lexer);
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
-         SyntaxTokens = ConvertTokensToSyntaxTokens(lexer, Tokens);
+         SyntaxTokens = PopulateTokenTypeNames(lexer, Tokens);
          return Tokens;
       }
 
@@ -135,6 +136,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var loader = new Grammar.Loader();
          var inputStream = new AntlrInputStream(inputText);
          var lexer = loader.LoadLexer(grammar, inputStream);
+         lexer.TokenFactory = SyntaxTokenFactory.Instance;
          if (lexerErrorListener != null)
          {
             lexer.RemoveErrorListeners();
@@ -145,7 +147,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
-         SyntaxTokens = ConvertTokensToSyntaxTokens(lexer, Tokens);
+         SyntaxTokens = PopulateTokenTypeNames(lexer, Tokens);
 
          if (option.HasFlag(ParseOption.Tokens))
             foreach (var token in Tokens)
@@ -196,14 +198,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          IsParsed = true;
       }
 
-      private IList<SyntaxToken> ConvertTokensToSyntaxTokens([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
+      private IList<SyntaxToken> PopulateTokenTypeNames([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
       {
          if (lexer is null) throw new ArgumentNullException(nameof(lexer));
          if (tokens is null) throw new ArgumentNullException(nameof(tokens));
 
          var syntaxTokens = new List<SyntaxToken>();
          foreach (var token in tokens)
-            syntaxTokens.Add(new SyntaxToken(lexer, token));
+         {
+            var syntaxToken = (SyntaxToken)token;
+            syntaxToken.TypeName = syntaxToken.Type > -1 ? lexer.Vocabulary.GetDisplayName(syntaxToken.Type) : string.Empty;
+            syntaxTokens.Add(syntaxToken);
+         }
 
          return syntaxTokens;
       }

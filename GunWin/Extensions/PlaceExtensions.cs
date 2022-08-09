@@ -52,7 +52,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
       /// </summary>
       /// <param name="place">The place to convert.</param>
       /// <returns>A new <see cref="FastColoredTextBoxNS.Place"/>.</returns>
-      /// <remarks>The Fast Colored Text Box placement begins line indexes at index 0 so we must reduce the grammar placement by 1.</remarks>
+      /// <remarks>The Fast Colored DisplayText Box placement begins line indexes at index 0 so we must reduce the grammar placement by 1.</remarks>
       // ReSharper disable once IdentifierTypo
       public static FastColoredTextBoxNS.Place ConvertToFctbPlace(this Place place)
       {
@@ -67,7 +67,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
       /// <returns><c>true</c> if within the bounds; otherwise, <c>false</c>.</returns>
       public static bool IsWithinTokenBounds(this Place place, SyntaxToken token)
       {
-         if (place.Line != token.LineNumber)
+         if (place.Line != token.Line)
             return false;
 
          if (place.Position + 1 < token.ColumnPosition)

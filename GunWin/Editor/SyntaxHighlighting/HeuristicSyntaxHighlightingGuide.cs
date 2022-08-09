@@ -73,25 +73,25 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 
       private bool IsLiteral(SyntaxToken token)
       {
-         if (token.TypeUpperCase.Contains("LITERAL"))
+         if (token.TypeNameUpperCase.Contains("LITERAL"))
             return true;
-         if (token.TypeUpperCase.EndsWith("_LIT"))
+         if (token.TypeNameUpperCase.EndsWith("_LIT"))
             return true;
-         if (token.TypeUpperCase.Contains("NUMBER"))
+         if (token.TypeNameUpperCase.Contains("NUMBER"))
             return true;
-         if (token.TypeUpperCase.Contains("FLOAT"))
+         if (token.TypeNameUpperCase.Contains("FLOAT"))
             return true;
-         if (token.TypeUpperCase.Contains("INTEGER"))
+         if (token.TypeNameUpperCase.Contains("INTEGER"))
             return true;
-         if (token.TypeUpperCase.Contains("DOUBLE"))
+         if (token.TypeNameUpperCase.Contains("DOUBLE"))
             return true;
-         if (token.TypeUpperCase.Contains("LONG"))
+         if (token.TypeNameUpperCase.Contains("LONG"))
             return true;
-         if (token.TypeUpperCase.Contains("STRING"))
+         if (token.TypeNameUpperCase.Contains("STRING"))
             return true;
-         if (token.TypeUpperCase.Contains("CHARACTER"))
+         if (token.TypeNameUpperCase.Contains("CHARACTER"))
             return true;
-         if (token.TypeUpperCase.Contains("HEX"))
+         if (token.TypeNameUpperCase.Contains("HEX"))
             return true;
 
          return false;
@@ -99,7 +99,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 
       private bool IsKeyword(SyntaxToken token)
       {
-         var type = token.TypeUpperCase;
+         var type = token.TypeNameUpperCase;
          if (type.StartsWith("'") && type.EndsWith("'"))
             type = type.Trim('\'');
 
@@ -247,7 +247,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "DEFER":
             case "CHAN":
                {
-                  if (type.Equals(token.Text.ToUpperInvariant()))
+                  if (type.Equals(token.DisplayText.ToUpperInvariant()))
                      return true;
 
                   return false;
@@ -306,7 +306,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 
       private bool IsComment(SyntaxToken token)
       {
-         return token.TypeUpperCase.Contains("COMMENT");
+         return token.TypeNameUpperCase.Contains("COMMENT");
       }
 
       public string GrammarName { get; set; }
@@ -319,82 +319,82 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
 
       public Color GetTokenForegroundColor(SyntaxToken token)
       {
-         if (_ForegroundColors.TryGetValue(token.TypeUpperCase, out var style))
+         if (_ForegroundColors.TryGetValue(token.TypeNameUpperCase, out var style))
             return style;
 
          if (IsKeyword(token))
          {
-            _ForegroundColors[token.TypeUpperCase] = _Settings.KeywordTokenColor;
+            _ForegroundColors[token.TypeNameUpperCase] = _Settings.KeywordTokenColor;
             return _Settings.KeywordTokenColor;
          }
 
          if (IsLiteral(token))
          {
-            _ForegroundColors[token.TypeUpperCase] = _Settings.LiteralTokenColor;
+            _ForegroundColors[token.TypeNameUpperCase] = _Settings.LiteralTokenColor;
             return _Settings.LiteralTokenColor;
          }
 
          if (IsComment(token))
          {
-            _ForegroundColors[token.TypeUpperCase] = _Settings.CommentTokenColor;
+            _ForegroundColors[token.TypeNameUpperCase] = _Settings.CommentTokenColor;
             return _Settings.CommentTokenColor;
          }
 
-         _ForegroundColors[token.TypeUpperCase] = _Settings.DefaultTokenColor;
+         _ForegroundColors[token.TypeNameUpperCase] = _Settings.DefaultTokenColor;
          return _Settings.DefaultTokenColor;
       }
 
       public Color GetTokenBackgroundColor(SyntaxToken token)
       {
-         if (_BackgroundColors.TryGetValue(token.TypeUpperCase, out var style))
+         if (_BackgroundColors.TryGetValue(token.TypeNameUpperCase, out var style))
             return style;
 
          if (IsKeyword(token))
          {
-            _BackgroundColors[token.TypeUpperCase] = _Settings.KeywordTokenBackgroundColor;
+            _BackgroundColors[token.TypeNameUpperCase] = _Settings.KeywordTokenBackgroundColor;
             return _Settings.KeywordTokenBackgroundColor;
          }
 
          if (IsLiteral(token))
          {
-            _BackgroundColors[token.TypeUpperCase] = _Settings.LiteralTokenBackgroundColor;
+            _BackgroundColors[token.TypeNameUpperCase] = _Settings.LiteralTokenBackgroundColor;
             return _Settings.LiteralTokenBackgroundColor;
          }
 
          if (IsComment(token))
          {
-            _BackgroundColors[token.TypeUpperCase] = _Settings.CommentTokenBackgroundColor;
+            _BackgroundColors[token.TypeNameUpperCase] = _Settings.CommentTokenBackgroundColor;
             return _Settings.CommentTokenBackgroundColor;
          }
 
-         _BackgroundColors[token.TypeUpperCase] = _Settings.DefaultTokenBackgroundColor;
+         _BackgroundColors[token.TypeNameUpperCase] = _Settings.DefaultTokenBackgroundColor;
          return _Settings.DefaultTokenBackgroundColor;
       }
 
       public FontStyle GetTokenFontStyle(SyntaxToken token)
       {
-         if (_FontStyles.TryGetValue(token.TypeUpperCase, out var style))
+         if (_FontStyles.TryGetValue(token.TypeNameUpperCase, out var style))
             return style;
 
          if (IsKeyword(token))
          {
-            _FontStyles[token.TypeUpperCase] = _Settings.KeywordTokenFontStyle;
+            _FontStyles[token.TypeNameUpperCase] = _Settings.KeywordTokenFontStyle;
             return _Settings.KeywordTokenFontStyle;
          }
 
          if (IsLiteral(token))
          {
-            _FontStyles[token.TypeUpperCase] = _Settings.KeywordTokenFontStyle;
+            _FontStyles[token.TypeNameUpperCase] = _Settings.KeywordTokenFontStyle;
             return _Settings.KeywordTokenFontStyle;
          }
 
          if (IsComment(token))
          {
-            _FontStyles[token.TypeUpperCase] = _Settings.CommentTokenFontStyle;
+            _FontStyles[token.TypeNameUpperCase] = _Settings.CommentTokenFontStyle;
             return _Settings.CommentTokenFontStyle;
          }
 
-         _FontStyles[token.TypeUpperCase] = _Settings.DefaultTokenFontStyle;
+         _FontStyles[token.TypeNameUpperCase] = _Settings.DefaultTokenFontStyle;
          return _Settings.DefaultTokenFontStyle;
       }
    }
