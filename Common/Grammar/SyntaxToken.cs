@@ -68,7 +68,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       public SyntaxToken([NotNull] Tuple<ITokenSource, ICharStream> source, int type, int channel, int start, int stop)
          : base(source, type, channel, start, stop)
       {
-         ColumnPosition = charPositionInLine + 1;
+         ColumnPosition = start + 1;
          Length = stop - start + 1;
 
          //TypeName = parserToken.Type > -1 ? lexer.Vocabulary.GetDisplayName(parserToken.Type) : string.Empty;

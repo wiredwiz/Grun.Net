@@ -67,14 +67,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
       /// <returns><c>true</c> if within the bounds; otherwise, <c>false</c>.</returns>
       public static bool IsWithinTokenBounds(this Place place, SyntaxToken token)
       {
-         if (place.Line != token.Line)
+         if (place.Line < token.Line || place.Line > token.EndingLineNumber)
             return false;
 
-         if (place.Position + 1 < token.ColumnPosition)
+         if (place.Position < token.Column)
             return false;
-
-         if (token.EndingLineNumber > place.Line)
-            return true;
 
          return place.Position < token.EndingColumnPosition;
       }

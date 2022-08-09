@@ -1060,20 +1060,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void SelectTokenFromSource(Common.Grammar.Place sourcePlace)
       {
          foreach (var token in _Tokens)
-           if (token.Line == sourcePlace.Line)
-           {
-             if (sourcePlace.IsWithinTokenBounds(token))
-             {
-               // We have found the related source token, now we select it in the list and source.
-               tokenListView.SelectedObject = token;
-               var selectedPos = tokenListView.SelectedItem.Position;
-               int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
-               tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
-               CodeEditor.SelectSource(token);
-               tabControlParse.SelectTab(1);
-               CodeEditor.Select();
-             }
-           }
+          if (sourcePlace.IsWithinTokenBounds(token))
+          {
+            // We have found the related source token, now we select it in the list and source.
+            tokenListView.SelectedObject = token;
+            var selectedPos = tokenListView.SelectedItem.Position;
+            int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
+            tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
+            CodeEditor.SelectSource(token);
+            tabControlParse.SelectTab(1);
+            CodeEditor.Select();
+          }
       }
 
       private void SelectParserRuleFromSourceSelection(Common.Grammar.Place selectionStart, Common.Grammar.Place selectionEnd)
