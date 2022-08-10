@@ -50,7 +50,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// </summary>
       /// <param name="token">The token.</param>
       /// <returns>A <see cref="Style"/> instance.</returns>
-      Style GetTokenStyle(SyntaxToken token);
+      Style GetTokenStyle(DetailedToken token);
 
       /// <summary>
       /// Gets the style for a parse error .

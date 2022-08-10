@@ -48,11 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grammar\SyntaxTokenFactory.cs" />
+    <Compile Include="Grammar\DetailedTokenFactory.cs" />
     <Compile Include="Syntax\ISyntaxHighlightingGuide.cs" />
     <Compile Include="Extensions\TokenInterfaceExtensionMethods.cs" />
     <Compile Include="Grammar\Place.cs" />
-    <Compile Include="Grammar\SyntaxToken.cs" />
+    <Compile Include="Grammar\DetailedToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

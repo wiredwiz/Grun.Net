@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="SyntaxToken.cs" company="Edgerunner.org">
+// <copyright file="DetailedToken.cs" company="Edgerunner.org">
 // Copyright 2020 
 // </copyright>
 // 
@@ -44,10 +44,10 @@ using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
 {
    /// <summary>
-   /// Struct that represents a lightweight view model for IToken instances
+   /// A more detailed implementation of IToken.
    /// </summary>
    /// <seealso cref="Antlr4.Runtime.IToken"/>
-   public class SyntaxToken : CommonToken
+   public class DetailedToken : CommonToken
    {
       private string _TypeNameUpperCase;
       private int? _EndingLineNumber;
@@ -57,14 +57,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       private string _TypeName;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
+      /// Initializes a new instance of the <see cref="DetailedToken"/> class.
       /// </summary>
       /// <param name="source">The source.</param>
       /// <param name="type">The type.</param>
       /// <param name="channel">The channel.</param>
       /// <param name="start">The start.</param>
       /// <param name="stop">The stop.</param>
-      public SyntaxToken([NotNull] Tuple<ITokenSource, ICharStream> source, int type, int channel, int start, int stop)
+      // ReSharper disable once TooManyDependencies
+      public DetailedToken([NotNull] Tuple<ITokenSource, ICharStream> source, int type, int channel, int start, int stop)
          : base(source, type, channel, start, stop)
       {
          ColumnPosition = start + 1;
@@ -72,20 +73,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       }
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
+      /// Initializes a new instance of the <see cref="DetailedToken"/> class.
       /// </summary>
       /// <param name="type">The type.</param>
       /// <param name="text">The text.</param>
-      public SyntaxToken(int type, string text)
+      public DetailedToken(int type, string text)
          : base(type, text)
       {
       }
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
+      /// Initializes a new instance of the <see cref="DetailedToken"/> class.
       /// </summary>
       /// <param name="type">The type.</param>
-      public SyntaxToken(int type)
+      public DetailedToken(int type)
          : base(type)
       {
       }
@@ -110,14 +111,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       {
          get
          {
-            if (!string.IsNullOrEmpty((text)))
+            if (!string.IsNullOrEmpty(text))
                return text;
             ICharStream inputStream = InputStream;
             if (inputStream == null)
-               return (string)null;
+               return null;
             int size = inputStream.Size;
             return start < size && stop < size ? inputStream.GetText(Interval.Of(start, stop)) : "<EOF>";
          }
+
          set => text = value;
       }
 

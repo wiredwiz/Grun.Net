@@ -105,7 +105,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private Settings _Settings;
 
-      private IList<SyntaxToken> _Tokens;
+      private IList<DetailedToken> _Tokens;
 
       private GViewer _Viewer;
 
@@ -260,10 +260,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             errorDisplay.ShowDialog();
          }
 
-         _Tokens = analyzer.SyntaxTokens;
+         _Tokens = analyzer.Tokens;
          _ParseErrors = new List<ParseMessage>(lexErrorListener.Errors);
          _ParseErrors.AddRange(parseErrorListener.Errors);
-         PopulateTokens(analyzer.SyntaxTokens);
+         PopulateTokens(analyzer.Tokens);
          PopulateParserMessages(_ParseErrors);
          PopulateTraceEvents(parseTreeListener);
       }
@@ -558,9 +558,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          Application.Exit();
       }
 
-      private IList<SyntaxToken> FindTokensInRange(IList<SyntaxToken> tokens, Range range)
+      private IList<DetailedToken> FindTokensInRange(IList<DetailedToken> tokens, Range range)
       {
-         var results = new List<SyntaxToken>();
+         var results = new List<DetailedToken>();
          var startLine = range.FromLine;
          var stopLine = range.ToLine + 2;
 
@@ -881,7 +881,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseMessageListView.SetObjects(listenerErrors);
       }
 
-      private void PopulateTokens(IList<SyntaxToken> tokens)
+      private void PopulateTokens(IList<DetailedToken> tokens)
       {
          tokenListView.SetObjects(tokens);
       }
@@ -985,7 +985,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if ((selected = tokenListView.SelectedItem) != null)
             if (selected.RowObject != null)
             {
-               var tokenView = (SyntaxToken)selected.RowObject;
+               var tokenView = (DetailedToken)selected.RowObject;
                CodeEditor.SelectSource(tokenView);
             }
       }

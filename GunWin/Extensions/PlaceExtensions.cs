@@ -65,7 +65,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
       /// <param name="place">The place to evaluate.</param>
       /// <param name="token">The token.</param>
       /// <returns><c>true</c> if within the bounds; otherwise, <c>false</c>.</returns>
-      public static bool IsWithinTokenBounds(this Place place, SyntaxToken token)
+      public static bool IsWithinTokenBounds(this Place place, DetailedToken token)
       {
          if (place.Line < token.Line || place.Line > token.EndingLineNumber)
             return false;

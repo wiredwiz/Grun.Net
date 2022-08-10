@@ -309,7 +309,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 
          var cursorRow = Console.CursorTop;
          var cursorColumn = Console.CursorLeft;
-         foreach (var token in analyzer.SyntaxTokens)
+         foreach (var token in analyzer.Tokens)
          {
             if (!_Cache.IsKnown(token))
             {
@@ -321,7 +321,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          Console.SetCursorPosition(cursorColumn, cursorRow);
       }
 
-      private static void ColorToken(SyntaxToken token, int lineOffset, ISyntaxHighlightingGuide guide)
+      private static void ColorToken(DetailedToken token, int lineOffset, ISyntaxHighlightingGuide guide)
       {
          if (token.Channel != 0)
             return;
@@ -423,7 +423,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          _Settings.LoadDefaults();
       }
 
-      private static int MakeTokenKey(SyntaxToken token)
+      private static int MakeTokenKey(DetailedToken token)
       {
          return $"{token.Line}-{token.ColumnPosition}-{token.DisplayText}".GetHashCode();
       }
