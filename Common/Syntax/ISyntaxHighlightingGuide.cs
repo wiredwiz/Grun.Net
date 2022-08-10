@@ -41,6 +41,9 @@ using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Syntax
 {
+   /// <summary>
+   /// Interface that represents a syntax highlighting guide
+   /// </summary>
    public interface ISyntaxHighlightingGuide
    {
       /// <summary>
