@@ -49,7 +49,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
    /// <seealso cref="Antlr4.Runtime.IToken"/>
    public class SyntaxToken : CommonToken
    {
-      private string _DisplayText;
       private string _TypeNameUpperCase;
       private int? _EndingLineNumber;
       private int? _EndingColumnPosition;
@@ -98,7 +97,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       /// Gets the token display text.
       /// </summary>
       /// <value>The token display text.</value>
-      public string DisplayText => _DisplayText ?? (_DisplayText = FormatTokenText(Text));
+      public string DisplayText => FormatTokenText(Text);
 
       /// <summary>
       /// Gets or sets the token type.
