@@ -69,9 +69,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       {
          ColumnPosition = start + 1;
          Length = stop - start + 1;
-
-         //TypeName = parserToken.Type > -1 ? lexer.Vocabulary.GetDisplayName(parserToken.Type) : string.Empty;
-         //TypeNameUpperCase = TypeName.ToUpperInvariant();
       }
 
       /// <summary>
