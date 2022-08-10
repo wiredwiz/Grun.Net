@@ -92,6 +92,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
             token.Text = text;
          else if (source.Item2 != null)
             token.Text = source.Item2.GetText(Interval.Of(start, stop));
+         if (source.Item1 is IRecognizer recognizer)
+            token.TypeName = token.Type > -1 ? recognizer.Vocabulary.GetDisplayName(token.Type) : string.Empty;
          return token;
       }
    }

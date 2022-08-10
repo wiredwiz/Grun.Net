@@ -37,7 +37,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
+using System.Linq;
 using Antlr4.Runtime;
 
 using JetBrains.Annotations;
@@ -107,7 +107,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var commonTokenStream = new CommonTokenStream(lexer);
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
-         SyntaxTokens = PopulateTokenTypeNames(lexer, Tokens);
+         SyntaxTokens = Tokens.Select(t => t as SyntaxToken).ToList();
          return Tokens;
       }
 
@@ -147,7 +147,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
 
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens();
-         SyntaxTokens = PopulateTokenTypeNames(lexer, Tokens);
+         SyntaxTokens = SyntaxTokens = Tokens.Select(t => t as SyntaxToken).ToList();
 
          if (option.HasFlag(ParseOption.Tokens))
             foreach (var token in Tokens)
