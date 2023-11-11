@@ -90,8 +90,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          if (stream is null) throw new ArgumentNullException(nameof(stream));
 
          Assembly.Load(File.ReadAllBytes(reference.AssemblyPath));
-         var lexer = Activator.CreateInstance(reference.Parser, stream) as Parser;
-         return lexer;
+         var parser = Activator.CreateInstance(reference.Parser, stream) as Parser;
+         return parser;
       }
 
       /// <summary>
