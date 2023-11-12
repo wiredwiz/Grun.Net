@@ -115,6 +115,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "ELSE":
             case "ELSEIF":
             case "ENDIF":
+            case "BEGIN":
             case "END":
             case "YIELD":
             case "THEN":
@@ -140,6 +141,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "STOP":
             case "DO":
             case "WHEN":
+            case "WITH":
 
             // Common literals
             case "TRUE":
@@ -212,7 +214,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "DEL":
             case "DEF":
             case "PUTS":
-            case "WITH":
             case "CLASS":
             case "STRUCT":
             case "INTERFACE":
