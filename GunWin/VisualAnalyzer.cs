@@ -1024,6 +1024,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          CodeEditor.AutoIndent = _Settings.EditorAutoIndent;
          CodeEditor.WordWrapIndent = _Settings.EditorWordWrapIndent;
          CodeEditor.WordWrap = _Settings.EditorWordWrap;
+         WordWrapMnuItem.CheckState = _Settings.EditorWordWrap ? CheckState.Checked : CheckState.Unchecked;
          CodeEditor.AutoCompleteBrackets = _Settings.EditorAutoBrackets;
          CodeEditor.TabLength = _Settings.EditorTabLength;
          CodeEditor.LineNumberColor = _Settings.EditorLineNumberColor;
@@ -1195,6 +1196,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
 
          SelectParserRuleFromSourceSelection(start, end);
+      }
+
+      private void WordWrapMnuItem_CheckStateChanged(object sender, EventArgs e)
+      {
+         CodeEditor.WordWrap = WordWrapMnuItem.CheckState == CheckState.Checked;
       }
    }
 }
