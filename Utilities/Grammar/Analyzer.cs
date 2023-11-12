@@ -37,7 +37,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
+using System.Linq;
 using Antlr4.Runtime;
 
 using JetBrains.Annotations;
@@ -54,16 +54,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
    public class Analyzer
    {
       /// <summary>
-      /// Gets the tokens.
-      /// </summary>
-      /// <value>The tokens.</value>
-      public IList<IToken> Tokens { get; private set; }
-
-      /// <summary>
       /// Gets the syntax tokens.
       /// </summary>
       /// <value>The syntax tokens.</value>
-      public IList<SyntaxToken> SyntaxTokens { get; private set; }
+      public IList<DetailedToken> Tokens { get; private set; }
 
       /// <summary>
       /// Gets the parser context.
@@ -90,7 +84,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <exception cref="T:System.IO.FileLoadException"><paramref name="inputText" /> is <see langword="null" /> or empty.</exception>
       /// <exception cref="T:System.IO.FileNotFoundException">Grammar assembly could not be loaded.</exception>
       /// <exception cref="T:System.BadImageFormatException">The grammar assembly path is an empty string ("") or does not exist.</exception>
-      public IList<IToken> Tokenize([NotNull] GrammarReference grammar, [NotNull] string inputText, IAntlrErrorListener<int> lexerErrorListener)
+      public IList<DetailedToken> Tokenize([NotNull] GrammarReference grammar, [NotNull] string inputText, IAntlrErrorListener<int> lexerErrorListener)
       {
          if (grammar is null)
             throw new ArgumentNullException(nameof(grammar));
@@ -100,14 +94,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var loader = new Grammar.Loader();
          var inputStream = new AntlrInputStream(inputText);
          var lexer = loader.LoadLexer(grammar, inputStream);
-         lexer.TokenFactory = SyntaxTokenFactory.Instance;
+         lexer.TokenFactory = DetailedTokenFactory.Instance;
          lexer.RemoveErrorListeners();
          if (lexerErrorListener != null)
             lexer.AddErrorListener(lexerErrorListener);
          var commonTokenStream = new CommonTokenStream(lexer);
          commonTokenStream.Fill();
-         Tokens = commonTokenStream.GetTokens();
-         SyntaxTokens = PopulateTokenTypeNames(lexer, Tokens);
+         Tokens = commonTokenStream.GetTokens().Cast<DetailedToken>().ToList();
          return Tokens;
       }
 
@@ -136,7 +129,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var loader = new Grammar.Loader();
          var inputStream = new AntlrInputStream(inputText);
          var lexer = loader.LoadLexer(grammar, inputStream);
-         lexer.TokenFactory = SyntaxTokenFactory.Instance;
+         lexer.TokenFactory = DetailedTokenFactory.Instance;
          if (lexerErrorListener != null)
          {
             lexer.RemoveErrorListeners();
@@ -146,8 +139,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          var commonTokenStream = new CommonTokenStream(lexer);
 
          commonTokenStream.Fill();
-         Tokens = commonTokenStream.GetTokens();
-         SyntaxTokens = PopulateTokenTypeNames(lexer, Tokens);
+         Tokens = commonTokenStream.GetTokens().Cast<DetailedToken>().ToList();
 
          if (option.HasFlag(ParseOption.Tokens))
             foreach (var token in Tokens)
@@ -198,15 +190,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          IsParsed = true;
       }
 
-      private IList<SyntaxToken> PopulateTokenTypeNames([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
+      private IList<DetailedToken> PopulateTokenTypeNames([NotNull] Lexer lexer, [NotNull] IEnumerable<IToken> tokens)
       {
          if (lexer is null) throw new ArgumentNullException(nameof(lexer));
          if (tokens is null) throw new ArgumentNullException(nameof(tokens));
 
-         var syntaxTokens = new List<SyntaxToken>();
+         var syntaxTokens = new List<DetailedToken>();
          foreach (var token in tokens)
          {
-            var syntaxToken = (SyntaxToken)token;
+            var syntaxToken = (DetailedToken)token;
             syntaxToken.TypeName = syntaxToken.Type > -1 ? lexer.Vocabulary.GetDisplayName(syntaxToken.Type) : string.Empty;
             syntaxTokens.Add(syntaxToken);
          }

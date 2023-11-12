@@ -71,7 +71,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
       /// <param name="registry">The registry.</param>
       /// <param name="tokens">The tokens.</param>
       /// <param name="errorTokens">The error tokens.</param>
-      public void ColorizeTokens(FastColoredTextBox editor, IStyleRegistry registry, IList<SyntaxToken> tokens, IList<IToken> errorTokens)
+      public void ColorizeTokens(FastColoredTextBox editor, IStyleRegistry registry, IList<DetailedToken> tokens, IList<IToken> errorTokens)
       {
          int coloring = Interlocked.Exchange(ref _TokenColoringInProgress, 1);
          if (coloring != 0) 

@@ -39,18 +39,18 @@ using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
 {
    /// <summary>
-   /// Class containing extension methods for the SyntaxToken class.
+   /// Class containing extension methods for the DetailedToken class.
    /// </summary>
    public static class SyntaxTokenExtensions
    {
       /// <summary>
-      /// Determines whether this SyntaxToken contains the specified source selection.
+      /// Determines whether this DetailedToken contains the specified source selection.
       /// </summary>
       /// <param name="token">The syntax token.</param>
       /// <param name="selectionStart">The source selection start.</param>
       /// <param name="selectionEnd">The source selection end.</param>
       /// <returns><c>true</c> if token contains the specified source selection; otherwise, <c>false</c>.</returns>
-      public static bool ContainsSourceSelection(this SyntaxToken token, Place selectionStart, Place selectionEnd)
+      public static bool ContainsSourceSelection(this DetailedToken token, Place selectionStart, Place selectionEnd)
       {
          if (token.Line > selectionStart.Line)
             return false;

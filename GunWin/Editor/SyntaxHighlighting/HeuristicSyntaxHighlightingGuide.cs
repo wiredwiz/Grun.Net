@@ -71,7 +71,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          _FontStyles = new Dictionary<string, FontStyle>();
       }
 
-      private bool IsLiteral(SyntaxToken token)
+      private bool IsLiteral(DetailedToken token)
       {
          if (token.TypeNameUpperCase.Contains("LITERAL"))
             return true;
@@ -97,7 +97,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          return false;
       }
 
-      private bool IsKeyword(SyntaxToken token)
+      private bool IsKeyword(DetailedToken token)
       {
          var type = token.TypeNameUpperCase;
          if (type.StartsWith("'") && type.EndsWith("'"))
@@ -115,6 +115,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "ELSE":
             case "ELSEIF":
             case "ENDIF":
+            case "BEGIN":
             case "END":
             case "YIELD":
             case "THEN":
@@ -140,6 +141,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "STOP":
             case "DO":
             case "WHEN":
+            case "WITH":
 
             // Common literals
             case "TRUE":
@@ -212,7 +214,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
             case "DEL":
             case "DEF":
             case "PUTS":
-            case "WITH":
             case "CLASS":
             case "STRUCT":
             case "INTERFACE":
@@ -304,7 +305,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          }
       }
 
-      private bool IsComment(SyntaxToken token)
+      private bool IsComment(DetailedToken token)
       {
          return token.TypeNameUpperCase.Contains("COMMENT");
       }
@@ -317,7 +318,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          return Color.Red;
       }
 
-      public Color GetTokenForegroundColor(SyntaxToken token)
+      public Color GetTokenForegroundColor(DetailedToken token)
       {
          if (_ForegroundColors.TryGetValue(token.TypeNameUpperCase, out var style))
             return style;
@@ -344,7 +345,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          return _Settings.DefaultTokenColor;
       }
 
-      public Color GetTokenBackgroundColor(SyntaxToken token)
+      public Color GetTokenBackgroundColor(DetailedToken token)
       {
          if (_BackgroundColors.TryGetValue(token.TypeNameUpperCase, out var style))
             return style;
@@ -371,7 +372,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor.SyntaxHighlighting
          return _Settings.DefaultTokenBackgroundColor;
       }
 
-      public FontStyle GetTokenFontStyle(SyntaxToken token)
+      public FontStyle GetTokenFontStyle(DetailedToken token)
       {
          if (_FontStyles.TryGetValue(token.TypeNameUpperCase, out var style))
             return style;

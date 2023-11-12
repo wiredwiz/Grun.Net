@@ -72,7 +72,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun.SyntaxHighlighting
          _LineOffset = Console.CursorTop - 1;
       }
 
-      private static void HighlightTokens(IEnumerable<SyntaxToken> tokens, ISyntaxHighlightingGuide guide)
+      private static void HighlightTokens(IEnumerable<DetailedToken> tokens, ISyntaxHighlightingGuide guide)
       {
          if (guide == null)
             return;
@@ -90,7 +90,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun.SyntaxHighlighting
          Console.SetCursorPosition(cursorColumn, cursorRow);
       }
 
-      private static void HighlightToken(SyntaxToken token, ISyntaxHighlightingGuide guide)
+      private static void HighlightToken(DetailedToken token, ISyntaxHighlightingGuide guide)
       {
          if (guide == null)
             return;
@@ -106,7 +106,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun.SyntaxHighlighting
          Console.SetCursorPosition(cursorColumn, cursorRow);
       }
 
-      private static void ColorToken(SyntaxToken token, int lineOffset, ISyntaxHighlightingGuide guide)
+      private static void ColorToken(DetailedToken token, int lineOffset, ISyntaxHighlightingGuide guide)
       {
          if (token.Channel != 0)
             return;

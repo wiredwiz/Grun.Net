@@ -178,7 +178,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Parsing
          parser.AddErrorListener(errorListener);
          analyzer.ExecuteParsing(parser, work.ParserRuleName);
 
-         return new ParserResult(analyzer.SyntaxTokens, analyzer.ParserContext, work.ParserRuleName, errorListener.Errors, trace ? parseTreeListener.Events : new List<TraceEvent>());
+         return new ParserResult(analyzer.Tokens, analyzer.ParserContext, work.ParserRuleName, errorListener.Errors, trace ? parseTreeListener.Events : new List<TraceEvent>());
       }
 
       private void OnParsingFinished(ParserResult result)

@@ -105,7 +105,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private Settings _Settings;
 
-      private IList<SyntaxToken> _Tokens;
+      private IList<DetailedToken> _Tokens;
 
       private GViewer _Viewer;
 
@@ -260,10 +260,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             errorDisplay.ShowDialog();
          }
 
-         _Tokens = analyzer.SyntaxTokens;
+         _Tokens = analyzer.Tokens;
          _ParseErrors = new List<ParseMessage>(lexErrorListener.Errors);
          _ParseErrors.AddRange(parseErrorListener.Errors);
-         PopulateTokens(analyzer.SyntaxTokens);
+         PopulateTokens(analyzer.Tokens);
          PopulateParserMessages(_ParseErrors);
          PopulateTraceEvents(parseTreeListener);
       }
@@ -558,9 +558,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          Application.Exit();
       }
 
-      private IList<SyntaxToken> FindTokensInRange(IList<SyntaxToken> tokens, Range range)
+      private IList<DetailedToken> FindTokensInRange(IList<DetailedToken> tokens, Range range)
       {
-         var results = new List<SyntaxToken>();
+         var results = new List<DetailedToken>();
          var startLine = range.FromLine;
          var stopLine = range.ToLine + 2;
 
@@ -881,7 +881,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseMessageListView.SetObjects(listenerErrors);
       }
 
-      private void PopulateTokens(IList<SyntaxToken> tokens)
+      private void PopulateTokens(IList<DetailedToken> tokens)
       {
          tokenListView.SetObjects(tokens);
       }
@@ -985,7 +985,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if ((selected = tokenListView.SelectedItem) != null)
             if (selected.RowObject != null)
             {
-               var tokenView = (SyntaxToken)selected.RowObject;
+               var tokenView = (DetailedToken)selected.RowObject;
                CodeEditor.SelectSource(tokenView);
             }
       }
@@ -1024,6 +1024,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          CodeEditor.AutoIndent = _Settings.EditorAutoIndent;
          CodeEditor.WordWrapIndent = _Settings.EditorWordWrapIndent;
          CodeEditor.WordWrap = _Settings.EditorWordWrap;
+         WordWrapMnuItem.CheckState = _Settings.EditorWordWrap ? CheckState.Checked : CheckState.Unchecked;
          CodeEditor.AutoCompleteBrackets = _Settings.EditorAutoBrackets;
          CodeEditor.TabLength = _Settings.EditorTabLength;
          CodeEditor.LineNumberColor = _Settings.EditorLineNumberColor;
@@ -1060,20 +1061,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void SelectTokenFromSource(Common.Grammar.Place sourcePlace)
       {
          foreach (var token in _Tokens)
-           if (token.Line == sourcePlace.Line)
-           {
-             if (sourcePlace.IsWithinTokenBounds(token))
-             {
-               // We have found the related source token, now we select it in the list and source.
-               tokenListView.SelectedObject = token;
-               var selectedPos = tokenListView.SelectedItem.Position;
-               int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
-               tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
-               CodeEditor.SelectSource(token);
-               tabControlParse.SelectTab(1);
-               CodeEditor.Select();
-             }
-           }
+          if (sourcePlace.IsWithinTokenBounds(token))
+          {
+            // We have found the related source token, now we select it in the list and source.
+            tokenListView.SelectedObject = token;
+            var selectedPos = tokenListView.SelectedItem.Position;
+            int offset = (tokenListView.RowHeightEffective + 2) * tokenListView.RowsPerPage / 2;
+            tokenListView.LowLevelScroll(0, selectedPos.Y - offset);
+            CodeEditor.SelectSource(token);
+            tabControlParse.SelectTab(1);
+            CodeEditor.Select();
+          }
       }
 
       private void SelectParserRuleFromSourceSelection(Common.Grammar.Place selectionStart, Common.Grammar.Place selectionEnd)
@@ -1198,6 +1196,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
 
          SelectParserRuleFromSourceSelection(start, end);
+      }
+
+      private void WordWrapMnuItem_CheckStateChanged(object sender, EventArgs e)
+      {
+         CodeEditor.WordWrap = WordWrapMnuItem.CheckState == CheckState.Checked;
       }
    }
 }

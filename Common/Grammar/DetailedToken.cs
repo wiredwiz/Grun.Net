@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="SyntaxToken.cs" company="Edgerunner.org">
+// <copyright file="DetailedToken.cs" company="Edgerunner.org">
 // Copyright 2020 
 // </copyright>
 // 
@@ -44,12 +44,11 @@ using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
 {
    /// <summary>
-   /// Struct that represents a lightweight view model for IToken instances
+   /// A more detailed implementation of IToken.
    /// </summary>
    /// <seealso cref="Antlr4.Runtime.IToken"/>
-   public class SyntaxToken : CommonToken
+   public class DetailedToken : CommonToken
    {
-      private string _DisplayText;
       private string _TypeNameUpperCase;
       private int? _EndingLineNumber;
       private int? _EndingColumnPosition;
@@ -58,47 +57,77 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       private string _TypeName;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
+      /// Initializes a new instance of the <see cref="DetailedToken"/> class.
       /// </summary>
       /// <param name="source">The source.</param>
       /// <param name="type">The type.</param>
       /// <param name="channel">The channel.</param>
       /// <param name="start">The start.</param>
       /// <param name="stop">The stop.</param>
-      public SyntaxToken([NotNull] Tuple<ITokenSource, ICharStream> source, int type, int channel, int start, int stop)
+      // ReSharper disable once TooManyDependencies
+      public DetailedToken([NotNull] Tuple<ITokenSource, ICharStream> source, int type, int channel, int start, int stop)
          : base(source, type, channel, start, stop)
       {
-         ColumnPosition = charPositionInLine + 1;
+         ColumnPosition = start + 1;
          Length = stop - start + 1;
-
-         //TypeName = parserToken.Type > -1 ? lexer.Vocabulary.GetDisplayName(parserToken.Type) : string.Empty;
-         //TypeNameUpperCase = TypeName.ToUpperInvariant();
       }
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
+      /// Initializes a new instance of the <see cref="DetailedToken"/> class.
       /// </summary>
       /// <param name="type">The type.</param>
       /// <param name="text">The text.</param>
-      public SyntaxToken(int type, string text)
+      public DetailedToken(int type, string text)
          : base(type, text)
       {
       }
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="SyntaxToken"/> class.
+      /// Initializes a new instance of the <see cref="DetailedToken"/> class.
       /// </summary>
       /// <param name="type">The type.</param>
-      public SyntaxToken(int type)
+      public DetailedToken(int type)
          : base(type)
       {
+      }
+
+      /// <summary>Explicitly set the text for this token.</summary>
+      /// <remarks>
+      /// Explicitly set the text for this token. If {code text} is not
+      /// <see langword="null" />
+      /// , then
+      /// <see cref="P:Antlr4.Runtime.CommonToken.Text" />
+      /// will return this value rather than
+      /// extracting the text from the input.
+      /// </remarks>
+      /// <value>
+      /// The explicit text of the token, or
+      /// <see langword="null" />
+      /// if the text
+      /// should be obtained from the input along with the start and stop indexes
+      /// of the token.
+      /// </value>
+      public override string Text
+      {
+         get
+         {
+            if (!string.IsNullOrEmpty(text))
+               return text;
+            ICharStream inputStream = InputStream;
+            if (inputStream == null)
+               return null;
+            int size = inputStream.Size;
+            return start < size && stop < size ? inputStream.GetText(Interval.Of(start, stop)) : "<EOF>";
+         }
+
+         set => text = value;
       }
 
       /// <summary>
       /// Gets the token display text.
       /// </summary>
       /// <value>The token display text.</value>
-      public string DisplayText => _DisplayText ?? (_DisplayText = FormatTokenText(Text));
+      public string DisplayText => FormatTokenText(Text);
 
       /// <summary>
       /// Gets or sets the token type.

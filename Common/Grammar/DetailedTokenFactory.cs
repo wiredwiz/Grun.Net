@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="SyntaxTokenFactory.cs" company="Edgerunner.org">
+// <copyright file="DetailedTokenFactory.cs" company="Edgerunner.org">
 // Copyright 2022 Thaddeus Ryker
 // </copyright>
 // 
@@ -43,16 +43,16 @@ using Antlr4.Runtime.Misc;
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
 {
    /// <summary>
-   /// Class responsible for creating a <see cref="SyntaxToken"/>.
+   /// Class responsible for creating a <see cref="DetailedToken"/>.
    /// Implements the <see cref="Antlr4.Runtime.ITokenFactory" />
    /// </summary>
    /// <seealso cref="Antlr4.Runtime.ITokenFactory" />
-   public class SyntaxTokenFactory : ITokenFactory
+   public class DetailedTokenFactory : ITokenFactory
    {
       /// <summary>
       /// The default static instance factory.
       /// </summary>
-      public static readonly ITokenFactory Instance = new SyntaxTokenFactory();
+      public static readonly ITokenFactory Instance = new DetailedTokenFactory();
 
       IToken ITokenFactory.Create(Tuple<ITokenSource, ICharStream> source, int type, string text, int channel, int start, int stop, int line, int charPositionInLine)
       {
@@ -69,8 +69,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       /// </summary>
       /// <param name="type">The type.</param>
       /// <param name="text">The text.</param>
-      /// <returns>A new SyntaxToken.</returns>
-      public virtual SyntaxToken Create(int type, string text) => new SyntaxToken(type, text);
+      /// <returns>A new DetailedToken.</returns>
+      public virtual DetailedToken Create(int type, string text) => new DetailedToken(type, text);
 
       /// <summary>
       /// Creates the specified source.
@@ -83,15 +83,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       /// <param name="stop">The token stop.</param>
       /// <param name="line">The token line.</param>
       /// <param name="charPositionInLine">The character position in line.</param>
-      /// <returns>A new SyntaxToken instance.</returns>
-      public SyntaxToken Create(Tuple<ITokenSource, ICharStream> source, int type, string text, int channel, int start, int stop, int line, int charPositionInLine)
+      /// <returns>A new DetailedToken instance.</returns>
+      public DetailedToken Create(Tuple<ITokenSource, ICharStream> source, int type, string text, int channel, int start, int stop, int line, int charPositionInLine)
       {
-         SyntaxToken token =
-            new SyntaxToken(source, type, channel, start, stop) { Line = line, Column = charPositionInLine };
+         DetailedToken token =
+            new DetailedToken(source, type, channel, start, stop) { Line = line, Column = charPositionInLine };
          if (text != null)
             token.Text = text;
          else if (source.Item2 != null)
             token.Text = source.Item2.GetText(Interval.Of(start, stop));
+         if (source.Item1 is IRecognizer recognizer)
+            token.TypeName = token.Type > -1 ? recognizer.Vocabulary.GetDisplayName(token.Type) : string.Empty;
          return token;
       }
    }

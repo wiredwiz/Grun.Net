@@ -49,7 +49,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          _KnownTokens = new Dictionary<int, Dictionary<int, int>>();
       }
 
-      public bool IsKnown(SyntaxToken token)
+      public bool IsKnown(DetailedToken token)
       {
          if (_KnownTokens.TryGetValue(token.Line, out var lineCache))
             if (lineCache.TryGetValue(token.ColumnPosition, out var hash))
@@ -59,7 +59,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
          return false;
       }
 
-      public void RegisterToken(SyntaxToken token)
+      public void RegisterToken(DetailedToken token)
       {
          if (_KnownTokens.TryGetValue(token.Line, out var lineCache))
             lineCache[token.ColumnPosition] = token.GetHashCode();
