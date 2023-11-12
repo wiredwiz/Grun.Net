@@ -41,7 +41,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
+using System.Runtime.InteropServices;
 using Antlr4.Runtime;
 
 using JetBrains.Annotations;
@@ -245,9 +245,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       {
          if (parserType is null) throw new ArgumentNullException(nameof(parserType));
 
-         var methods = parserType.GetMethods()
-            .Where(m => m.GetCustomAttributes(typeof(RuleVersionAttribute), false).Length > 0);
-         return from method in methods select method.Name;
+         var prop = parserType.GetField("ruleNames", BindingFlags.Public | BindingFlags.Static);
+         var value = prop.GetValue(null) as string[];
+         return value;
       }
 
       private List<GrammarReference> FindGrammars([NotNull] string path, string name = null)
