@@ -91,38 +91,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
       {
       }
 
-      /// <summary>Explicitly set the text for this token.</summary>
-      /// <remarks>
-      /// Explicitly set the text for this token. If {code text} is not
-      /// <see langword="null" />
-      /// , then
-      /// <see cref="P:Antlr4.Runtime.CommonToken.Text" />
-      /// will return this value rather than
-      /// extracting the text from the input.
-      /// </remarks>
-      /// <value>
-      /// The explicit text of the token, or
-      /// <see langword="null" />
-      /// if the text
-      /// should be obtained from the input along with the start and stop indexes
-      /// of the token.
-      /// </value>
-      public override string Text
-      {
-         get
-         {
-            if (!string.IsNullOrEmpty(text))
-               return text;
-            ICharStream inputStream = InputStream;
-            if (inputStream == null)
-               return null;
-            int size = inputStream.Size;
-            return start < size && stop < size ? inputStream.GetText(Interval.Of(start, stop)) : "<EOF>";
-         }
-
-         set => text = value;
-      }
-
       /// <summary>
       /// Gets the token display text.
       /// </summary>

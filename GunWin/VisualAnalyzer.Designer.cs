@@ -151,7 +151,7 @@
          // splitContainer1.Panel2
          // 
          this.splitContainer1.Panel2.Controls.Add(this.tabControlParse);
-         this.splitContainer1.Size = new System.Drawing.Size(1292, 544);
+         this.splitContainer1.Size = new System.Drawing.Size(1292, 542);
          this.splitContainer1.SplitterDistance = 433;
          this.splitContainer1.SplitterWidth = 5;
          this.splitContainer1.TabIndex = 0;
@@ -168,7 +168,7 @@
          this.tableLayoutPanel1.RowCount = 2;
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(431, 542);
+         this.tableLayoutPanel1.Size = new System.Drawing.Size(431, 540);
          this.tableLayoutPanel1.TabIndex = 1;
          // 
          // CodeEditor
@@ -195,6 +195,7 @@
          this.CodeEditor.CharWidth = 10;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -259,7 +260,7 @@
          this.tabControlParse.Margin = new System.Windows.Forms.Padding(4);
          this.tabControlParse.Name = "tabControlParse";
          this.tabControlParse.SelectedIndex = 0;
-         this.tabControlParse.Size = new System.Drawing.Size(852, 542);
+         this.tabControlParse.Size = new System.Drawing.Size(852, 540);
          this.tabControlParse.TabIndex = 0;
          // 
          // tabParseTree
@@ -271,7 +272,7 @@
          this.tabParseTree.Margin = new System.Windows.Forms.Padding(4);
          this.tabParseTree.Name = "tabParseTree";
          this.tabParseTree.Padding = new System.Windows.Forms.Padding(4);
-         this.tabParseTree.Size = new System.Drawing.Size(844, 504);
+         this.tabParseTree.Size = new System.Drawing.Size(844, 502);
          this.tabParseTree.TabIndex = 0;
          this.tabParseTree.Text = "Parse Tree";
          this.tabParseTree.UseVisualStyleBackColor = true;
@@ -290,7 +291,7 @@
          // splitContainer3.Panel2
          // 
          this.splitContainer3.Panel2.Controls.Add(this.PnlGraph);
-         this.splitContainer3.Size = new System.Drawing.Size(836, 440);
+         this.splitContainer3.Size = new System.Drawing.Size(836, 438);
          this.splitContainer3.SplitterDistance = 187;
          this.splitContainer3.SplitterWidth = 5;
          this.splitContainer3.TabIndex = 1;
@@ -301,7 +302,7 @@
          this.ParseTreeView.Location = new System.Drawing.Point(0, 0);
          this.ParseTreeView.Margin = new System.Windows.Forms.Padding(4);
          this.ParseTreeView.Name = "ParseTreeView";
-         this.ParseTreeView.Size = new System.Drawing.Size(187, 440);
+         this.ParseTreeView.Size = new System.Drawing.Size(187, 438);
          this.ParseTreeView.TabIndex = 0;
          this.ParseTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ParseTreeView_AfterSelect);
          this.ParseTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ParseTreeView_NodeMouseClick);
@@ -312,13 +313,13 @@
          this.PnlGraph.Location = new System.Drawing.Point(0, 0);
          this.PnlGraph.Margin = new System.Windows.Forms.Padding(4);
          this.PnlGraph.Name = "PnlGraph";
-         this.PnlGraph.Size = new System.Drawing.Size(644, 440);
+         this.PnlGraph.Size = new System.Drawing.Size(644, 438);
          this.PnlGraph.TabIndex = 0;
          // 
          // GraphZoomTrackBar
          // 
          this.GraphZoomTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-         this.GraphZoomTrackBar.Location = new System.Drawing.Point(4, 444);
+         this.GraphZoomTrackBar.Location = new System.Drawing.Point(4, 442);
          this.GraphZoomTrackBar.Margin = new System.Windows.Forms.Padding(4);
          this.GraphZoomTrackBar.Maximum = 200;
          this.GraphZoomTrackBar.Name = "GraphZoomTrackBar";
@@ -524,7 +525,7 @@
             this.helpToolStripMenuItem});
          this.menuStrip1.Location = new System.Drawing.Point(0, 0);
          this.menuStrip1.Name = "menuStrip1";
-         this.menuStrip1.Size = new System.Drawing.Size(1292, 28);
+         this.menuStrip1.Size = new System.Drawing.Size(1292, 30);
          this.menuStrip1.TabIndex = 1;
          this.menuStrip1.Text = "menuStrip1";
          // 
@@ -539,7 +540,7 @@
             this.toolStripSeparator3,
             this.exitToolStripMenuItem});
          this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-         this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+         this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
          this.fileToolStripMenuItem.Text = "&File";
          // 
          // loadGrammarToolStripMenuItem
@@ -603,7 +604,7 @@
             this.selectTokenToolStripMenuItem1,
             this.selectParserRuleToolStripMenuItem1});
          this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
-         this.EditToolStripMenuItem.Size = new System.Drawing.Size(49, 24);
+         this.EditToolStripMenuItem.Size = new System.Drawing.Size(49, 26);
          this.EditToolStripMenuItem.Text = "&Edit";
          // 
          // GoToToolStripMenuItem
@@ -662,7 +663,7 @@
             this.DiagnosticsToolStripMenuItem,
             this.SimpleLLModeToolStripMenuItem});
          this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-         this.optionsToolStripMenuItem.Size = new System.Drawing.Size(75, 24);
+         this.optionsToolStripMenuItem.Size = new System.Drawing.Size(75, 26);
          this.optionsToolStripMenuItem.Text = "&Options";
          // 
          // HeuristicHighlightingToolStripMenuItem
@@ -727,7 +728,7 @@
          this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
          this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-         this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+         this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
          this.helpToolStripMenuItem.Text = "&Help";
          // 
          // aboutToolStripMenuItem
@@ -744,7 +745,7 @@
          // splitContainer2
          // 
          this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainer2.Location = new System.Drawing.Point(0, 28);
+         this.splitContainer2.Location = new System.Drawing.Point(0, 30);
          this.splitContainer2.Margin = new System.Windows.Forms.Padding(4);
          this.splitContainer2.Name = "splitContainer2";
          this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -756,8 +757,8 @@
          // splitContainer2.Panel2
          // 
          this.splitContainer2.Panel2.Controls.Add(this.ParseMessageListView);
-         this.splitContainer2.Size = new System.Drawing.Size(1292, 722);
-         this.splitContainer2.SplitterDistance = 544;
+         this.splitContainer2.Size = new System.Drawing.Size(1292, 720);
+         this.splitContainer2.SplitterDistance = 542;
          this.splitContainer2.SplitterWidth = 5;
          this.splitContainer2.TabIndex = 2;
          // 

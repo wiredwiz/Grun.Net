@@ -35,7 +35,7 @@
 #endregion
 
 using System.Collections.Generic;
-
+using System.IO;
 using Antlr4.Runtime;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
@@ -64,6 +64,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// <summary>
       /// Upon syntax error, notify any interested parties.
       /// </summary>
+      /// <param name="output">Where the error should be written.</param>
       /// <param name="recognizer">What parser got the error. From this
       /// object, you can access the context as well
       /// as the input stream.</param>
@@ -92,14 +93,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar.Errors
       /// when we discover mismatched token errors that we can recover from
       /// in-line, without returning from the surrounding rule (via the single
       /// token insertion and deletion mechanism).</p></remarks>
-      // ReSharper disable once TooManyArguments
-      public void SyntaxError(
-         IRecognizer recognizer,
-         IToken offendingSymbol,
-         int line,
-         int charPositionInLine,
-         string msg,
-         RecognitionException e)
+      public void SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine,
+         string msg, RecognitionException e)
       {
          // TODO: add multi-lingual support for source literal
          Errors.Add(new ParseMessage(line, charPositionInLine + 1, "Parser", msg, offendingSymbol));

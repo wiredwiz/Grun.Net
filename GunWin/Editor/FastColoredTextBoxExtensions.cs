@@ -66,7 +66,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Editor
          if (context == null)
             return;
 
-         var startingPlace = new Place(context.Start.Column, context.start.Line - 1);
+         var startingPlace = new Place(context.Start.Column, context.Start.Line - 1);
          var stopToken = context.Stop ?? context.Start;
          var spot = stopToken.GetEndPlace();
          var stoppingPlace = new Place(spot.Position + 1, spot.Line - 1);

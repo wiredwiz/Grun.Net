@@ -90,7 +90,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Grammar
             new DetailedToken(source, type, channel, start, stop) { Line = line, Column = charPositionInLine };
          if (text != null)
             token.Text = text;
-         else if (source.Item2 != null)
+         else if (source.Item2 != null & stop >= start)
             token.Text = source.Item2.GetText(Interval.Of(start, stop));
          if (source.Item1 is IRecognizer recognizer)
             token.TypeName = token.Type > -1 ? recognizer.Vocabulary.GetDisplayName(token.Type) : string.Empty;
