@@ -195,6 +195,7 @@
          this.CodeEditor.CharWidth = 10;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -472,7 +473,7 @@
          // 
          // colTraceType
          // 
-         this.colTraceType.AspectName = "TypeName";
+         this.colTraceType.AspectName = "Type";
          this.colTraceType.CellPadding = null;
          this.colTraceType.Text = "Event TypeName";
          this.colTraceType.Width = 134;

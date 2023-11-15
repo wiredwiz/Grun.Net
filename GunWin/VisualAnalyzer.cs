@@ -121,6 +121,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private bool _EnableTrackBarZoom = true;
 
+      private bool _Reloading = false;
+
       #region Constructors And Finalizers
 
       /// <summary>
@@ -342,7 +344,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void GrammarAssemblyChanged(object sender, GrammarReference e)
       {
          var grammar = FetchGrammarInternal(e.AssemblyPath, e.GrammarName);
+         _Reloading = true;
          SetGrammar(grammar);
+         _Reloading = false;
          ParseSource();
          ColorizeTokens(null);
       }
@@ -522,7 +526,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             return;
 
          var tokensToColor = range == null ? _Tokens : FindTokensInRange(_Tokens, range);
-         _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor, GetErrorTokens());
+         if (tokensToColor != null)
+            _Highlighter.ColorizeTokens(CodeEditor, _Registry, tokensToColor, GetErrorTokens());
       }
 
       private void ConfigureGraphWorker()
@@ -845,7 +850,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void ParserRulesCombo_SelectedIndexChanged(object sender, EventArgs e)
       {
-         if (CmbRules.Items.Count > 0)
+         if (CmbRules.Items.Count > 0 && !_Reloading)
          {
             ParseSource();
             ColorizeTokens(null);
