@@ -473,7 +473,7 @@
          // 
          // colTraceType
          // 
-         this.colTraceType.AspectName = "TypeName";
+         this.colTraceType.AspectName = "Type";
          this.colTraceType.CellPadding = null;
          this.colTraceType.Text = "Event TypeName";
          this.colTraceType.Width = 134;
