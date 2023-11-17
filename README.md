@@ -2,7 +2,8 @@
 
 A set of tools written in C# for testing Antlr4 generated C# grammar assemblies. 
 These tools are meant to supplement the need to continually test with the Antlr java TestRig assembly.
-Currently the tool only supports the Antlr4.Runtime assembly, but a 2.0 release with support for the standard runtime assembly is forthcoming (and overdue).
+If you want support for the Antlr4.Runtime assembly, install version 1.3.23320.0.  If you want support for the Antlr4.Runtime.Standard assembly, then install 2.0.23321.1 instead.
+You may install both versions together if needed, the 2.x runtime standard versions will install alongside the original without issues.
 In the future I will work on a version that supports both dynamically, but the current design of the app makes this impossible.
 
 ![.Net Framework CI](https://github.com/wiredwiz/Grun.Net/workflows/.Net%20Framework%20CI/badge.svg)
