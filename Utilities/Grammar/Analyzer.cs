@@ -154,12 +154,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          if (option.HasFlag(ParseOption.Diagnostics))
          {
             parser.AddErrorListener(new DiagnosticErrorListener());
-            parser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.LlExactAmbigDetection;
+            parser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.LL_EXACT_AMBIG_DETECTION;
          }
 
          // Handle Sll parsing option
          if (option.HasFlag(ParseOption.Sll))
-            parser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.Sll;
+            parser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.SLL;
 
          // Handle Trace parsing option
          parser.Trace = option.HasFlag(ParseOption.Trace);

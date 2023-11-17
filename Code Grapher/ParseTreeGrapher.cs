@@ -100,8 +100,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
                ruleFailedAndMatchedNothing =
                   // ReSharper disable once ComplexConditionExpression
                   context.exception != null &&
-                  context.stop != null
-                  && context.stop.TokenIndex < context.start.TokenIndex;
+                  context.Stop != null
+                  && context.Stop.TokenIndex < context.Start.TokenIndex;
 
             if (tree is IErrorNode || ruleFailedAndMatchedNothing)
                node.Label.FontColor = Color.Red;

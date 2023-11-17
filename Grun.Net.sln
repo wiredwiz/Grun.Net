@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1022
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grun", "Grun\Grun.csproj", "{B614368A-F4C9-409F-8896-CB1DA204AD6D}"
 EndProject
@@ -64,21 +64,9 @@ Global
 		SolutionGuid = {A1CB1A18-09C5-4D7F-916D-2346D29A8563}
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
-		UpdateAssemblyVersion = True
-		UpdateAssemblyFileVersion = True
-		UpdateAssemblyInfoVersion = True
-		ShouldCreateLogs = True
-		AdvancedSettingsExpanded = True
-		AssemblyVersionSettings = None.None.None.None
-		AssemblyFileVersionSettings = None.None.None.None
-		AssemblyInfoVersionSettings = None.None.None.None
-		UpdatePackageVersion = False
-		AssemblyInfoVersionType = SettingsVersion
-		InheritWinAppVersionFrom = None
 		UpdateAssemblyVersion.Release|Any CPU = True
 		UpdateAssemblyFileVersion.Release|Any CPU = True
 		UpdateAssemblyInfoVersion.Release|Any CPU = True
-		ShouldCreateLogs.Release|Any CPU = True
 		AssemblyVersionSettings.Release|Any CPU = None.None.DateStamp.IncrementWithResetOnIncrease
 		AssemblyFileVersionSettings.Release|Any CPU = None.None.DateStamp.IncrementWithResetOnIncrease
 		AssemblyInfoVersionSettings.Release|Any CPU = None.None.DateStamp.IncrementWithResetOnIncrease
