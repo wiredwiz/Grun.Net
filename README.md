@@ -6,6 +6,8 @@ If you want support for the Antlr4.Runtime assembly, install version 1.3.23320.0
 You may install both versions together if needed, the 2.x runtime standard versions will install alongside the original without issues.
 In the future I will work on a version that supports both dynamically, but the current design of the app makes this impossible.
 
+Please create issues for any bug fixes or feature requests.  I want to make this tool better and help improve C# ANTLR development.
+
 ![.Net Framework CI](https://github.com/wiredwiz/Grun.Net/workflows/.Net%20Framework%20CI/badge.svg)
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://raw.githubusercontent.com/wiredwiz/Grun.Net/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/wiredwiz/Grun.Net.svg)](https://github.com/wiredwiz/Grun.Net/releases/)
