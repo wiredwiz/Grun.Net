@@ -75,6 +75,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
       public int MinimumRenderCountToTriggerLongDelay { get; set; }
 
       /// <summary>
+      /// Gets or sets the maximum node render count.
+      /// </summary>
+      /// <value>The maximum node count to render.</value>
+      public int MaximumNodeRenderCount { get; set; }
+
+      /// <summary>
       /// Gets or sets the color of the keyword token.
       /// </summary>
       /// <value>The color of the keyword token.</value>
@@ -732,6 +738,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          var defDelayPerNode = 5;
          var defMaxRenderDelay = 1000;
          var defMinRenderCountForLongDelay = 10;
+         var defMaxNodeRenderCount = 500;
 
          if (appSettings == null)
          {
@@ -757,6 +764,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          // Fetch MinimumRenderCountToTriggerLongDelay setting
          result = appSettings["MinimumRenderCountToTriggerLongDelay"]?.Value ?? string.Empty;
          MinimumRenderCountToTriggerLongDelay = !int.TryParse(result, out settingValue) ? defMinRenderCountForLongDelay : settingValue;
+
+         // Fetch MaximumNodeRenderCount setting
+         result = appSettings["MaximumNodeRenderCount"]?.Value ?? string.Empty;
+         MaximumNodeRenderCount = !int.TryParse(result, out settingValue) ? defMaxNodeRenderCount : settingValue;
       }
    }
 }

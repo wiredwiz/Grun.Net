@@ -364,7 +364,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void GraphingFinished(object sender, GraphingResult e)
       {
          BuildParseTreeTreeViewGuide(e.ParseTree);
-         RenderParseTreeGraph(e.Graph);
+
+         // Bail if our graph node count is too high
+         if (e.Graph.Nodes.Count() <= _Settings.MaximumNodeRenderCount) RenderParseTreeGraph(e.Graph);
+
          if (e.Graph != null)
             stripLabelNodeCount.Text = e.Graph.Nodes.Count().ToString();
 

@@ -1,4 +1,4 @@
-﻿namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
+namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 {
    partial class VisualAnalyzer
    {
@@ -361,6 +361,7 @@
             this.colLength});
          this.tokenListView.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tokenListView.FullRowSelect = true;
+         this.tokenListView.HeaderUsesThemes = false;
          this.tokenListView.HideSelection = false;
          this.tokenListView.Location = new System.Drawing.Point(4, 4);
          this.tokenListView.Margin = new System.Windows.Forms.Padding(4);
@@ -371,6 +372,8 @@
          this.tokenListView.Size = new System.Drawing.Size(836, 496);
          this.tokenListView.TabIndex = 0;
          this.tokenListView.UseCompatibleStateImageBehavior = false;
+         this.tokenListView.UseFilterIndicator = true;
+         this.tokenListView.UseFiltering = true;
          this.tokenListView.View = System.Windows.Forms.View.Details;
          this.tokenListView.VirtualMode = true;
          this.tokenListView.Click += new System.EventHandler(this.TokenListView_Click);
@@ -788,7 +791,7 @@
          // 
          // colLineNumber
          // 
-         this.colLineNumber.AspectName = "Line";
+         this.colLineNumber.AspectName = "LineNumber";
          this.colLineNumber.CellPadding = null;
          this.colLineNumber.Text = "Line";
          // 
