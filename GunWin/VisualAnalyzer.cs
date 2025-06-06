@@ -542,7 +542,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             BackgroundColor = _Settings.GraphNodeBackgroundColor.GetMsAglColor(),
             BorderColor = _Settings.GraphNodeBorderColor.GetMsAglColor(),
-            TextColor = _Settings.GraphNodeTextColor.GetMsAglColor()
+            TextColor = _Settings.GraphNodeTextColor.GetMsAglColor(),
+            UseLabelNames = _Settings.UseRuleLabelNamesForGraphNodes
          };
       }
 
@@ -1033,6 +1034,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          CodeEditor.WordWrapIndent = _Settings.EditorWordWrapIndent;
          CodeEditor.WordWrap = _Settings.EditorWordWrap;
          WordWrapMnuItem.CheckState = _Settings.EditorWordWrap ? CheckState.Checked : CheckState.Unchecked;
+         UseLabelNamesMnuItem.CheckState = _Settings.UseRuleLabelNamesForGraphNodes ? CheckState.Checked : CheckState.Unchecked;
          CodeEditor.AutoCompleteBrackets = _Settings.EditorAutoBrackets;
          CodeEditor.TabLength = _Settings.EditorTabLength;
          CodeEditor.LineNumberColor = _Settings.EditorLineNumberColor;
@@ -1198,9 +1200,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
          if (end.Line < start.Line || (end.Line == start.Line && end.Position < start.Position))
          {
-            var temp = start;
-            start = end;
-            end = temp;
+            (start, end) = (end, start);
          }
 
          SelectParserRuleFromSourceSelection(start, end);
@@ -1209,6 +1209,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void WordWrapMnuItem_CheckStateChanged(object sender, EventArgs e)
       {
          CodeEditor.WordWrap = WordWrapMnuItem.CheckState == CheckState.Checked;
+      }
+
+      private void UseLabelNamesMnuItem_CheckStateChanged(object sender, EventArgs e)
+      {
+         _Grapher.UseLabelNames = UseLabelNamesMnuItem.CheckState == CheckState.Checked;
+         ParseSource();
       }
    }
 }
