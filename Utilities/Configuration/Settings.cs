@@ -171,6 +171,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
       public Color GraphNodeBackgroundColor { get; set; }
 
       /// <summary>
+      /// Gets or sets a value indicating whether to use parser rule label names for graph node text.
+      /// </summary>
+      /// <value><c>true</c> if [use rule label names for graph nodes]; otherwise, <c>false</c>.</value>
+      public bool UseRuleLabelNamesForGraphNodes { get; set; }
+
+      /// <summary>
       /// Gets or sets the editor font family.
       /// </summary>
       /// <value>The editor font family.</value>
@@ -291,6 +297,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          LoadGraphThrottlingSettings(appSettings);
          LoadSyntaxHighlightingSettings(appSettings);
          LoadGraphingNodeColorSettings(appSettings);
+         LoadGraphingBehaviorSettings(appSettings);
          LoadEditorSettings(appSettings);
          LoadConsoleSettings(appSettings);
          LoadParserMessageFontSettings(appSettings);
@@ -304,9 +311,25 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Configuration
          LoadGraphThrottlingSettings(null);
          LoadSyntaxHighlightingSettings(null);
          LoadGraphingNodeColorSettings(null);
+         LoadGraphingBehaviorSettings(null);
          LoadEditorSettings(null);
          LoadConsoleSettings(null);
          LoadParserMessageFontSettings(null);
+      }
+
+      private void LoadGraphingBehaviorSettings(KeyValueConfigurationCollection appSettings)
+      {
+         var defUseNodeLabels = true;
+
+         if (appSettings == null)
+         {
+            UseRuleLabelNamesForGraphNodes = defUseNodeLabels;
+            return;
+         }
+
+         // Fetch Graphing behavior setting
+         var result = appSettings["UseRuleLabelNamesForGraphNodes"]?.Value ?? string.Empty;
+         UseRuleLabelNamesForGraphNodes = !bool.TryParse(result, out var settingValueBoolean) ? defUseNodeLabels : settingValueBoolean;
       }
 
       private void LoadEditorSettings(KeyValueConfigurationCollection appSettings)
