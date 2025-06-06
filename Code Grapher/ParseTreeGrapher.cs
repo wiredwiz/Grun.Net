@@ -36,6 +36,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 
 using Antlr4.Runtime;
@@ -59,6 +60,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
 
       /// <inheritdoc/>
       public Color? BorderColor { get; set; }
+
+      public bool UseLabelNames { get; set; }
 
       /// <inheritdoc/>
       public Graph CreateGraph(ITree tree, IList<string> parserRules)
@@ -96,7 +99,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
 
             var ruleFailedAndMatchedNothing = false;
 
-            if (tree is ParserRuleContext context)
+            var context = tree as ParserRuleContext;
+
+            if (UseLabelNames && context != null)
+            {
+               var className = context.GetType().Name;
+               var labelEnd = className.LastIndexOf("Context", StringComparison.Ordinal);
+               node.LabelText = labelEnd != -1 ? className.Substring(0, labelEnd) : Trees.GetNodeText(tree, parserRules);
+            }
+            else
+               node.LabelText = Trees.GetNodeText(tree, parserRules);
+
+            if (context != null)
                ruleFailedAndMatchedNothing =
                   // ReSharper disable once ComplexConditionExpression
                   context.exception != null &&

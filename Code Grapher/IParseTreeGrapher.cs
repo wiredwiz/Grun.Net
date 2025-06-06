@@ -68,6 +68,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
       Color? BorderColor { get; set; }
 
       /// <summary>
+      /// Gets or sets a value indicating whether [use rule label names in graph nodes].
+      /// </summary>
+      /// <value><c>true</c> if [use label names]; otherwise, <c>false</c>.</value>
+      bool UseLabelNames { get; set; }
+
+      /// <summary>
       /// Creates the parse tree graph.
       /// </summary>
       /// <param name="tree">The parse tree to graph.</param>

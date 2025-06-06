@@ -79,6 +79,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.HeuristicHighlightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.ShowLexerErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.UseLabelNamesMnuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.WordWrapMnuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
          this.TracingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,7 +141,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
          this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-         this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
          this.splitContainer1.Name = "splitContainer1";
          // 
          // splitContainer1.Panel1
@@ -151,9 +151,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // splitContainer1.Panel2
          // 
          this.splitContainer1.Panel2.Controls.Add(this.tabControlParse);
-         this.splitContainer1.Size = new System.Drawing.Size(1292, 542);
-         this.splitContainer1.SplitterDistance = 433;
-         this.splitContainer1.SplitterWidth = 5;
+         this.splitContainer1.Size = new System.Drawing.Size(969, 438);
+         this.splitContainer1.SplitterDistance = 325;
          this.splitContainer1.TabIndex = 0;
          // 
          // tableLayoutPanel1
@@ -164,11 +163,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
          this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+         this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
          this.tableLayoutPanel1.Name = "tableLayoutPanel1";
          this.tableLayoutPanel1.RowCount = 2;
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 41F));
          this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(431, 540);
+         this.tableLayoutPanel1.Size = new System.Drawing.Size(323, 436);
          this.tableLayoutPanel1.TabIndex = 1;
          // 
          // CodeEditor
@@ -189,25 +189,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
         '\''};
          this.CodeEditor.AutoIndent = false;
          this.CodeEditor.AutoIndentChars = false;
-         this.CodeEditor.AutoScrollMinSize = new System.Drawing.Size(31, 18);
+         this.CodeEditor.AutoScrollMinSize = new System.Drawing.Size(27, 14);
          this.CodeEditor.BackBrush = null;
-         this.CodeEditor.CharHeight = 18;
-         this.CodeEditor.CharWidth = 10;
+         this.CodeEditor.CharHeight = 14;
+         this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
-         this.CodeEditor.Location = new System.Drawing.Point(4, 54);
-         this.CodeEditor.Margin = new System.Windows.Forms.Padding(4);
+         this.CodeEditor.Location = new System.Drawing.Point(3, 44);
          this.CodeEditor.Name = "CodeEditor";
          this.CodeEditor.Paddings = new System.Windows.Forms.Padding(0);
          this.CodeEditor.RightBracket = ')';
          this.CodeEditor.RightBracket2 = ']';
          this.CodeEditor.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
          this.CodeEditor.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("CodeEditor.ServiceColors")));
-         this.CodeEditor.Size = new System.Drawing.Size(423, 484);
+         this.CodeEditor.Size = new System.Drawing.Size(317, 393);
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
          this.CodeEditor.SelectionChanged += new System.EventHandler(this.CodeEditor_SelectionChanged);
@@ -220,19 +218,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.panel1.Controls.Add(this.lblParserRule);
          this.panel1.Controls.Add(this.CmbRules);
          this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.panel1.Location = new System.Drawing.Point(3, 3);
+         this.panel1.Location = new System.Drawing.Point(2, 2);
+         this.panel1.Margin = new System.Windows.Forms.Padding(2);
          this.panel1.Name = "panel1";
-         this.panel1.Size = new System.Drawing.Size(425, 44);
+         this.panel1.Size = new System.Drawing.Size(319, 37);
          this.panel1.TabIndex = 1;
          // 
          // lblParserRule
          // 
          this.lblParserRule.AutoSize = true;
          this.lblParserRule.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.lblParserRule.Location = new System.Drawing.Point(4, 9);
-         this.lblParserRule.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+         this.lblParserRule.Location = new System.Drawing.Point(3, 7);
          this.lblParserRule.Name = "lblParserRule";
-         this.lblParserRule.Size = new System.Drawing.Size(113, 25);
+         this.lblParserRule.Size = new System.Drawing.Size(92, 20);
          this.lblParserRule.TabIndex = 0;
          this.lblParserRule.Text = "Parser Rule";
          // 
@@ -242,10 +240,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.CmbRules.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
          this.CmbRules.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.CmbRules.FormattingEnabled = true;
-         this.CmbRules.Location = new System.Drawing.Point(135, 5);
-         this.CmbRules.Margin = new System.Windows.Forms.Padding(4);
+         this.CmbRules.Location = new System.Drawing.Point(101, 4);
          this.CmbRules.Name = "CmbRules";
-         this.CmbRules.Size = new System.Drawing.Size(269, 33);
+         this.CmbRules.Size = new System.Drawing.Size(203, 28);
          this.CmbRules.TabIndex = 0;
          this.CmbRules.SelectedIndexChanged += new System.EventHandler(this.ParserRulesCombo_SelectedIndexChanged);
          // 
@@ -257,10 +254,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.tabControlParse.Dock = System.Windows.Forms.DockStyle.Fill;
          this.tabControlParse.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.tabControlParse.Location = new System.Drawing.Point(0, 0);
-         this.tabControlParse.Margin = new System.Windows.Forms.Padding(4);
          this.tabControlParse.Name = "tabControlParse";
          this.tabControlParse.SelectedIndex = 0;
-         this.tabControlParse.Size = new System.Drawing.Size(852, 540);
+         this.tabControlParse.Size = new System.Drawing.Size(638, 436);
          this.tabControlParse.TabIndex = 0;
          // 
          // tabParseTree
@@ -268,11 +264,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.tabParseTree.Controls.Add(this.splitContainer3);
          this.tabParseTree.Controls.Add(this.GraphZoomTrackBar);
          this.tabParseTree.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.tabParseTree.Location = new System.Drawing.Point(4, 34);
-         this.tabParseTree.Margin = new System.Windows.Forms.Padding(4);
+         this.tabParseTree.Location = new System.Drawing.Point(4, 29);
          this.tabParseTree.Name = "tabParseTree";
-         this.tabParseTree.Padding = new System.Windows.Forms.Padding(4);
-         this.tabParseTree.Size = new System.Drawing.Size(844, 502);
+         this.tabParseTree.Padding = new System.Windows.Forms.Padding(3);
+         this.tabParseTree.Size = new System.Drawing.Size(630, 403);
          this.tabParseTree.TabIndex = 0;
          this.tabParseTree.Text = "Parse Tree";
          this.tabParseTree.UseVisualStyleBackColor = true;
@@ -280,8 +275,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // splitContainer3
          // 
          this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainer3.Location = new System.Drawing.Point(4, 4);
-         this.splitContainer3.Margin = new System.Windows.Forms.Padding(4);
+         this.splitContainer3.Location = new System.Drawing.Point(3, 3);
          this.splitContainer3.Name = "splitContainer3";
          // 
          // splitContainer3.Panel1
@@ -291,18 +285,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // splitContainer3.Panel2
          // 
          this.splitContainer3.Panel2.Controls.Add(this.PnlGraph);
-         this.splitContainer3.Size = new System.Drawing.Size(836, 438);
-         this.splitContainer3.SplitterDistance = 187;
-         this.splitContainer3.SplitterWidth = 5;
+         this.splitContainer3.Size = new System.Drawing.Size(624, 352);
+         this.splitContainer3.SplitterDistance = 139;
          this.splitContainer3.TabIndex = 1;
          // 
          // ParseTreeView
          // 
          this.ParseTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
          this.ParseTreeView.Location = new System.Drawing.Point(0, 0);
-         this.ParseTreeView.Margin = new System.Windows.Forms.Padding(4);
          this.ParseTreeView.Name = "ParseTreeView";
-         this.ParseTreeView.Size = new System.Drawing.Size(187, 438);
+         this.ParseTreeView.Size = new System.Drawing.Size(139, 352);
          this.ParseTreeView.TabIndex = 0;
          this.ParseTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ParseTreeView_AfterSelect);
          this.ParseTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ParseTreeView_NodeMouseClick);
@@ -311,19 +303,17 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.PnlGraph.Dock = System.Windows.Forms.DockStyle.Fill;
          this.PnlGraph.Location = new System.Drawing.Point(0, 0);
-         this.PnlGraph.Margin = new System.Windows.Forms.Padding(4);
          this.PnlGraph.Name = "PnlGraph";
-         this.PnlGraph.Size = new System.Drawing.Size(644, 438);
+         this.PnlGraph.Size = new System.Drawing.Size(481, 352);
          this.PnlGraph.TabIndex = 0;
          // 
          // GraphZoomTrackBar
          // 
          this.GraphZoomTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-         this.GraphZoomTrackBar.Location = new System.Drawing.Point(4, 442);
-         this.GraphZoomTrackBar.Margin = new System.Windows.Forms.Padding(4);
+         this.GraphZoomTrackBar.Location = new System.Drawing.Point(3, 355);
          this.GraphZoomTrackBar.Maximum = 200;
          this.GraphZoomTrackBar.Name = "GraphZoomTrackBar";
-         this.GraphZoomTrackBar.Size = new System.Drawing.Size(836, 56);
+         this.GraphZoomTrackBar.Size = new System.Drawing.Size(624, 45);
          this.GraphZoomTrackBar.TabIndex = 2;
          this.GraphZoomTrackBar.ValueChanged += new System.EventHandler(this.GraphZoomTrackBar_ValueChanged);
          // 
@@ -331,11 +321,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.tabTokens.Controls.Add(this.tokenListView);
          this.tabTokens.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.tabTokens.Location = new System.Drawing.Point(4, 34);
-         this.tabTokens.Margin = new System.Windows.Forms.Padding(4);
+         this.tabTokens.Location = new System.Drawing.Point(4, 29);
          this.tabTokens.Name = "tabTokens";
-         this.tabTokens.Padding = new System.Windows.Forms.Padding(4);
-         this.tabTokens.Size = new System.Drawing.Size(844, 504);
+         this.tabTokens.Padding = new System.Windows.Forms.Padding(3);
+         this.tabTokens.Size = new System.Drawing.Size(630, 403);
          this.tabTokens.TabIndex = 1;
          this.tabTokens.Text = "Tokens";
          this.tabTokens.UseVisualStyleBackColor = true;
@@ -363,13 +352,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.tokenListView.FullRowSelect = true;
          this.tokenListView.HeaderUsesThemes = false;
          this.tokenListView.HideSelection = false;
-         this.tokenListView.Location = new System.Drawing.Point(4, 4);
-         this.tokenListView.Margin = new System.Windows.Forms.Padding(4);
+         this.tokenListView.Location = new System.Drawing.Point(3, 3);
          this.tokenListView.MultiSelect = false;
          this.tokenListView.Name = "tokenListView";
          this.tokenListView.ShowGroups = false;
          this.tokenListView.ShowItemCountOnGroups = true;
-         this.tokenListView.Size = new System.Drawing.Size(836, 496);
+         this.tokenListView.Size = new System.Drawing.Size(624, 397);
          this.tokenListView.TabIndex = 0;
          this.tokenListView.UseCompatibleStateImageBehavior = false;
          this.tokenListView.UseFilterIndicator = true;
@@ -436,10 +424,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // tabTrace
          // 
          this.tabTrace.Controls.Add(this.TraceListView);
-         this.tabTrace.Location = new System.Drawing.Point(4, 34);
-         this.tabTrace.Margin = new System.Windows.Forms.Padding(4);
+         this.tabTrace.Location = new System.Drawing.Point(4, 29);
          this.tabTrace.Name = "tabTrace";
-         this.tabTrace.Size = new System.Drawing.Size(844, 504);
+         this.tabTrace.Size = new System.Drawing.Size(630, 403);
          this.tabTrace.TabIndex = 2;
          this.tabTrace.Text = "Trace";
          this.tabTrace.UseVisualStyleBackColor = true;
@@ -459,12 +446,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.TraceListView.HeaderUsesThemes = false;
          this.TraceListView.HideSelection = false;
          this.TraceListView.Location = new System.Drawing.Point(0, 0);
-         this.TraceListView.Margin = new System.Windows.Forms.Padding(4);
          this.TraceListView.MultiSelect = false;
          this.TraceListView.Name = "TraceListView";
          this.TraceListView.ShowGroups = false;
          this.TraceListView.ShowSortIndicators = false;
-         this.TraceListView.Size = new System.Drawing.Size(844, 504);
+         this.TraceListView.Size = new System.Drawing.Size(630, 403);
          this.TraceListView.SortGroupItemsByPrimaryColumn = false;
          this.TraceListView.TabIndex = 0;
          this.TraceListView.UseCompatibleStateImageBehavior = false;
@@ -502,19 +488,19 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             this.selectTokenToolStripMenuItem,
             this.selectParserRuleToolStripMenuItem});
          this.TracingContextMenuStrip.Name = "TracingContextMenuStrip";
-         this.TracingContextMenuStrip.Size = new System.Drawing.Size(195, 52);
+         this.TracingContextMenuStrip.Size = new System.Drawing.Size(186, 52);
          // 
          // selectTokenToolStripMenuItem
          // 
          this.selectTokenToolStripMenuItem.Name = "selectTokenToolStripMenuItem";
-         this.selectTokenToolStripMenuItem.Size = new System.Drawing.Size(194, 24);
+         this.selectTokenToolStripMenuItem.Size = new System.Drawing.Size(185, 24);
          this.selectTokenToolStripMenuItem.Text = "Select Token";
          this.selectTokenToolStripMenuItem.Click += new System.EventHandler(this.SelectTokenToolStripMenuItem_Click);
          // 
          // selectParserRuleToolStripMenuItem
          // 
          this.selectParserRuleToolStripMenuItem.Name = "selectParserRuleToolStripMenuItem";
-         this.selectParserRuleToolStripMenuItem.Size = new System.Drawing.Size(194, 24);
+         this.selectParserRuleToolStripMenuItem.Size = new System.Drawing.Size(185, 24);
          this.selectParserRuleToolStripMenuItem.Text = "Select Parser Rule";
          this.selectParserRuleToolStripMenuItem.Click += new System.EventHandler(this.SelectParserRuleToolStripMenuItem_Click);
          // 
@@ -528,7 +514,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             this.helpToolStripMenuItem});
          this.menuStrip1.Location = new System.Drawing.Point(0, 0);
          this.menuStrip1.Name = "menuStrip1";
-         this.menuStrip1.Size = new System.Drawing.Size(1292, 30);
+         this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+         this.menuStrip1.Size = new System.Drawing.Size(969, 27);
          this.menuStrip1.TabIndex = 1;
          this.menuStrip1.Text = "menuStrip1";
          // 
@@ -543,14 +530,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             this.toolStripSeparator3,
             this.exitToolStripMenuItem});
          this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-         this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+         this.fileToolStripMenuItem.Size = new System.Drawing.Size(41, 23);
          this.fileToolStripMenuItem.Text = "&File";
          // 
          // loadGrammarToolStripMenuItem
          // 
          this.loadGrammarToolStripMenuItem.Name = "loadGrammarToolStripMenuItem";
          this.loadGrammarToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
+         this.loadGrammarToolStripMenuItem.Size = new System.Drawing.Size(255, 24);
          this.loadGrammarToolStripMenuItem.Text = "&Load Grammar";
          this.loadGrammarToolStripMenuItem.Click += new System.EventHandler(this.LoadGrammarToolStripMenuItem_Click);
          // 
@@ -558,20 +545,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.loadSourceToolStripMenuItem.Name = "loadSourceToolStripMenuItem";
          this.loadSourceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-         this.loadSourceToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
+         this.loadSourceToolStripMenuItem.Size = new System.Drawing.Size(255, 24);
          this.loadSourceToolStripMenuItem.Text = "Load Source &File";
          this.loadSourceToolStripMenuItem.Click += new System.EventHandler(this.LoadSourceToolStripMenuItem_Click);
          // 
          // toolStripSeparator1
          // 
          this.toolStripSeparator1.Name = "toolStripSeparator1";
-         this.toolStripSeparator1.Size = new System.Drawing.Size(279, 6);
+         this.toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
          // 
          // SaveFileToolStripMenuItem
          // 
          this.SaveFileToolStripMenuItem.Name = "SaveFileToolStripMenuItem";
          this.SaveFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-         this.SaveFileToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
+         this.SaveFileToolStripMenuItem.Size = new System.Drawing.Size(255, 24);
          this.SaveFileToolStripMenuItem.Text = "Save Source";
          this.SaveFileToolStripMenuItem.Click += new System.EventHandler(this.SaveFileToolStripMenuItem_Click);
          // 
@@ -580,20 +567,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.SaveFileAsToolStripMenuItem.Name = "SaveFileAsToolStripMenuItem";
          this.SaveFileAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-         this.SaveFileAsToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
+         this.SaveFileAsToolStripMenuItem.Size = new System.Drawing.Size(255, 24);
          this.SaveFileAsToolStripMenuItem.Text = "Save Source As";
          this.SaveFileAsToolStripMenuItem.Click += new System.EventHandler(this.SaveFileAsToolStripMenuItem_Click);
          // 
          // toolStripSeparator3
          // 
          this.toolStripSeparator3.Name = "toolStripSeparator3";
-         this.toolStripSeparator3.Size = new System.Drawing.Size(279, 6);
+         this.toolStripSeparator3.Size = new System.Drawing.Size(252, 6);
          // 
          // exitToolStripMenuItem
          // 
          this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
          this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-         this.exitToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
+         this.exitToolStripMenuItem.Size = new System.Drawing.Size(255, 24);
          this.exitToolStripMenuItem.Text = "E&xit";
          this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
          // 
@@ -607,14 +594,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             this.selectTokenToolStripMenuItem1,
             this.selectParserRuleToolStripMenuItem1});
          this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
-         this.EditToolStripMenuItem.Size = new System.Drawing.Size(49, 26);
+         this.EditToolStripMenuItem.Size = new System.Drawing.Size(44, 23);
          this.EditToolStripMenuItem.Text = "&Edit";
          // 
          // GoToToolStripMenuItem
          // 
          this.GoToToolStripMenuItem.Name = "GoToToolStripMenuItem";
          this.GoToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-         this.GoToToolStripMenuItem.Size = new System.Drawing.Size(259, 26);
+         this.GoToToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
          this.GoToToolStripMenuItem.Text = "Go To";
          this.GoToToolStripMenuItem.Click += new System.EventHandler(this.GoToToolStripMenuItem_Click);
          // 
@@ -622,7 +609,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.FindToolStripMenuItem.Name = "FindToolStripMenuItem";
          this.FindToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-         this.FindToolStripMenuItem.Size = new System.Drawing.Size(259, 26);
+         this.FindToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
          this.FindToolStripMenuItem.Text = "&Find";
          this.FindToolStripMenuItem.Click += new System.EventHandler(this.FindToolStripMenuItem_Click);
          // 
@@ -630,20 +617,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.ReplaceToolStripMenuItem.Name = "ReplaceToolStripMenuItem";
          this.ReplaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-         this.ReplaceToolStripMenuItem.Size = new System.Drawing.Size(259, 26);
+         this.ReplaceToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
          this.ReplaceToolStripMenuItem.Text = "&Replace";
          this.ReplaceToolStripMenuItem.Click += new System.EventHandler(this.ReplaceToolStripMenuItem_Click);
          // 
          // toolStripSeparator4
          // 
          this.toolStripSeparator4.Name = "toolStripSeparator4";
-         this.toolStripSeparator4.Size = new System.Drawing.Size(256, 6);
+         this.toolStripSeparator4.Size = new System.Drawing.Size(231, 6);
          // 
          // selectTokenToolStripMenuItem1
          // 
          this.selectTokenToolStripMenuItem1.Name = "selectTokenToolStripMenuItem1";
          this.selectTokenToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-         this.selectTokenToolStripMenuItem1.Size = new System.Drawing.Size(259, 26);
+         this.selectTokenToolStripMenuItem1.Size = new System.Drawing.Size(234, 24);
          this.selectTokenToolStripMenuItem1.Text = "Select &Token";
          this.selectTokenToolStripMenuItem1.Click += new System.EventHandler(this.selectTokenToolStripMenuItem1_Click);
          // 
@@ -651,7 +638,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.selectParserRuleToolStripMenuItem1.Name = "selectParserRuleToolStripMenuItem1";
          this.selectParserRuleToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-         this.selectParserRuleToolStripMenuItem1.Size = new System.Drawing.Size(259, 26);
+         this.selectParserRuleToolStripMenuItem1.Size = new System.Drawing.Size(234, 24);
          this.selectParserRuleToolStripMenuItem1.Text = "Select Parser &Rule";
          this.selectParserRuleToolStripMenuItem1.Click += new System.EventHandler(this.selectParserRuleToolStripMenuItem1_Click);
          // 
@@ -660,13 +647,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.HeuristicHighlightingToolStripMenuItem,
             this.ShowLexerErrorsToolStripMenuItem,
+            this.UseLabelNamesMnuItem,
             this.WordWrapMnuItem,
             this.toolStripSeparator2,
             this.TracingToolStripMenuItem,
             this.DiagnosticsToolStripMenuItem,
             this.SimpleLLModeToolStripMenuItem});
          this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-         this.optionsToolStripMenuItem.Size = new System.Drawing.Size(75, 26);
+         this.optionsToolStripMenuItem.Size = new System.Drawing.Size(70, 23);
          this.optionsToolStripMenuItem.Text = "&Options";
          // 
          // HeuristicHighlightingToolStripMenuItem
@@ -675,7 +663,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.HeuristicHighlightingToolStripMenuItem.CheckOnClick = true;
          this.HeuristicHighlightingToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
          this.HeuristicHighlightingToolStripMenuItem.Name = "HeuristicHighlightingToolStripMenuItem";
-         this.HeuristicHighlightingToolStripMenuItem.Size = new System.Drawing.Size(284, 26);
+         this.HeuristicHighlightingToolStripMenuItem.Size = new System.Drawing.Size(254, 24);
          this.HeuristicHighlightingToolStripMenuItem.Text = "Heuristic Syntax Highlighting";
          this.HeuristicHighlightingToolStripMenuItem.Click += new System.EventHandler(this.HeuristicHighlightingToolStripMenuItem_Click);
          // 
@@ -684,8 +672,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.ShowLexerErrorsToolStripMenuItem.Checked = true;
          this.ShowLexerErrorsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
          this.ShowLexerErrorsToolStripMenuItem.Name = "ShowLexerErrorsToolStripMenuItem";
-         this.ShowLexerErrorsToolStripMenuItem.Size = new System.Drawing.Size(284, 26);
+         this.ShowLexerErrorsToolStripMenuItem.Size = new System.Drawing.Size(254, 24);
          this.ShowLexerErrorsToolStripMenuItem.Text = "Show Lexer Errors";
+         // 
+         // UseLabelNamesMnuItem
+         // 
+         this.UseLabelNamesMnuItem.Checked = true;
+         this.UseLabelNamesMnuItem.CheckOnClick = true;
+         this.UseLabelNamesMnuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.UseLabelNamesMnuItem.Name = "UseLabelNamesMnuItem";
+         this.UseLabelNamesMnuItem.Size = new System.Drawing.Size(254, 24);
+         this.UseLabelNamesMnuItem.Text = "Show Node Label Names";
+         this.UseLabelNamesMnuItem.CheckStateChanged += new System.EventHandler(this.UseLabelNamesMnuItem_CheckStateChanged);
          // 
          // WordWrapMnuItem
          // 
@@ -693,20 +691,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.WordWrapMnuItem.CheckOnClick = true;
          this.WordWrapMnuItem.CheckState = System.Windows.Forms.CheckState.Checked;
          this.WordWrapMnuItem.Name = "WordWrapMnuItem";
-         this.WordWrapMnuItem.Size = new System.Drawing.Size(284, 26);
+         this.WordWrapMnuItem.Size = new System.Drawing.Size(254, 24);
          this.WordWrapMnuItem.Text = "Word Wrap";
          this.WordWrapMnuItem.CheckStateChanged += new System.EventHandler(this.WordWrapMnuItem_CheckStateChanged);
          // 
          // toolStripSeparator2
          // 
          this.toolStripSeparator2.Name = "toolStripSeparator2";
-         this.toolStripSeparator2.Size = new System.Drawing.Size(281, 6);
+         this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
          // 
          // TracingToolStripMenuItem
          // 
          this.TracingToolStripMenuItem.CheckOnClick = true;
          this.TracingToolStripMenuItem.Name = "TracingToolStripMenuItem";
-         this.TracingToolStripMenuItem.Size = new System.Drawing.Size(284, 26);
+         this.TracingToolStripMenuItem.Size = new System.Drawing.Size(254, 24);
          this.TracingToolStripMenuItem.Text = "Tracing";
          this.TracingToolStripMenuItem.Click += new System.EventHandler(this.TracingToolStripMenuItem_Click);
          // 
@@ -714,7 +712,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.DiagnosticsToolStripMenuItem.CheckOnClick = true;
          this.DiagnosticsToolStripMenuItem.Name = "DiagnosticsToolStripMenuItem";
-         this.DiagnosticsToolStripMenuItem.Size = new System.Drawing.Size(284, 26);
+         this.DiagnosticsToolStripMenuItem.Size = new System.Drawing.Size(254, 24);
          this.DiagnosticsToolStripMenuItem.Text = "Diagnostics";
          this.DiagnosticsToolStripMenuItem.Click += new System.EventHandler(this.DiagnosticsToolStripMenuItem_Click);
          // 
@@ -722,7 +720,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.SimpleLLModeToolStripMenuItem.CheckOnClick = true;
          this.SimpleLLModeToolStripMenuItem.Name = "SimpleLLModeToolStripMenuItem";
-         this.SimpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(284, 26);
+         this.SimpleLLModeToolStripMenuItem.Size = new System.Drawing.Size(254, 24);
          this.SimpleLLModeToolStripMenuItem.Text = "Simple LL Mode";
          this.SimpleLLModeToolStripMenuItem.Click += new System.EventHandler(this.SimpleLLModeToolStripMenuItem_Click);
          // 
@@ -731,13 +729,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
          this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-         this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+         this.helpToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
          this.helpToolStripMenuItem.Text = "&Help";
          // 
          // aboutToolStripMenuItem
          // 
          this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-         this.aboutToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+         this.aboutToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
          this.aboutToolStripMenuItem.Text = "&About GrunWin";
          this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
          // 
@@ -748,8 +746,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // splitContainer2
          // 
          this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainer2.Location = new System.Drawing.Point(0, 30);
-         this.splitContainer2.Margin = new System.Windows.Forms.Padding(4);
+         this.splitContainer2.Location = new System.Drawing.Point(0, 27);
          this.splitContainer2.Name = "splitContainer2";
          this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
          // 
@@ -760,9 +757,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // splitContainer2.Panel2
          // 
          this.splitContainer2.Panel2.Controls.Add(this.ParseMessageListView);
-         this.splitContainer2.Size = new System.Drawing.Size(1292, 720);
-         this.splitContainer2.SplitterDistance = 542;
-         this.splitContainer2.SplitterWidth = 5;
+         this.splitContainer2.Size = new System.Drawing.Size(969, 582);
+         this.splitContainer2.SplitterDistance = 438;
          this.splitContainer2.TabIndex = 2;
          // 
          // ParseMessageListView
@@ -780,10 +776,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.ParseMessageListView.FullRowSelect = true;
          this.ParseMessageListView.HideSelection = false;
          this.ParseMessageListView.Location = new System.Drawing.Point(0, 0);
-         this.ParseMessageListView.Margin = new System.Windows.Forms.Padding(4);
          this.ParseMessageListView.Name = "ParseMessageListView";
          this.ParseMessageListView.ShowGroups = false;
-         this.ParseMessageListView.Size = new System.Drawing.Size(1292, 173);
+         this.ParseMessageListView.Size = new System.Drawing.Size(969, 140);
          this.ParseMessageListView.TabIndex = 0;
          this.ParseMessageListView.UseCompatibleStateImageBehavior = false;
          this.ParseMessageListView.View = System.Windows.Forms.View.Details;
@@ -831,10 +826,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             this.toolStripStatusLabel2,
             this.StripLabelDelay});
          this.StatusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-         this.StatusStrip1.Location = new System.Drawing.Point(0, 750);
+         this.StatusStrip1.Location = new System.Drawing.Point(0, 609);
          this.StatusStrip1.Name = "StatusStrip1";
-         this.StatusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-         this.StatusStrip1.Size = new System.Drawing.Size(1292, 29);
+         this.StatusStrip1.Size = new System.Drawing.Size(969, 24);
          this.StatusStrip1.TabIndex = 3;
          this.StatusStrip1.Text = "statusStrip1";
          // 
@@ -842,7 +836,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.StripLabelGrammar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.StripLabelGrammar.Name = "StripLabelGrammar";
-         this.StripLabelGrammar.Size = new System.Drawing.Size(92, 23);
+         this.StripLabelGrammar.Size = new System.Drawing.Size(70, 17);
          this.StripLabelGrammar.Text = "Grammar:";
          // 
          // stripLabelGrammarName
@@ -858,7 +852,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.stripLabelNode.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.stripLabelNode.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
          this.stripLabelNode.Name = "stripLabelNode";
-         this.stripLabelNode.Size = new System.Drawing.Size(145, 23);
+         this.stripLabelNode.Size = new System.Drawing.Size(115, 17);
          this.stripLabelNode.Text = "Parse Tree Nodes:";
          // 
          // stripLabelNodeCount
@@ -872,7 +866,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.StripLabelLineCaption.Margin = new System.Windows.Forms.Padding(80, 3, 0, 2);
          this.StripLabelLineCaption.Name = "StripLabelLineCaption";
-         this.StripLabelLineCaption.Size = new System.Drawing.Size(24, 20);
+         this.StripLabelLineCaption.Size = new System.Drawing.Size(24, 19);
          this.StripLabelLineCaption.Text = "Ln";
          // 
          // StripLabelLine
@@ -885,7 +879,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // StripLabelColumnCaption
          // 
          this.StripLabelColumnCaption.Name = "StripLabelColumnCaption";
-         this.StripLabelColumnCaption.Size = new System.Drawing.Size(31, 20);
+         this.StripLabelColumnCaption.Size = new System.Drawing.Size(29, 19);
          this.StripLabelColumnCaption.Text = "Col";
          // 
          // StripLabelColumn
@@ -899,7 +893,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          this.toolStripStatusLabel1.Margin = new System.Windows.Forms.Padding(40, 3, 0, 2);
          this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-         this.toolStripStatusLabel1.Size = new System.Drawing.Size(81, 20);
+         this.toolStripStatusLabel1.Size = new System.Drawing.Size(75, 19);
          this.toolStripStatusLabel1.Text = "Throttling?";
          // 
          // StripLabelThrottling
@@ -913,7 +907,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // toolStripStatusLabel2
          // 
          this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-         this.toolStripStatusLabel2.Size = new System.Drawing.Size(50, 20);
+         this.toolStripStatusLabel2.Size = new System.Drawing.Size(46, 19);
          this.toolStripStatusLabel2.Text = "Delay:";
          // 
          // StripLabelDelay
@@ -925,15 +919,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          // VisualAnalyzer
          // 
-         this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+         this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(1292, 779);
+         this.ClientSize = new System.Drawing.Size(969, 633);
          this.Controls.Add(this.splitContainer2);
          this.Controls.Add(this.menuStrip1);
          this.Controls.Add(this.StatusStrip1);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MainMenuStrip = this.menuStrip1;
-         this.Margin = new System.Windows.Forms.Padding(4);
          this.Name = "VisualAnalyzer";
          this.Text = "GrunWin Visual Analyzer";
          this.Load += new System.EventHandler(this.VisualAnalyzer_Load);
@@ -1051,6 +1044,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
       private System.Windows.Forms.Panel panel1;
       private System.Windows.Forms.ToolStripMenuItem WordWrapMnuItem;
+      private System.Windows.Forms.ToolStripMenuItem UseLabelNamesMnuItem;
    }
 }
 
