@@ -867,21 +867,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (e.Node.Tag is ITree selected)
          {
             RenderParseTreeGraph(selected);
-            CodeEditor.SelectSource(selected);
-         }
-      }
-
-      private void ParseTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-      {
-         if (sender is TreeView viewer)
-         {
-            if (viewer.SelectedNode == e.Node)
-               // Now we graph and display just the selected branch
-               if (e.Node.Tag is ITree selected)
-               {
-                  RenderParseTreeGraph(selected);
-                  CodeEditor.SelectSource(selected);
-               }
+            if (selected.Parent != null)
+               CodeEditor.SelectSource(selected);
          }
       }
 
