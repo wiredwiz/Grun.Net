@@ -292,6 +292,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // ParseTreeView
          // 
          this.ParseTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.ParseTreeView.HideSelection = false;
          this.ParseTreeView.Location = new System.Drawing.Point(0, 0);
          this.ParseTreeView.Name = "ParseTreeView";
          this.ParseTreeView.Size = new System.Drawing.Size(139, 352);
