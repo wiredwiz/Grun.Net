@@ -1,4 +1,4 @@
-﻿#region BSD 3-Clause License
+#region BSD 3-Clause License
 
 // <copyright file="VisualAnalyzer.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
@@ -522,6 +522,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void ColorizeTokens(Range range)
       {
+         if (!HeuristicHighlightingToolStripMenuItem.Checked)
+            return;
+
          if (_Registry == null)
             return;
 
