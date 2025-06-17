@@ -1,4 +1,4 @@
-#region BSD 3-Clause License
+﻿#region BSD 3-Clause License
 
 // <copyright file="VisualAnalyzer.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
@@ -910,6 +910,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          try
          {
             var graph = _Grapher.CreateGraph(tree, _Grammar.ParserRules);
+
+            if (graph.Nodes.Count() > _Settings.MaximumNodeRenderCount)
+               return;
+
             graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
             _Viewer.SuspendLayout();
             _Viewer.Graph = graph;
