@@ -857,9 +857,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          // stripLabelNodeCount
          // 
-         this.stripLabelNodeCount.AutoSize = false;
          this.stripLabelNodeCount.Name = "stripLabelNodeCount";
-         this.stripLabelNodeCount.Size = new System.Drawing.Size(40, 17);
+         this.stripLabelNodeCount.Size = new System.Drawing.Size(0, 0);
          this.stripLabelNodeCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
          // StripLabelLineCaption
@@ -871,9 +870,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          // StripLabelLine
          // 
-         this.StripLabelLine.AutoSize = false;
          this.StripLabelLine.Name = "StripLabelLine";
-         this.StripLabelLine.Size = new System.Drawing.Size(40, 15);
+         this.StripLabelLine.Size = new System.Drawing.Size(0, 0);
          this.StripLabelLine.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
          // StripLabelColumnCaption
@@ -884,9 +882,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          // StripLabelColumn
          // 
-         this.StripLabelColumn.AutoSize = false;
          this.StripLabelColumn.Name = "StripLabelColumn";
-         this.StripLabelColumn.Size = new System.Drawing.Size(40, 15);
+         this.StripLabelColumn.Size = new System.Drawing.Size(0, 0);
          this.StripLabelColumn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
          // toolStripStatusLabel1
@@ -912,9 +909,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          // StripLabelDelay
          // 
-         this.StripLabelDelay.AutoSize = false;
          this.StripLabelDelay.Name = "StripLabelDelay";
-         this.StripLabelDelay.Size = new System.Drawing.Size(80, 15);
+         this.StripLabelDelay.Size = new System.Drawing.Size(0, 0);
          this.StripLabelDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
          // VisualAnalyzer
