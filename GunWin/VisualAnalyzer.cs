@@ -1,4 +1,4 @@
-#region BSD 3-Clause License
+﻿#region BSD 3-Clause License
 
 // <copyright file="VisualAnalyzer.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
@@ -413,6 +413,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                   Name = child.GetHashCode().ToString()
                };
             treeNode.Nodes.Add(newNode);
+            Application.DoEvents();
             AddTreeBranchesAndLeaves(newNode, child);
          }
       }
@@ -420,10 +421,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void BuildParseTreeTreeViewGuide(ITree tree)
       {
          ParseTreeView.SuspendLayout();
+         ParseTreeView.BeginUpdate();
          ParseTreeView.Nodes.Clear();
 
          if (tree == null)
          {
+            ParseTreeView.EndUpdate();
             ParseTreeView.ResumeLayout();
             return;
          }
@@ -433,6 +436,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseTreeView.Nodes.Add(treeNode);
          AddTreeBranchesAndLeaves(treeNode, tree);
 
+         ParseTreeView.EndUpdate();
          ParseTreeView.ResumeLayout();
       }
 
