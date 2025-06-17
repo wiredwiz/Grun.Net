@@ -1,4 +1,4 @@
-﻿#region BSD 3-Clause License
+#region BSD 3-Clause License
 
 // <copyright file="VisualAnalyzer.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
@@ -366,10 +366,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          BuildParseTreeTreeViewGuide(e.ParseTree);
 
          // Bail if our graph node count is too high
-         if (e.Graph.Nodes.Count() <= _Settings.MaximumNodeRenderCount) RenderParseTreeGraph(e.Graph);
+         if (e.NodeCount <= _Settings.MaximumNodeRenderCount) RenderParseTreeGraph(e.Graph);
 
          if (e.Graph != null)
-            stripLabelNodeCount.Text = e.Graph.Nodes.Count().ToString();
+            stripLabelNodeCount.Text = e.NodeCount.ToString();
 
          if (sender is IGraphWorker worker)
          {

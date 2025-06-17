@@ -1,4 +1,4 @@
-﻿#region BSD 3-Clause License
+#region BSD 3-Clause License
 
 // <copyright file="GraphWorker.cs" company="Edgerunner.org">
 // Copyright 2020 
@@ -202,18 +202,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
          return DateTime.Now + TimeSpan.FromMilliseconds(delay);
       }
 
-      private int CalculateTotalTreeNodes(ITree tree)
-      {
-         if (tree == null)
-            return 0;
-
-         var result = 1;
-         for (var i = 0; i < tree.ChildCount; i++)
-            result += CalculateTotalTreeNodes(tree.GetChild(i));
-
-         return result;
-      }
-
       private void GraphingWorkLoop()
       {
          var currentRenderCount = 0;
@@ -278,7 +266,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 
                currentRenderCount = 0;
                var result = HandleGraphing(work);
-               _PreviousNodeQty = CalculateTotalTreeNodes(work.ParseTree);
+               _PreviousNodeQty = result.NodeCount;
                OnGraphingFinished(result);
             }
          }

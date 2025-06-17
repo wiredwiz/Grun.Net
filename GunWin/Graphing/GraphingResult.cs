@@ -54,6 +54,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       {
          Graph = graph;
          ParseTree = parseTree;
+         NodeCount = CalculateTotalTreeNodes(parseTree);
       }
 
       /// <summary>
@@ -67,5 +68,23 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       /// </summary>
       /// <value>The parse tree.</value>
       public ITree ParseTree { get; }
+
+      /// <summary>
+      /// Gets the graph node count.
+      /// </summary>
+      /// <value>The graph node count.</value>
+      public int NodeCount { get; }
+
+      private static int CalculateTotalTreeNodes(ITree tree)
+      {
+         if (tree == null)
+            return 0;
+
+         var result = 1;
+         for (var i = 0; i < tree.ChildCount; i++)
+            result += CalculateTotalTreeNodes(tree.GetChild(i));
+
+         return result;
+      }
    }
 }
