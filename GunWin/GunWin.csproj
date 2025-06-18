@@ -181,6 +181,10 @@
       <Project>{8bd992fd-a3b3-4af9-9371-5aa14ddfda68}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ParserTreeView\ParserTreeView.csproj">
+      <Project>{b96d577c-e90a-4817-aa1c-3a211efb83f0}</Project>
+      <Name>ParserTreeView</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{4e020f1d-27bf-4853-8573-474d7edb4e72}</Project>
       <Name>Utilities</Name>
