@@ -861,6 +861,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       void SetZoomFactor(int zoomFactor)
       {
          GraphZoomTrackBar.Value = zoomFactor;
+         _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
       }
 
       private void PopulateParserMessages(List<ParseMessage> listenerErrors)
@@ -1193,7 +1194,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void UseLabelNamesMnuItem_CheckStateChanged(object sender, EventArgs e)
       {
          _Grapher.UseLabelNames = UseLabelNamesMnuItem.CheckState == CheckState.Checked;
-         ParseSource();
+         if (ParseTreeView.SelectedNode != null && ParseTreeView.SelectedNode.Tag is ITree selected) 
+            RenderParseTreeGraph(selected, GraphZoomTrackBar.Value);
       }
    }
 }
