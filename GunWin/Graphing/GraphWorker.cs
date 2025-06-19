@@ -145,7 +145,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
                                     _Settings.MaximumRenderShortDelay);
             var work = new GraphingWorkItem(tree, parserRules, grapher, nextRun);
             QueuedWork.Enqueue(work);
-            _LastQueuedTime = DateTime.Now;
+            _LastQueuedTime = DateTime.UtcNow;
             if (GraphingTask.IsCompleted)
                GraphingTask = new Task(GraphingWorkLoop);
             if (GraphingTask.Status != TaskStatus.Running)
@@ -187,7 +187,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 
             if (changed)
                OnThrottleStatusChanged();
-            return DateTime.Now;
+            return DateTime.UtcNow;
          }
 
          var delay = Math.Min(maximumDelay, previousNodes * millisecondsPerNodeToDelay);
@@ -199,7 +199,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
          }
          if (changed)
             OnThrottleStatusChanged();
-         return DateTime.Now + TimeSpan.FromMilliseconds(delay);
+         return DateTime.UtcNow + TimeSpan.FromMilliseconds(delay);
       }
 
       private void GraphingWorkLoop()
@@ -208,68 +208,87 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 
          while (true)
          {
-            bool changed;
-            int workCount;
             DateTime lastQueued;
-            lock (_Padlock)
+            // Generate our render count and last queued time
+            (currentRenderCount, lastQueued) = UpdateWorkloadValues(currentRenderCount);
+
+            // check if we need to throttle with a long delay and if we do, execute a long delay before resuming
+            if (currentRenderCount > _Settings.MinimumRenderCountToTriggerLongDelay && (DateTime.UtcNow - lastQueued) < TimeSpan.FromMilliseconds(500))
             {
-               if (currentRenderCount == 0)
-                  currentRenderCount = QueuedWork.Count;
-               else
-                  currentRenderCount += QueuedWork.Count - 1;
-
-               workCount = currentRenderCount;
-               if (workCount == 0)
-                  return;
-
-               lastQueued = _LastQueuedTime;
-            }
-
-            if (workCount > _Settings.MinimumRenderCountToTriggerLongDelay && (DateTime.Now - lastQueued) < TimeSpan.FromMilliseconds(500))
-            {
-               lock (_Padlock)
-               {
-                  changed = _CurrentlyThrottling == 0 || _LongDelayActive == 0;
-                  _CurrentlyThrottling = 1;
-                  _LongDelayActive = 1;
-               }
-               if (changed)
-                  OnThrottleStatusChanged();
-               Thread.Sleep(500);
+               ExecuteLongDelay();
                continue;
             }
 
-            lock (_Padlock)
-            {
-               changed = _LongDelayActive == 1;
-               _LongDelayActive = 0;
-               if (changed)
-                  OnThrottleStatusChanged();
-
-               // Sanity check ....just in case
-               if (QueuedWork.Count == 0)
-                  return;
-
-               // We really only care about the last work item, so that's all we are keeping
-               // However, we use the "GraphWhen" target date/time for the first entry for our check
-               var work = QueuedWork.Dequeue();
-               var graphWhen = work.GraphWhen;
-               while (QueuedWork.Count != 0)
-                  work = QueuedWork.Dequeue();
-
-               // If we should delay longer, we enqueue the last item again for later evaluation
-               if (DateTime.Now < graphWhen)
-               {
-                  QueuedWork.Enqueue(work);
-                  continue;
-               }
-
-               currentRenderCount = 0;
-               var result = HandleGraphing(work);
-               _PreviousNodeQty = result.NodeCount;
-               OnGraphingFinished(result);
-            }
+            // Now we build our graph or re-enqueue our last work item if we haven't reached the exact time to begin graphing
+            currentRenderCount = EvaluateAndExecuteGraphWorkload();
          }
+      }
+
+      private (int currentRenderCount, DateTime lastQueued) UpdateWorkloadValues(int currentRenderCount)
+      {
+         DateTime lastQueued;
+         lock (_Padlock)
+         {
+            if (currentRenderCount == 0)
+               currentRenderCount = QueuedWork.Count;
+            else
+               currentRenderCount += QueuedWork.Count - 1;
+
+            lastQueued = _LastQueuedTime;
+            if (currentRenderCount == 0)
+               return (currentRenderCount, lastQueued);
+         }
+
+         return (currentRenderCount, lastQueued);
+      }
+
+      private void ExecuteLongDelay()
+      {
+         bool changed;
+         lock (_Padlock)
+         {
+            changed = _CurrentlyThrottling == 0 || _LongDelayActive == 0;
+            _CurrentlyThrottling = 1;
+            _LongDelayActive = 1;
+         }
+         if (changed)
+            OnThrottleStatusChanged();
+         Thread.Sleep(500);
+      }
+
+      private int EvaluateAndExecuteGraphWorkload()
+      {
+         lock (_Padlock)
+         {
+            var changed = _LongDelayActive == 1;
+            _LongDelayActive = 0;
+            if (changed)
+               OnThrottleStatusChanged();
+
+            // Sanity check ....just in case
+            if (QueuedWork.Count == 0)
+               return 0;
+
+            // We really only care about the last work item, so that's all we are keeping
+            // However, we use the "GraphWhen" target date/time for the first entry for our check
+            var work = QueuedWork.Dequeue();
+            var graphWhen = work.GraphWhen;
+            while (QueuedWork.Count != 0)
+               work = QueuedWork.Dequeue();
+
+            // If we should delay longer, we enqueue the last item again for later evaluation
+            if (DateTime.UtcNow < graphWhen)
+            {
+               QueuedWork.Enqueue(work);
+               return QueuedWork.Count;
+            }
+
+            var result = HandleGraphing(work);
+            _PreviousNodeQty = result.NodeCount;
+            OnGraphingFinished(result);
+         }
+
+         return 0;
       }
 
       /// <summary>
@@ -277,7 +296,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
       /// </summary>
       /// <param name="work">The work item to graph.</param>
       /// <returns>A new <see cref="Graph" />.</returns>
-      private GraphingResult HandleGraphing(GraphingWorkItem work)
+      private static GraphingResult HandleGraphing(GraphingWorkItem work)
       {
          if (work.TreeGrapher == null || work.ParseTree == null)
             return new GraphingResult();
@@ -305,7 +324,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Graphing
 
       private void PostThrottleStatusChangedEvent(object state)
       {
-         ThrottleStatusChanged?.Invoke(this, new EventArgs());
+         ThrottleStatusChanged?.Invoke(this, EventArgs.Empty);
       }
    }
 }

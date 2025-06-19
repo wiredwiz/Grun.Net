@@ -39,7 +39,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.tabControlParse = new System.Windows.Forms.TabControl();
          this.tabParseTree = new System.Windows.Forms.TabPage();
          this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-         this.ParseTreeView = new System.Windows.Forms.TreeView();
+         this.ParseTreeView = new Org.Edgerunner.ANTLR4.Tools.Testing.ParserTreeView();
          this.PnlGraph = new System.Windows.Forms.Panel();
          this.GraphZoomTrackBar = new System.Windows.Forms.TrackBar();
          this.tabTokens = new System.Windows.Forms.TabPage();
@@ -1000,7 +1000,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private System.Windows.Forms.ToolStripStatusLabel stripLabelGrammarName;
       private System.Windows.Forms.ToolStripMenuItem loadSourceToolStripMenuItem;
       private System.Windows.Forms.SplitContainer splitContainer3;
-      private System.Windows.Forms.TreeView ParseTreeView;
+      private Org.Edgerunner.ANTLR4.Tools.Testing.ParserTreeView ParseTreeView;
       private System.Windows.Forms.TrackBar GraphZoomTrackBar;
       private System.Windows.Forms.ToolStripMenuItem HeuristicHighlightingToolStripMenuItem;
       private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
