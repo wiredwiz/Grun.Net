@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Antlr4.Runtime.Tree;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
@@ -28,7 +29,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
             for (var i = 0; i < tree.ChildCount; i++)
             {
                var child = tree.GetChild(i);
-               AddChildNode(e.Node, child);
+               AddChildNodeAndLeaves(e.Node, child);
             }
          }
       }
@@ -46,7 +47,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
             for (var i = 0; i < tree.ChildCount; i++)
             {
                var child = tree.GetChild(i);
-               AddChildNode(e.Node, child);
+               AddChildNodeAndLeaves(e.Node, child);
             }
          }
       }
@@ -58,23 +59,45 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// <param name="grammar">The <see cref="GrammarReference"/> instance to use.</param>
       public void LoadParseTree(ITree parseTree, GrammarReference grammar)
       {
+         if (parseTree == null) throw new ArgumentNullException(nameof(parseTree));
+         if (grammar == null) throw new ArgumentNullException(nameof(grammar));
+
          ActiveNodes.Clear();
          Nodes.Clear();
          ParseTree = parseTree;
          Grammar = grammar;
-         AddChildNode(null, parseTree);
+         AddChildNodeAndLeaves(null, parseTree);
       }
 
       /// <summary>
       /// Selects the tree node corresponding to the specified <see cref="ITree"/> instance.
       /// </summary>
-      /// <param name="tree">The <see cref="ITree"/> instance.</param>
-      public void SelectTreeNode(ITree tree)
+      /// <param name="tree">The <see cref="ITree"/> instance to use.</param>
+      /// <returns>The selected <see cref="TreeNode"/> or null if not found.</returns>
+      public TreeNode SelectTreeNode(ITree tree)
       {
+         if (tree == null) throw new ArgumentNullException(nameof(tree));
+
          var treeNode = AddBranchesTillLeaf(tree);
-         SelectedNode = treeNode;
-         TopNode = treeNode;
-         treeNode.EnsureVisible();
+         if (treeNode != null)
+         {
+            SelectedNode = treeNode;
+            TopNode = treeNode;
+            treeNode.EnsureVisible();
+         }
+         return treeNode;
+      }
+
+      /// <summary>
+      /// Finds the tree node corresponding to the specified <see cref="ITree"/> instance.
+      /// </summary>
+      /// <param name="tree">The <see cref="ITree"/> node to use.</param>
+      /// <returns>The corresponding <see cref="TreeNode"/> instance or null if not found.</returns>
+      public TreeNode FindTreeNode(ITree tree)
+      {
+         if (tree == null) throw new ArgumentNullException(nameof(tree));
+
+         return AddBranchesTillLeaf(tree);
       }
 
       /// <summary>
@@ -84,8 +107,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// <returns>The final leaf <see cref="TreeNode"/> instance that was created.</returns>
       private TreeNode AddBranchesTillLeaf(ITree tree)
       {
-         // TODO: Find and fix the bug in this method's logic
-
          // fetch our unique ID for the tree instance and then check if it already exists in active nodes
          // if so, we return the existing tree node since nothing more needs to be done
          var nodeName = tree.GetHashCode().ToString();
@@ -94,10 +115,30 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
 
          // Now we create a stack of ITree instances and begin walking our way up the parentage and pushing them onto the stack
          var stack = new Stack<ITree>();
-         var workingChildren = new List<ITree>();
+         
+         if (!BuildBranchStackFromTreeNode(tree, stack, out var parentTree)) 
+            return null;
+         
+         // Now that we built our stack of nodes that need to be created, and we have our starting parent TreeNode
+         // We begin popping off ITree instances and creating the nodes.
+         parentTree = CreateBranchNodesAndLeavesFromStack(stack, parentTree);
+
+         // Now we return the final leaf that was created on the branch
+         return parentTree;
+      }
+
+      /// <summary>
+      /// Builds the branch stack from specified tree node.
+      /// </summary>
+      /// <param name="tree">The destination node we wish to build the intervening branch and leaves for.</param>
+      /// <param name="stack">The stack to add prospective nodes to.</param>
+      /// <param name="parentTree">The parent tree node to build the branch and leaves off of.</param>
+      /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
+      private bool BuildBranchStackFromTreeNode(ITree tree, Stack<ITree> stack, out TreeNode parentTree)
+      {
          stack.Push(tree);
          var work = tree.Parent;
-         nodeName = work.GetHashCode().ToString();
+         var nodeName = work.GetHashCode().ToString();
          while (!ActiveNodes.ContainsKey(nodeName))
          {
             stack.Push(work);
@@ -107,23 +148,35 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
             nodeName = work.GetHashCode().ToString();
          }
 
-         TreeNode parentTree;
          if (work.Parent == null)
          {
             if (this.Nodes.Count == 0)
-               return null;
+            {
+               parentTree = null;
+               return false;
+            }
 
             parentTree = this.Nodes[0];
          }
          else
             parentTree = ActiveNodes[nodeName];
 
-         // Now that we built our stack of nodes that need to be created, and we have our starting parent TreeNode
-         // We begin popping off ITree instances and creating the nodes.
+         return true;
+      }
+
+      /// <summary>
+      /// Creates the branch nodes and leaves from stack.
+      /// </summary>
+      /// <param name="stack">The stack to use.</param>
+      /// <param name="parentTree">The parent tree node to build on.</param>
+      /// <returns>Returns a <see cref="TreeNode"/> representing our final leaf.</returns>
+      private TreeNode CreateBranchNodesAndLeavesFromStack(Stack<ITree> stack, TreeNode parentTree)
+      {
+         var workingChildren = new List<ITree>();
          while (stack.Count > 0)
          {
             // pop our first work item
-            work = stack.Pop();
+            var work = stack.Pop();
             // clear our working children list
             workingChildren.Clear();
             // our working parent should never be null and if it is, something has gone HORRIBLY wrong, we will leave it to error in that case
@@ -137,17 +190,16 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
 
             // now we add our extra working children from our list
             foreach (var child in workingChildren) 
-               AddChildNode(parentTree, child);
+               AddChildNodeAndLeaves(parentTree, child);
 
             // now we add the child that is part of our branch being traversed and set it as the new parent for the branch we are building
-            parentTree = AddChildNode(parentTree, work);
+            parentTree = AddChildNodeAndLeaves(parentTree, work);
          }
 
-         // Now we return the final leaf that was created on the branch
          return parentTree;
       }
 
-      private TreeNode AddChildNode(TreeNode root, ITree tree)
+      private TreeNode AddChildNodeAndLeaves(TreeNode root, ITree tree)
       {
          // Add the child node
          var nodeName = tree.GetHashCode().ToString();
