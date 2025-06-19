@@ -1,4 +1,4 @@
-﻿#region BSD 3-Clause License
+#region BSD 3-Clause License
 
 // <copyright file="VisualAnalyzer.cs" company="Edgerunner.org">
 // Copyright 2020 Thaddeus Ryker
@@ -431,10 +431,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             return;
          }
 
-         var treeNode =
-            new TreeNode(Trees.GetNodeText(tree, _Grammar.ParserRules)) { Tag = tree, Name = tree.GetHashCode().ToString() };
-         ParseTreeView.Nodes.Add(treeNode);
-         AddTreeBranchesAndLeaves(treeNode, tree);
+         ParseTreeView.LoadParseTree(tree, _Grammar);
 
          ParseTreeView.EndUpdate();
          ParseTreeView.ResumeLayout();
@@ -819,16 +816,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void Menu_GraphFromHere_Click(object sender, EventArgs e)
       {
-         if (_Viewer.SelectedObject is Node node)
+         if (_Viewer.SelectedObject is Node node && node.UserData is ITree target)
          {
-            var treeNodes = ParseTreeView.Nodes.Find(node.UserData?.GetHashCode().ToString(), true);
-            if (treeNodes.Length != 0)
-            {
-               var workingNode = treeNodes.First();
-               ParseTreeView.SelectedNode = workingNode;
-               RenderParseTreeGraph(workingNode.Tag as ITree, 0);
-               ParseTreeView.Focus();
-            }
+            ParseTreeView.SelectTreeNode(target);
+            RenderParseTreeGraph(target, 0);
+            ParseTreeView.Focus();
          }
       }
 
@@ -916,7 +908,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             var graph = _Grapher.CreateGraph(tree, _Grammar.ParserRules);
 
             if (graph.Nodes.Count() > _Settings.MaximumNodeRenderCount)
+            {
+               _Viewer.Graph = null;
                return;
+            }
 
             graph.LayoutAlgorithmSettings = new SugiyamaLayoutSettings();
             _Viewer.SuspendLayout();
