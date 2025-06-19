@@ -59,8 +59,6 @@ using JetBrains.Annotations;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
-
-using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Common.Syntax;
 using Org.Edgerunner.ANTLR4.Tools.Graphing;
@@ -121,7 +119,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private bool _EnableTrackBarZoom = true;
 
-      private bool _Reloading = false;
+      private bool _Reloading;
 
       #region Constructors And Finalizers
 
@@ -301,10 +299,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          LoadParserRules();
 
          // If our grammar is only being reloaded, no reason to load a new monitor and guide
-         if (oldGrammar != null)
-            if (oldGrammar.GrammarName == grammar.GrammarName &&
-                oldGrammar.AssemblyPath == grammar.AssemblyPath)
-               return;
+         if (oldGrammar != null &&
+             oldGrammar.GrammarName == grammar.GrammarName &&
+             oldGrammar.AssemblyPath == grammar.AssemblyPath)
+            return;
 
          stripLabelGrammarName.Text = grammar.GrammarName;
          _GrammarMonitor = new GrammarMonitor(grammar, SynchronizationContext.Current);
@@ -402,23 +400,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          Debug.WriteLine($"Scroll zoom factor {factor}");
       }
 
-      private void AddTreeBranchesAndLeaves(TreeNode treeNode, ITree tree)
-      {
-         for (var i = 0; i < tree.ChildCount; i++)
-         {
-            var child = tree.GetChild(i);
-            var newNode =
-               new TreeNode(Trees.GetNodeText(child, _Grammar.ParserRules))
-               {
-                  Tag = child,
-                  Name = child.GetHashCode().ToString()
-               };
-            treeNode.Nodes.Add(newNode);
-            Application.DoEvents();
-            AddTreeBranchesAndLeaves(newNode, child);
-         }
-      }
-
       private void BuildParseTreeTreeViewGuide(ITree tree)
       {
          ParseTreeView.SuspendLayout();
@@ -438,7 +419,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseTreeView.ResumeLayout();
       }
 
-      private void SetNewWorkingDirectoryUsingFile(string fileName)
+      private static void SetNewWorkingDirectoryUsingFile(string fileName)
       {
          if (!string.IsNullOrEmpty(fileName))
          {
@@ -464,28 +445,27 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                CodeEditor.SelectAll();
                CodeEditor.Text = e.Data.GetData(DataFormats.UnicodeText).ToString();
             }
-            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
-               if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop) && e.Data.GetData(DataFormats.FileDrop) is string[] files)
+            {
+               SetNewWorkingDirectoryUsingFile(files[0]);
+               var assemblyFiles = (from file in files where file.EndsWith(".dll") select file).ToList();
+               var otherFiles = (from file in files where !file.EndsWith(".dll") select file).ToList();
+               if (assemblyFiles.Count > 1 || (assemblyFiles.Count + otherFiles.Count > 2))
                {
-                  SetNewWorkingDirectoryUsingFile(files[0]);
-                  var assemblyFiles = (from file in files where file.EndsWith(".dll") select file).ToList();
-                  var otherFiles = (from file in files where !file.EndsWith(".dll") select file).ToList();
-                  if (assemblyFiles.Count > 1 || (assemblyFiles.Count + otherFiles.Count > 2))
-                  {
-                     MessageBox.Show(Resources.DragDropLoadErrorMessage);
-                     return;
-                  }
-
-                  if (assemblyFiles.Count != 0)
-                  {
-                     var grammar = FetchGrammarInternal(assemblyFiles[0]);
-                     if (grammar != null)
-                        SetGrammar(grammar);
-                  }
-
-                  if (otherFiles.Count != 0)
-                     LoadSourceFileInternal(otherFiles[0]);
+                  MessageBox.Show(Resources.DragDropLoadErrorMessage);
+                  return;
                }
+
+               if (assemblyFiles.Count != 0)
+               {
+                  var grammar = FetchGrammarInternal(assemblyFiles[0]);
+                  if (grammar != null)
+                     SetGrammar(grammar);
+               }
+
+               if (otherFiles.Count != 0)
+                  LoadSourceFileInternal(otherFiles[0]);
+            }
          }
          catch (Exception ex)
          {
@@ -554,11 +534,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void ThrottleStatusChanged(object sender, EventArgs e)
       {
-         if (sender is IGraphWorker worker)
-         {
-            if (worker.LongDelayActive && StripLabelDelay.Text != Resources.Long)
-               StripLabelDelay.Text = Resources.Long;
-         }
+         if (sender is IGraphWorker worker && worker.LongDelayActive && StripLabelDelay.Text != Resources.Long)
+            StripLabelDelay.Text = Resources.Long;
       }
 
       private void DiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -572,7 +549,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          Application.Exit();
       }
 
-      private IList<DetailedToken> FindTokensInRange(IList<DetailedToken> tokens, Range range)
+      private static IList<DetailedToken> FindTokensInRange(IList<DetailedToken> tokens, Range range)
       {
          var results = new List<DetailedToken>();
          var startLine = range.FromLine;
@@ -591,9 +568,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void GraphZoomTrackBar_ValueChanged(object sender, EventArgs e)
       {
-         if (_EnableTrackBarZoom)
-            if (_Viewer != null)
-               _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
+         if (_EnableTrackBarZoom && _Viewer != null) 
+            _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
       }
 
       private void HeuristicHighlightingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -684,7 +660,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                MessageBox.Show(string.Format(Resources.NoGrammarsFoundInAssembly, Path.GetFileName(fileToSearch)));
                return null;
             case 1:
-               foundGrammar = selectableGrammars.First();
+               foundGrammar = selectableGrammars[0];
                break;
             default:
                {
@@ -829,9 +805,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          OLVListItem selected;
          object rowObject = null;
-         if ((selected = ParseMessageListView.SelectedItem) != null)
-            if (selected.RowObject != null)
-               rowObject = selected.RowObject;
+         if ((selected = ParseMessageListView.SelectedItem) != null && selected.RowObject != null)
+            rowObject = selected.RowObject;
 
          if (rowObject != null)
          {
@@ -967,27 +942,25 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          if (graph != null)
          {
             OLVListItem selected;
-            if ((selected = TraceListView.SelectedItem) != null)
-               if (selected.RowObject != null)
-               {
-                  var traceEvent = (TraceEvent)selected.RowObject;
-                  CodeEditor.SelectSource(traceEvent.ParserRuleContext);
-               }
+            if ((selected = TraceListView.SelectedItem) != null && selected.RowObject != null)
+            {
+               var traceEvent = (TraceEvent)selected.RowObject;
+               CodeEditor.SelectSource(traceEvent.ParserRuleContext);
+            }
          }
       }
 
       private void SelectTokenToolStripMenuItem_Click(object sender, EventArgs e)
       {
          OLVListItem selected;
-         if ((selected = TraceListView.SelectedItem) != null)
-            if (selected.RowObject != null)
-            {
-               var traceEvent = (TraceEvent)selected.RowObject;
-               CodeEditor.SelectSource(traceEvent.Token);
-               var model =
-                  (from token in _Tokens where token == traceEvent.Token select token).First();
-               tokenListView.SelectObject(model);
-            }
+         if ((selected = TraceListView.SelectedItem) != null && selected.RowObject != null)
+         {
+            var traceEvent = (TraceEvent)selected.RowObject;
+            CodeEditor.SelectSource(traceEvent.Token);
+            var model =
+               (from token in _Tokens where token == traceEvent.Token select token).First();
+            tokenListView.SelectObject(model);
+         }
       }
 
       private void SimpleLLModeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -999,12 +972,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void TokenListView_Click(object sender, EventArgs e)
       {
          OLVListItem selected;
-         if ((selected = tokenListView.SelectedItem) != null)
-            if (selected.RowObject != null)
-            {
-               var tokenView = (DetailedToken)selected.RowObject;
-               CodeEditor.SelectSource(tokenView);
-            }
+         if ((selected = tokenListView.SelectedItem) != null && selected.RowObject != null)
+         {
+            var tokenView = (DetailedToken)selected.RowObject;
+            CodeEditor.SelectSource(tokenView);
+         }
       }
 
       private void TraceListView_BeforeSorting(object sender, BeforeSortingEventArgs e)
@@ -1202,7 +1174,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var end = new Common.Grammar.Place(CodeEditor.Selection.End.iLine + 1, CodeEditor.Selection.End.iChar);
 
          // If we don't actually have a selection, then create a selection range extending one character past the cursor
-         if (end.Equals(start))
+         if (end.Line == start.Line && end.Position == start.Position)
             end = new Common.Grammar.Place(end.Line, end.Position + 1);
 
          if (end.Line < start.Line || (end.Line == start.Line && end.Position < start.Position))
