@@ -389,6 +389,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          {
             CodeEditor.SelectSource(node.UserData as ITree ?? throw new InvalidOperationException());
             CodeEditor.Focus();
+            ParseTreeView.DisplayTreeNode(node.UserData as ITree);
          }
       }
 
@@ -397,7 +398,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          var factor = Math.Max(
             Math.Min((int)Math.Round((_Viewer.ZoomF - 1.0) / _TrackBarZoomIncrement), GraphZoomTrackBar.Maximum),
             GraphZoomTrackBar.Minimum);
-         GraphZoomTrackBar.Value = factor;
+         SetZoomFactor(factor);
          Debug.WriteLine($"Scroll zoom factor {factor}");
       }
 
@@ -630,7 +631,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // If the setting the track bar were to set the zoom on the viewer, it can crash due to the timing of changes occurring in the graph
          // Beyond that, setting the Zoom back to 1 would be redundant since pressing the home button has essentially done this.
          _EnableTrackBarZoom = false;
-         GraphZoomTrackBar.Value = 0;
+         SetZoomFactor(0);
          _EnableTrackBarZoom = true;
       }
 
@@ -871,6 +872,22 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          }
       }
 
+      private void ParseTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+      {
+         if (e.Node.Tag is ITree selected)
+         {
+            SetZoomFactor(0);
+            RenderParseTreeGraph(selected);
+            if (selected.Parent != null)
+               CodeEditor.SelectSource(selected);
+         }
+      }
+
+      void SetZoomFactor(int zoomFactor)
+      {
+         GraphZoomTrackBar.Value = zoomFactor;
+      }
+
       private void PopulateParserMessages(List<ParseMessage> listenerErrors)
       {
          ParseMessageListView.SetObjects(listenerErrors);
@@ -917,8 +934,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             _Viewer.SuspendLayout();
             _Viewer.Graph = graph;
             if (zoomFactor.HasValue)
-               GraphZoomTrackBar.Value = zoomFactor.Value;
-            _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
+               SetZoomFactor(zoomFactor.Value);
             _Viewer.ResumeLayout();
          }
          catch (Exception ex)
@@ -941,8 +957,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          _Viewer.SuspendLayout();
          _Viewer.Graph = graph;
          if (zoomFactor.HasValue)
-            GraphZoomTrackBar.Value = zoomFactor.Value;
-         _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
+            SetZoomFactor(zoomFactor.Value);
          _Viewer.ResumeLayout();
       }
 
@@ -1092,8 +1107,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
                // Center the viewer on the selected node and zoom in
                _Viewer.CenterToPoint(graphNode.GeometryNode.Center);
-               GraphZoomTrackBar.Value = Math.Min(200, Math.Min(horizontalAxisRatio, verticalAxisRatio));
-               _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
+               SetZoomFactor(Math.Min(200, Math.Min(horizontalAxisRatio, verticalAxisRatio)));
                _Viewer.Refresh();
 
                // After we have refreshed the transformed view, we select the node for dragging so that it displays with a border for emphasis

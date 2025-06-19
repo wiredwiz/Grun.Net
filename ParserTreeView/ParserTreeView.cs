@@ -57,6 +57,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// </summary>
       /// <param name="parseTree">The <see cref="ITree"/> instance to load.</param>
       /// <param name="grammar">The <see cref="GrammarReference"/> instance to use.</param>
+      /// <exception cref="ArgumentNullException">tree or grammar were null.</exception>
       public void LoadParseTree(ITree parseTree, GrammarReference grammar)
       {
          if (parseTree == null) throw new ArgumentNullException(nameof(parseTree));
@@ -74,6 +75,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// </summary>
       /// <param name="tree">The <see cref="ITree"/> instance to use.</param>
       /// <returns>The selected <see cref="TreeNode"/> or null if not found.</returns>
+      /// <exception cref="ArgumentNullException">tree was null.</exception>
       public TreeNode SelectTreeNode(ITree tree)
       {
          if (tree == null) throw new ArgumentNullException(nameof(tree));
@@ -89,10 +91,30 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       }
 
       /// <summary>
+      /// Displays the tree node that corresponds to the specified <see cref="ITree"/> instance.
+      /// </summary>
+      /// <param name="tree">The <see cref="ITree"/> to use.</param>
+      /// <returns>The displayed <see cref="TreeNode"/> or null if one was not found.</returns>
+      /// <exception cref="ArgumentNullException">tree was null.</exception>
+      public TreeNode DisplayTreeNode(ITree tree)
+      {
+         if (tree == null) throw new ArgumentNullException(nameof(tree));
+
+         var treeNode = AddBranchesTillLeaf(tree);
+         if (treeNode != null)
+         {
+            TopNode = treeNode;
+            treeNode.EnsureVisible();
+         }
+         return treeNode;
+      }
+
+      /// <summary>
       /// Finds the tree node corresponding to the specified <see cref="ITree"/> instance.
       /// </summary>
       /// <param name="tree">The <see cref="ITree"/> node to use.</param>
       /// <returns>The corresponding <see cref="TreeNode"/> instance or null if not found.</returns>
+      /// <exception cref="ArgumentNullException">tree was null.</exception>
       public TreeNode FindTreeNode(ITree tree)
       {
          if (tree == null) throw new ArgumentNullException(nameof(tree));
@@ -105,8 +127,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// </summary>
       /// <param name="tree">The tree instance to create a branch for.</param>
       /// <returns>The final leaf <see cref="TreeNode"/> instance that was created.</returns>
+      /// <exception cref="ArgumentNullException">tree was null.</exception>
       private TreeNode AddBranchesTillLeaf(ITree tree)
       {
+         if (tree == null) throw new ArgumentNullException(nameof(tree));
+
          // fetch our unique ID for the tree instance and then check if it already exists in active nodes
          // if so, we return the existing tree node since nothing more needs to be done
          var nodeName = tree.GetHashCode().ToString();
@@ -220,6 +245,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
          // Now we also add any children of that child node to prepopulate the tree enough to show nodes with children
          for (var i = 0; i < tree.ChildCount; i++)
          {
+            Application.DoEvents();
             var child = tree.GetChild(i);
             nodeName = child.GetHashCode().ToString();
             if (ActiveNodes.ContainsKey(nodeName))
