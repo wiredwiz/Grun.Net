@@ -861,7 +861,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       void SetZoomFactor(int zoomFactor)
       {
          GraphZoomTrackBar.Value = zoomFactor;
-         _Viewer.ZoomF = (GraphZoomTrackBar.Value * _TrackBarZoomIncrement) + 1.0;
       }
 
       private void PopulateParserMessages(List<ParseMessage> listenerErrors)
