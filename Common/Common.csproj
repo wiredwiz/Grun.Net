@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\TreeExtensions.cs" />
     <Compile Include="Grammar\DetailedTokenFactory.cs" />
     <Compile Include="Syntax\ISyntaxHighlightingGuide.cs" />
     <Compile Include="Extensions\TokenInterfaceExtensionMethods.cs" />
