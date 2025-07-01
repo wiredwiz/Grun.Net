@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="ITokenExtensions.cs" company="Edgerunner.org">
+// <copyright file="ErrorNodeImplExtensions.cs" company="Edgerunner.org">
 // Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
@@ -34,37 +34,43 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using Antlr4.Runtime;
-
-using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
+using Antlr4.Runtime.Tree;
+using JetBrains.Annotations;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
 {
    /// <summary>
-   /// Class containing extension methods for the IToken interface.
+   /// Class containing extension methods for the ErrorNodeImpl class.
    /// </summary>
-   // ReSharper disable once InconsistentNaming
-   public static class ITokenExtensions
+   public static class ErrorNodeImplExtensions
    {
       /// <summary>
-      /// Determines whether this IToken contains the specified source selection.
+      /// Determines whether this ErrorNodeImpl contains the specified source selection.
       /// </summary>
-      /// <param name="token">The token interface.</param>
+      /// <param name="node">The error node implementation.</param>
       /// <param name="selectionStart">The source selection start.</param>
       /// <param name="selectionEnd">The source selection end.</param>
-      /// <returns><c>true</c> if token contains the specified source selection; otherwise, <c>false</c>.</returns>
-      public static bool ContainsSourceSelection(this IToken token, Place selectionStart, Place selectionEnd)
+      /// <returns><c>true</c> if node contains the specified source selection; otherwise, <c>false</c>.</returns>
+      public static bool ContainsSourceSelection([NotNull] this ErrorNodeImpl node, Place selectionStart, Place selectionEnd)
       {
-         if (token.Line > selectionStart.Line)
-            return false;
-         if (token.Line == selectionStart.Line && token.Column > selectionStart.Position)
-            return false;
+         var nodeStart = new Place(node.Symbol.Column, node.Symbol.Line - 1);
+         Place nodeEnd;
+         if (node.Symbol.StartIndex != -1)
+         {
+            var spot = node.Symbol.GetEndPlace();
+            nodeEnd = new Place(spot.Position, spot.Line - 1);
+         }
+         else
+            nodeEnd = nodeStart;
 
-         var tokenEnd = token.GetEndPlace();
-         if (tokenEnd.Line < selectionEnd.Line)
+         if (nodeStart.Line > selectionStart.Line)
             return false;
-         if (tokenEnd.Line == selectionEnd.Line && (tokenEnd.Position + 1) < selectionEnd.Position)
+         if (nodeStart.Line == selectionStart.Line && nodeStart.Position > selectionStart.Position)
+            return false;
+         if (nodeEnd.Line < selectionEnd.Line)
+            return false;
+         if (nodeEnd.Line == selectionEnd.Line && (nodeEnd.Position + 1) < selectionEnd.Position)
             return false;
 
          return true;

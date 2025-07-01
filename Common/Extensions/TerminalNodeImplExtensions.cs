@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="TreeExtensions.cs" company="Edgerunner.org">
-// Copyright 2025 thad
+// <copyright file="TerminalNodeImplExtensions.cs" company="Edgerunner.org">
+// Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2025, thad
+// Copyright (c) 2021, Thaddeus Ryker
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -34,25 +34,28 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using JetBrains.Annotations;
+using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
+// ReSharper disable StyleCop.SA1650
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
 {
-   public static class TreeExtensions
+   /// <summary>
+   /// Class containing extension methods for the TerminalNodeImpl class.
+   /// </summary>
+   public static class TerminalNodeImplExtensions
    {
-      public static string GetLabelName(this ITree tree, IList<string> parserRules)
+      /// <summary>
+      /// Determines whether this TerminalNodeImpl contains the specified source selection.
+      /// </summary>
+      /// <param name="node">The terminal node implementation.</param>
+      /// <param name="selectionStart">The source selection start.</param>
+      /// <param name="selectionEnd">The source selection end.</param>
+      /// <returns><c>true</c> if node contains the specified source selection; otherwise, <c>false</c>.</returns>
+      public static bool ContainsSourceSelection([NotNull] this TerminalNodeImpl node, Place selectionStart, Place selectionEnd)
       {
-         if (tree is ParserRuleContext context)
-         {
-            var className = context.GetType().Name;
-            var labelEnd = className.LastIndexOf("Context", StringComparison.Ordinal);
-            return labelEnd != -1 ? className.Substring(0, labelEnd) : Trees.GetNodeText(tree, parserRules);
-         }
-
-         return null;
+         return node.Symbol.ContainsSourceSelection(selectionStart, selectionEnd);
       }
    }
 }

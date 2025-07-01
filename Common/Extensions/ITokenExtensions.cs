@@ -1,5 +1,5 @@
 ﻿#region BSD 3-Clause License
-// <copyright file="SyntaxTokenExtensions.cs" company="Edgerunner.org">
+// <copyright file="ITokenExtensions.cs" company="Edgerunner.org">
 // Copyright 2021 Thaddeus Ryker
 // </copyright>
 // 
@@ -34,31 +34,35 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using Antlr4.Runtime;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
 {
    /// <summary>
-   /// Class containing extension methods for the DetailedToken class.
+   /// Class containing extension methods for the IToken interface.
    /// </summary>
-   public static class SyntaxTokenExtensions
+   // ReSharper disable once InconsistentNaming
+   public static class ITokenExtensions
    {
       /// <summary>
-      /// Determines whether this DetailedToken contains the specified source selection.
+      /// Determines whether this IToken contains the specified source selection.
       /// </summary>
-      /// <param name="token">The syntax token.</param>
+      /// <param name="token">The token interface.</param>
       /// <param name="selectionStart">The source selection start.</param>
       /// <param name="selectionEnd">The source selection end.</param>
       /// <returns><c>true</c> if token contains the specified source selection; otherwise, <c>false</c>.</returns>
-      public static bool ContainsSourceSelection(this DetailedToken token, Place selectionStart, Place selectionEnd)
+      public static bool ContainsSourceSelection(this IToken token, Place selectionStart, Place selectionEnd)
       {
          if (token.Line > selectionStart.Line)
             return false;
-         if (token.EndingLineNumber < selectionEnd.Line)
+         if (token.Line == selectionStart.Line && token.Column > selectionStart.Position)
             return false;
-         if (token.Line == selectionStart.Line && token.ColumnPosition > selectionStart.Position + 1)
+
+         var tokenEnd = token.GetEndPlace();
+         if (tokenEnd.Line < selectionEnd.Line)
             return false;
-         if (token.EndingLineNumber == selectionEnd.Line && (token.EndingColumnPosition + 1) < selectionEnd.Position)
+         if (tokenEnd.Line == selectionEnd.Line && (tokenEnd.Position + 1) < selectionEnd.Position)
             return false;
 
          return true;

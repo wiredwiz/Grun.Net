@@ -1,11 +1,11 @@
 ﻿#region BSD 3-Clause License
 // <copyright file="ITreeExtensions.cs" company="Edgerunner.org">
-// Copyright 2021 Thaddeus Ryker
+// Copyright 2025 thad
 // </copyright>
 // 
 // BSD 3-Clause License
 // 
-// Copyright (c) 2021, Thaddeus Ryker
+// Copyright (c) 2025, thad
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -34,21 +34,38 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-
 using JetBrains.Annotations;
-
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
 {
    /// <summary>
    /// Class containing extension methods for the ITree interface.
    /// </summary>
    public static class ITreeExtensions
    {
+
       /// <summary>
+      /// Gets the parser rule name for the specified <see cref="ITree"/> instance.
+      /// </summary>
+      /// <param name="tree">The tree instance.</param>
+      /// <returns>The resulting name or null if the rule name could not be resolved.</returns>
+      public static string GetParserRuleName(this ITree tree)
+      {
+         if (tree is ParserRuleContext context)
+         {
+            var className = context.GetType().Name;
+            var labelEnd = className.LastIndexOf("Context", StringComparison.Ordinal);
+            return labelEnd > 0 ? className.Substring(0, labelEnd) : null;
+         }
+
+         return null;
+      }
+
+            /// <summary>
       /// Finds the deepest tree node that contains the select source position.
       /// </summary>
       /// <param name="tree">The tree to evaluate.</param>

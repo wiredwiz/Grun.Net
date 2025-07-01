@@ -50,7 +50,6 @@ using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Dialogs;
-using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Properties;
 
 using Place = FastColoredTextBoxNS.Place;

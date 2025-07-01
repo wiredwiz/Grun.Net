@@ -43,6 +43,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
 using Microsoft.Msagl.Drawing;
+using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Graphing
 {
@@ -102,11 +103,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
             var context = tree as ParserRuleContext;
 
             if (UseLabelNames && context != null)
-            {
-               var className = context.GetType().Name;
-               var labelEnd = className.LastIndexOf("Context", StringComparison.Ordinal);
-               node.LabelText = labelEnd != -1 ? className.Substring(0, labelEnd) : Trees.GetNodeText(tree, parserRules);
-            }
+               node.LabelText = context.GetParserRuleName() ?? Trees.GetNodeText(tree, parserRules);
             else
                node.LabelText = Trees.GetNodeText(tree, parserRules);
 

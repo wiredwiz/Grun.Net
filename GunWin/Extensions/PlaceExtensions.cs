@@ -34,13 +34,9 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using JetBrains.Annotations;
-
-using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
-using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
 {
    /// <summary>
    /// Class containing extension methods for the Place struct.

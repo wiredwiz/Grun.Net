@@ -103,13 +103,7 @@
       <DependentUpon>GrammarSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\SyntaxHighlighting\HeuristicSyntaxHighlightingGuide.cs" />
-    <Compile Include="Extensions\ErrorNodeImplExtensions.cs" />
-    <Compile Include="Extensions\ITokenExtensions.cs" />
-    <Compile Include="Extensions\ITreeExtensions.cs" />
-    <Compile Include="Extensions\ParserRuleContextExtensions.cs" />
     <Compile Include="Extensions\PlaceExtensions.cs" />
-    <Compile Include="Extensions\SyntaxTokenExtensions.cs" />
-    <Compile Include="Extensions\TerminalNodeImplExtensions.cs" />
     <Compile Include="Graphing\GraphingResult.cs" />
     <Compile Include="Graphing\GraphingWorkItem.cs" />
     <Compile Include="Graphing\GraphWorker.cs" />

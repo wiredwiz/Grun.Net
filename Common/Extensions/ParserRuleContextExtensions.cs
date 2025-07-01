@@ -35,13 +35,12 @@
 #endregion
 
 using Antlr4.Runtime;
-
+using Antlr4.Runtime.Tree;
 using JetBrains.Annotations;
-
-using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
+using System;
 
-namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
+namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
 {
    /// <summary>
    /// Class containing extension methods for the ParserRuleContext class.
@@ -73,6 +72,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin.Extensions
             return false;
 
          return true;
+      }
+
+      /// <summary>
+      /// Gets the rule name for the specified <see cref="ParserRuleContext"/> instance.
+      /// </summary>
+      /// <param name="context">The <see cref="ParserRuleContext"/> instance to use.</param>
+      /// <returns>The resulting name or null if the rule name could not be resolved.</returns>
+      public static string GetParserRuleName(this ParserRuleContext context)
+      {
+         var className = context.GetType().Name;
+         var labelEnd = className.LastIndexOf("Context", StringComparison.Ordinal);
+         return labelEnd > 0 ? className.Substring(0, labelEnd) : null;
       }
    }
 }
