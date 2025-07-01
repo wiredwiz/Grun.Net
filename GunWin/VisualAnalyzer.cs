@@ -1067,7 +1067,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void SelectParserRuleFromSourceSelection(Common.Grammar.Place selectionStart, Common.Grammar.Place selectionEnd)
       {
          var node = _ParseTree?.FindTreeNodeForSourceSelection(selectionStart, selectionEnd);
-         if (node != null)
+         if (node != null && _Viewer.Graph != null)
          {
             var graphNode = _Viewer?.Graph.FindNode(node.GetHashCode().ToString());
             if (graphNode != null)
