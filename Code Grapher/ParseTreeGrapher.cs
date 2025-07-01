@@ -103,7 +103,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Graphing
             var context = tree as ParserRuleContext;
 
             if (UseLabelNames && context != null)
-               node.LabelText = context.GetParserRuleName() ?? Trees.GetNodeText(tree, parserRules);
+               node.LabelText = context.GetLabeledRuleName() ?? Trees.GetNodeText(tree, parserRules);
             else
                node.LabelText = Trees.GetNodeText(tree, parserRules);
 

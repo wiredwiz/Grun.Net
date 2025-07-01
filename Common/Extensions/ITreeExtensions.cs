@@ -49,11 +49,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
    {
 
       /// <summary>
-      /// Gets the parser rule name for the specified <see cref="ITree"/> instance.
+      /// Gets the labeled parser rule name for the specified <see cref="ITree"/> instance.
       /// </summary>
       /// <param name="tree">The tree instance.</param>
-      /// <returns>The resulting name or null if the rule name could not be resolved.</returns>
-      public static string GetParserRuleName(this ITree tree)
+      /// <returns>The resulting labeled name or null if the name could not be resolved.</returns>
+      public static string GetLabeledRuleName(this ITree tree)
       {
          if (tree is ParserRuleContext context)
          {

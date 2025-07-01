@@ -2,14 +2,27 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Antlr4.Runtime.Tree;
+using Org.Edgerunner.ANTLR4.Tools.Common.Extensions;
 using Org.Edgerunner.ANTLR4.Tools.Testing.Grammar;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing
 {
    public partial class ParserTreeView : TreeView
    {
+      /// <summary>
+      /// Gets the grammar being used.
+      /// </summary>
+      /// <value>The grammar.</value>
       public GrammarReference Grammar { get; private set; }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether [use label names].
+      /// </summary>
+      /// <value><c>true</c> if [use label names]; otherwise, <c>false</c>.</value>
+      public bool UseLabelNames { get; set; }
+
       public ITree ParseTree { get; private set; }
+
       private Dictionary<string, TreeNode> ActiveNodes { get; } = new Dictionary<string, TreeNode>();
 
       /// <summary>
@@ -230,7 +243,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
          var nodeName = tree.GetHashCode().ToString();
          if (!ActiveNodes.TryGetValue(nodeName, out var treeNode))
          {
-            treeNode = new TreeNode(Trees.GetNodeText(tree, Grammar.ParserRules))
+            treeNode = new TreeNode(tree.GetLabeledRuleName() ?? Trees.GetNodeText(tree, Grammar.ParserRules))
             {
                Tag = tree,
                Name = nodeName
@@ -250,7 +263,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
             nodeName = child.GetHashCode().ToString();
             if (ActiveNodes.ContainsKey(nodeName))
                continue;
-            var newChild = new TreeNode(Trees.GetNodeText(child, Grammar.ParserRules))
+
+            var newChild = new TreeNode(child.GetLabeledRuleName() ?? Trees.GetNodeText(child, Grammar.ParserRules))
             {
                Tag = child,
                Name = nodeName

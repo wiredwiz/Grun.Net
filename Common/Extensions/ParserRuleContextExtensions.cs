@@ -75,11 +75,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
       }
 
       /// <summary>
-      /// Gets the rule name for the specified <see cref="ParserRuleContext"/> instance.
+      /// Gets the labeled rule name for the specified <see cref="ParserRuleContext"/> instance.
       /// </summary>
       /// <param name="context">The <see cref="ParserRuleContext"/> instance to use.</param>
-      /// <returns>The resulting name or null if the rule name could not be resolved.</returns>
-      public static string GetParserRuleName(this ParserRuleContext context)
+      /// <returns>The resulting labeled name or null if the name could not be resolved.</returns>
+      public static string GetLabeledRuleName(this ParserRuleContext context)
       {
          var className = context.GetType().Name;
          var labelEnd = className.LastIndexOf("Context", StringComparison.Ordinal);

@@ -991,6 +991,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void VisualAnalyzer_Load(object sender, EventArgs e)
       {
+         ParseTreeView.UseLabelNames = UseLabelNamesMnuItem.CheckState == CheckState.Checked;
          InitializeGraphCanvas();
          ConfigureGraphWorker();
          ConfigureParserMessageWindow();
@@ -1193,6 +1194,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private void UseLabelNamesMnuItem_CheckStateChanged(object sender, EventArgs e)
       {
          _Grapher.UseLabelNames = UseLabelNamesMnuItem.CheckState == CheckState.Checked;
+         ParseTreeView.UseLabelNames = UseLabelNamesMnuItem.CheckState == CheckState.Checked;
          if (ParseTreeView.SelectedNode != null && ParseTreeView.SelectedNode.Tag is ITree selected) 
             RenderParseTreeGraph(selected, GraphZoomTrackBar.Value);
       }
