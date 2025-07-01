@@ -94,6 +94,12 @@
     <Compile Include="Dialogs\ErrorDisplay.Designer.cs">
       <DependentUpon>ErrorDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\LexerSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\LexerSelector.Designer.cs">
+      <DependentUpon>LexerSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\FastColoredTextBoxExtensions.cs" />
     <Compile Include="Editor\SyntaxHighlighting\EditorSyntaxHighlighter.cs" />
     <Compile Include="Dialogs\GrammarSelector.cs">
@@ -131,6 +137,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ErrorDisplay.resx">
       <DependentUpon>ErrorDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\LexerSelector.resx">
+      <DependentUpon>LexerSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GrammarSelector.resx">
       <DependentUpon>GrammarSelector.cs</DependentUpon>
