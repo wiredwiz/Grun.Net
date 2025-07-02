@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Antlr4.Runtime.Tree;
@@ -210,28 +210,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       /// <returns>Returns a <see cref="TreeNode"/> representing our final leaf.</returns>
       private TreeNode CreateBranchNodesAndLeavesFromStack(Stack<ITree> stack, TreeNode parentTree)
       {
-         var workingChildren = new List<ITree>();
          while (stack.Count > 0)
          {
             // pop our first work item
             var work = stack.Pop();
-            // clear our working children list
-            workingChildren.Clear();
             // our working parent should never be null and if it is, something has gone HORRIBLY wrong, we will leave it to error in that case
             for (var i = 0; i < work.Parent.ChildCount; i++)
             {
                // We add all children to the working children list that IS NOT the branch node we will be building off of
                var child = work.Parent.GetChild(i);
                if (child != work)
-                  workingChildren.Add(child);
+                  AddChildNodeAndLeaves(parentTree, child);
+               else
+                  parentTree = AddChildNodeAndLeaves(parentTree, work);
             }
-
-            // now we add our extra working children from our list
-            foreach (var child in workingChildren) 
-               AddChildNodeAndLeaves(parentTree, child);
-
-            // now we add the child that is part of our branch being traversed and set it as the new parent for the branch we are building
-            parentTree = AddChildNodeAndLeaves(parentTree, work);
          }
 
          return parentTree;
