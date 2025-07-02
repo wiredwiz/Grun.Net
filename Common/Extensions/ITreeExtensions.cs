@@ -35,10 +35,14 @@
 #endregion
 
 using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using JetBrains.Annotations;
 using Org.Edgerunner.ANTLR4.Tools.Common.Grammar;
+using Org.Edgerunner.ANTLR4.Tools.Common.Hashing;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
 {
@@ -117,6 +121,22 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
                }
 
          return passes ? matched : null;
+      }
+
+
+      /// <summary>
+      /// Gets the unique hashed identifier for this tree instance.
+      /// </summary>
+      /// <param name="tree">The <see cref="ITree"/> instance to use.</param>
+      /// <param name="parserRules">The parser rules to use.</param>
+      /// <returns>A new string containing the unique hashed id.</returns>
+      public static string GetIdHash(this ITree tree, IList<string> parserRules)
+      {
+         var syntaxNode = tree as ISyntaxTree;
+         Debug.Assert(syntaxNode != null, nameof(syntaxNode) + " != null");
+         var locationId = syntaxNode.SourceInterval.a + "-" + syntaxNode.SourceInterval.b;
+         var nodeText = tree is ParserRuleContext context ? context.GetLabeledRuleName() : Trees.GetNodeText(tree, parserRules);
+         return SuperFastHash.Hash(nodeText + "-" + locationId).ToString();
       }
    }
 }
