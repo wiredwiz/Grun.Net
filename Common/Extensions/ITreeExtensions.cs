@@ -136,7 +136,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Common.Extensions
          Debug.Assert(syntaxNode != null, nameof(syntaxNode) + " != null");
          var locationId = syntaxNode.SourceInterval.a + "-" + syntaxNode.SourceInterval.b;
          var nodeText = tree is ParserRuleContext context ? context.GetLabeledRuleName() : Trees.GetNodeText(tree, parserRules);
-         return SuperFastHash.Hash(nodeText + "-" + locationId).ToString();
+         byte[] data = System.Text.Encoding.UTF8.GetBytes(nodeText + "-" + locationId);
+         var hash = new FastHashes.XxHash32();
+         return BitConverter.ToUInt32(hash.ComputeHash(data), 0).ToString();
       }
    }
 }
