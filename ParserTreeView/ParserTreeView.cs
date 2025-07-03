@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Antlr4.Runtime.Tree;
@@ -176,14 +176,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       {
          stack.Push(tree);
          var work = tree.Parent;
-         var nodeName = work.GetHashCode().ToString();
+         var nodeName = work.GetIdHash(Grammar.ParserRules); // work.GetHashCode().ToString();
          while (!ActiveNodes.ContainsKey(nodeName))
          {
             stack.Push(work);
             if (work.Parent == null)
                break;
             work = work.Parent;
-            nodeName = work.GetHashCode().ToString();
+            nodeName = work.GetIdHash(Grammar.ParserRules); // work.GetHashCode().ToString();
          }
 
          if (work.Parent == null)
@@ -232,7 +232,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       private TreeNode AddChildNodeAndLeaves(TreeNode root, ITree tree)
       {
          // Add the child node
-         var nodeName = tree.GetHashCode().ToString();
+         var nodeName = tree.GetIdHash(Grammar.ParserRules); // tree.GetHashCode().ToString();
          if (!ActiveNodes.TryGetValue(nodeName, out var treeNode))
          {
             treeNode = new TreeNode(tree.GetLabeledRuleName() ?? Trees.GetNodeText(tree, Grammar.ParserRules))
@@ -252,7 +252,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
          {
             Application.DoEvents();
             var child = tree.GetChild(i);
-            nodeName = child.GetHashCode().ToString();
+            nodeName = child.GetIdHash(Grammar.ParserRules);
             if (ActiveNodes.ContainsKey(nodeName))
                continue;
 
