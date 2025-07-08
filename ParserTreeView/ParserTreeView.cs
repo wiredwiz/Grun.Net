@@ -235,7 +235,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
          var nodeName = tree.GetIdHash(Grammar.ParserRules); // tree.GetHashCode().ToString();
          if (!ActiveNodes.TryGetValue(nodeName, out var treeNode))
          {
-            treeNode = new TreeNode(tree.GetLabeledRuleName() ?? Trees.GetNodeText(tree, Grammar.ParserRules))
+            treeNode = new TreeNode((UseLabelNames ? tree.GetLabeledRuleName() : null) ?? Trees.GetNodeText(tree, Grammar.ParserRules))
             {
                Tag = tree,
                Name = nodeName
@@ -256,7 +256,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
             if (ActiveNodes.ContainsKey(nodeName))
                continue;
 
-            var newChild = new TreeNode(child.GetLabeledRuleName() ?? Trees.GetNodeText(child, Grammar.ParserRules))
+            var newChild = new TreeNode((UseLabelNames ? child.GetLabeledRuleName() : null) ?? Trees.GetNodeText(child, Grammar.ParserRules))
             {
                Tag = child,
                Name = nodeName
