@@ -1195,8 +1195,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       {
          _Grapher.UseLabelNames = UseLabelNamesMnuItem.CheckState == CheckState.Checked;
          ParseTreeView.UseLabelNames = UseLabelNamesMnuItem.CheckState == CheckState.Checked;
-         if (ParseTreeView.SelectedNode != null && ParseTreeView.SelectedNode.Tag is ITree selected) 
-            RenderParseTreeGraph(selected, GraphZoomTrackBar.Value);
+         ParseSource();
       }
    }
 }
