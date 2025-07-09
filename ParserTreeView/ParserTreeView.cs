@@ -175,6 +175,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing
       private bool BuildBranchStackFromTreeNode(ITree tree, Stack<ITree> stack, out TreeNode parentTree)
       {
          stack.Push(tree);
+         if (tree.Parent == null)
+         {
+            parentTree = null;
+            return false;
+         }
          var work = tree.Parent;
          var nodeName = work.GetIdHash(Grammar.ParserRules); // work.GetHashCode().ToString();
          while (!ActiveNodes.ContainsKey(nodeName))

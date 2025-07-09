@@ -111,13 +111,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <param name="inputText">The input text to use.</param>
       /// <param name="option">The parsing options to use.</param>
       /// <param name="lexerErrorListener">The lexer error listener.</param>
+      /// <param name="channel">The token stream channel to read from.</param>
       /// <returns>A new <see cref="Parser" /> instance.</returns>
       /// <exception cref="ArgumentNullException">grammar is <see langword="null" /></exception>
       /// <exception cref="ArgumentNullException">inputText is <see langword="null" /></exception>
       /// <exception cref="GrammarException">No parser found for grammar \"{grammar.GrammarName}\"</exception>
       /// <exception cref="ArgumentNullException">No parser found for specified grammar.</exception>
       // ReSharper disable once FlagArgument
-      public Parser BuildParserWithOptions([NotNull] GrammarReference grammar, [NotNull] string inputText, ParseOption option, IAntlrErrorListener<int> lexerErrorListener)
+      public Parser BuildParserWithOptions([NotNull] GrammarReference grammar, [NotNull] string inputText, ParseOption option, IAntlrErrorListener<int> lexerErrorListener, int channel = 0)
       {
          if (grammar is null)
             throw new ArgumentNullException(nameof(grammar));
@@ -136,7 +137,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             lexer.AddErrorListener(lexerErrorListener);
          }
 
-         var commonTokenStream = new CommonTokenStream(lexer);
+         var commonTokenStream = new CommonTokenStream(lexer, channel);
 
          commonTokenStream.Fill();
          Tokens = commonTokenStream.GetTokens().Cast<DetailedToken>().ToList();

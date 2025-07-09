@@ -31,11 +31,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisualAnalyzer));
          this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-         this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.CodeEditor = new FastColoredTextBoxNS.FastColoredTextBox();
-         this.panel1 = new System.Windows.Forms.Panel();
-         this.lblParserRule = new System.Windows.Forms.Label();
-         this.CmbRules = new System.Windows.Forms.ComboBox();
          this.tabControlParse = new System.Windows.Forms.TabControl();
          this.tabParseTree = new System.Windows.Forms.TabPage();
          this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -108,13 +104,18 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
          this.StripLabelDelay = new System.Windows.Forms.ToolStripStatusLabel();
          this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+         this.CmbRules = new System.Windows.Forms.ComboBox();
+         this.lblParserRule = new System.Windows.Forms.Label();
+         this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+         this.lblChannel = new System.Windows.Forms.Label();
+         this.numChannel = new System.Windows.Forms.NumericUpDown();
+         this.panel1 = new System.Windows.Forms.Panel();
+         this.panel2 = new System.Windows.Forms.Panel();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
-         this.tableLayoutPanel1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).BeginInit();
-         this.panel1.SuspendLayout();
          this.tabControlParse.SuspendLayout();
          this.tabParseTree.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
@@ -134,6 +135,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.splitContainer2.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.ParseMessageListView)).BeginInit();
          this.StatusStrip1.SuspendLayout();
+         this.flowLayoutPanel2.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.numChannel)).BeginInit();
+         this.panel1.SuspendLayout();
+         this.panel2.SuspendLayout();
          this.SuspendLayout();
          // 
          // splitContainer1
@@ -145,7 +150,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          // 
          // splitContainer1.Panel1
          // 
-         this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel1);
+         this.splitContainer1.Panel1.Controls.Add(this.CodeEditor);
+         this.splitContainer1.Panel1.Controls.Add(this.flowLayoutPanel2);
          this.splitContainer1.Panel1MinSize = 325;
          // 
          // splitContainer1.Panel2
@@ -155,27 +161,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.splitContainer1.SplitterDistance = 325;
          this.splitContainer1.TabIndex = 0;
          // 
-         // tableLayoutPanel1
-         // 
-         this.tableLayoutPanel1.ColumnCount = 1;
-         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-         this.tableLayoutPanel1.Controls.Add(this.CodeEditor, 0, 1);
-         this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
-         this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-         this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
-         this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-         this.tableLayoutPanel1.RowCount = 2;
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 41F));
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(323, 436);
-         this.tableLayoutPanel1.TabIndex = 1;
-         // 
          // CodeEditor
          // 
-         this.CodeEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
          this.CodeEditor.AutoCompleteBracketsList = new char[] {
         '(',
         ')',
@@ -195,56 +182,25 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.CodeEditor.CharWidth = 8;
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+         this.CodeEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
-         this.CodeEditor.Location = new System.Drawing.Point(3, 44);
+         this.CodeEditor.Location = new System.Drawing.Point(0, 97);
          this.CodeEditor.Name = "CodeEditor";
          this.CodeEditor.Paddings = new System.Windows.Forms.Padding(0);
          this.CodeEditor.RightBracket = ')';
          this.CodeEditor.RightBracket2 = ']';
          this.CodeEditor.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
          this.CodeEditor.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("CodeEditor.ServiceColors")));
-         this.CodeEditor.Size = new System.Drawing.Size(317, 393);
+         this.CodeEditor.Size = new System.Drawing.Size(323, 339);
          this.CodeEditor.TabIndex = 0;
          this.CodeEditor.Zoom = 100;
          this.CodeEditor.SelectionChanged += new System.EventHandler(this.CodeEditor_SelectionChanged);
          this.CodeEditor.TextChangedDelayed += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChangedDelayed);
          this.CodeEditor.DragDrop += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragDrop);
          this.CodeEditor.DragEnter += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragEnter);
-         // 
-         // panel1
-         // 
-         this.panel1.Controls.Add(this.lblParserRule);
-         this.panel1.Controls.Add(this.CmbRules);
-         this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.panel1.Location = new System.Drawing.Point(2, 2);
-         this.panel1.Margin = new System.Windows.Forms.Padding(2);
-         this.panel1.Name = "panel1";
-         this.panel1.Size = new System.Drawing.Size(319, 37);
-         this.panel1.TabIndex = 1;
-         // 
-         // lblParserRule
-         // 
-         this.lblParserRule.AutoSize = true;
-         this.lblParserRule.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.lblParserRule.Location = new System.Drawing.Point(3, 7);
-         this.lblParserRule.Name = "lblParserRule";
-         this.lblParserRule.Size = new System.Drawing.Size(92, 20);
-         this.lblParserRule.TabIndex = 0;
-         this.lblParserRule.Text = "Parser Rule";
-         // 
-         // CmbRules
-         // 
-         this.CmbRules.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-         this.CmbRules.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-         this.CmbRules.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.CmbRules.FormattingEnabled = true;
-         this.CmbRules.Location = new System.Drawing.Point(101, 4);
-         this.CmbRules.Name = "CmbRules";
-         this.CmbRules.Size = new System.Drawing.Size(203, 28);
-         this.CmbRules.TabIndex = 0;
-         this.CmbRules.SelectedIndexChanged += new System.EventHandler(this.ParserRulesCombo_SelectedIndexChanged);
          // 
          // tabControlParse
          // 
@@ -297,6 +253,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.ParseTreeView.Name = "ParseTreeView";
          this.ParseTreeView.Size = new System.Drawing.Size(139, 352);
          this.ParseTreeView.TabIndex = 0;
+         this.ParseTreeView.UseLabelNames = false;
          this.ParseTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ParseTreeView_AfterSelect);
          this.ParseTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ParseTreeView_NodeMouseClick);
          // 
@@ -914,6 +871,77 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.StripLabelDelay.Size = new System.Drawing.Size(0, 0);
          this.StripLabelDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
+         // CmbRules
+         // 
+         this.CmbRules.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+         this.CmbRules.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+         this.CmbRules.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.CmbRules.FormattingEnabled = true;
+         this.CmbRules.Location = new System.Drawing.Point(95, 8);
+         this.CmbRules.Name = "CmbRules";
+         this.CmbRules.Size = new System.Drawing.Size(203, 28);
+         this.CmbRules.TabIndex = 0;
+         this.CmbRules.SelectedIndexChanged += new System.EventHandler(this.ParserRulesCombo_SelectedIndexChanged);
+         // 
+         // lblParserRule
+         // 
+         this.lblParserRule.AutoSize = true;
+         this.lblParserRule.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.lblParserRule.Location = new System.Drawing.Point(5, 11);
+         this.lblParserRule.Name = "lblParserRule";
+         this.lblParserRule.Size = new System.Drawing.Size(92, 20);
+         this.lblParserRule.TabIndex = 0;
+         this.lblParserRule.Text = "Parser Rule";
+         this.lblParserRule.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // flowLayoutPanel2
+         // 
+         this.flowLayoutPanel2.AutoSize = true;
+         this.flowLayoutPanel2.Controls.Add(this.panel1);
+         this.flowLayoutPanel2.Controls.Add(this.panel2);
+         this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
+         this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+         this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+         this.flowLayoutPanel2.Size = new System.Drawing.Size(323, 97);
+         this.flowLayoutPanel2.TabIndex = 1;
+         // 
+         // lblChannel
+         // 
+         this.lblChannel.AutoSize = true;
+         this.lblChannel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.lblChannel.Location = new System.Drawing.Point(5, 10);
+         this.lblChannel.Name = "lblChannel";
+         this.lblChannel.Size = new System.Drawing.Size(81, 20);
+         this.lblChannel.TabIndex = 1;
+         this.lblChannel.Text = "Channel #";
+         this.lblChannel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // numChannel
+         // 
+         this.numChannel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.numChannel.Location = new System.Drawing.Point(92, 8);
+         this.numChannel.Name = "numChannel";
+         this.numChannel.Size = new System.Drawing.Size(45, 26);
+         this.numChannel.TabIndex = 3;
+         // 
+         // panel1
+         // 
+         this.panel1.Controls.Add(this.CmbRules);
+         this.panel1.Controls.Add(this.lblParserRule);
+         this.panel1.Location = new System.Drawing.Point(3, 3);
+         this.panel1.Name = "panel1";
+         this.panel1.Size = new System.Drawing.Size(314, 43);
+         this.panel1.TabIndex = 0;
+         // 
+         // panel2
+         // 
+         this.panel2.Controls.Add(this.lblChannel);
+         this.panel2.Controls.Add(this.numChannel);
+         this.panel2.Location = new System.Drawing.Point(3, 52);
+         this.panel2.Name = "panel2";
+         this.panel2.Size = new System.Drawing.Size(146, 42);
+         this.panel2.TabIndex = 1;
+         // 
          // VisualAnalyzer
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -928,13 +956,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.Text = "GrunWin Visual Analyzer";
          this.Load += new System.EventHandler(this.VisualAnalyzer_Load);
          this.splitContainer1.Panel1.ResumeLayout(false);
+         this.splitContainer1.Panel1.PerformLayout();
          this.splitContainer1.Panel2.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
          this.splitContainer1.ResumeLayout(false);
-         this.tableLayoutPanel1.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).EndInit();
-         this.panel1.ResumeLayout(false);
-         this.panel1.PerformLayout();
          this.tabControlParse.ResumeLayout(false);
          this.tabParseTree.ResumeLayout(false);
          this.tabParseTree.PerformLayout();
@@ -957,6 +983,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ((System.ComponentModel.ISupportInitialize)(this.ParseMessageListView)).EndInit();
          this.StatusStrip1.ResumeLayout(false);
          this.StatusStrip1.PerformLayout();
+         this.flowLayoutPanel2.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.numChannel)).EndInit();
+         this.panel1.ResumeLayout(false);
+         this.panel1.PerformLayout();
+         this.panel2.ResumeLayout(false);
+         this.panel2.PerformLayout();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -965,9 +997,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       #endregion
 
       private System.Windows.Forms.SplitContainer splitContainer1;
-      private System.Windows.Forms.Label lblParserRule;
       private FastColoredTextBoxNS.FastColoredTextBox CodeEditor;
-      private System.Windows.Forms.ComboBox CmbRules;
       private System.Windows.Forms.TabControl tabControlParse;
       private System.Windows.Forms.TabPage tabParseTree;
       private System.Windows.Forms.TabPage tabTokens;
@@ -1038,10 +1068,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       private System.Windows.Forms.ToolStripMenuItem selectTokenToolStripMenuItem1;
       private System.Windows.Forms.ToolStripMenuItem selectParserRuleToolStripMenuItem1;
       private BrightIdeasSoftware.OLVColumn colSource;
-      private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-      private System.Windows.Forms.Panel panel1;
       private System.Windows.Forms.ToolStripMenuItem WordWrapMnuItem;
       private System.Windows.Forms.ToolStripMenuItem UseLabelNamesMnuItem;
+      private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+      private System.Windows.Forms.Label lblParserRule;
+      private System.Windows.Forms.ComboBox CmbRules;
+      private System.Windows.Forms.Label lblChannel;
+      private System.Windows.Forms.NumericUpDown numChannel;
+      private System.Windows.Forms.Panel panel1;
+      private System.Windows.Forms.Panel panel2;
    }
 }
 

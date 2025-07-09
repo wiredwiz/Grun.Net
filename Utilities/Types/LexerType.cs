@@ -57,7 +57,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Types
          var isParser = typeof(Lexer).IsAssignableFrom(type);
          if (!isParser || !type.Name.EndsWith("Lexer"))
             throw new
-               GrammarException($"Type \"{type.FullName}\" does not appear to be a valid ANTLR exer.");
+               GrammarException($"Type \"{type.FullName}\" does not appear to be a valid ANTLR lexer.");
 
          ActualType = type;
          GrammarName = ActualType.Name.Substring(0, ActualType.Name.Length - 5);

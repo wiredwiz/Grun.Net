@@ -218,7 +218,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
             {
                if (ParseWithDiagnostics) options |= ParseOption.Diagnostics;
                if (ParseWithSllMode) options |= ParseOption.Sll;
-               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options, lexErrorListener);
+               var parser = analyzer.BuildParserWithOptions(_Grammar, CodeEditor.Text, options, lexErrorListener, (int)Math.Round(numChannel.Value, MidpointRounding.ToEven));
                if (ParseWithTracing)
                {
                   parseTreeListener = new GuiTraceListener(parser);
