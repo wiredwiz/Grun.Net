@@ -1,4 +1,4 @@
-﻿#region BSD 3-Clause License
+#region BSD 3-Clause License
 
 // <copyright file="Scanner.cs" company="Edgerunner.org">
 // Copyright 2020 
@@ -238,7 +238,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
       /// <summary>
       /// Gets the parser rules for the specified grammar parser.
       /// </summary>
-      /// <param name="parserType">The the grammar parser type.</param>
+      /// <param name="parserType">The grammar parser type.</param>
       /// <returns>An <see cref="IEnumerable{String}"/> containing the parser rules (if any).</returns>
       /// <exception cref="T:System.ArgumentNullException"><paramref name="parserType"/> is <see langword="null"/></exception>
       public IEnumerable<string> GetParserRulesForGrammarParser([NotNull] Type parserType)
