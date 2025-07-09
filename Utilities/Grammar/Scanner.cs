@@ -1,4 +1,4 @@
-#region BSD 3-Clause License
+﻿#region BSD 3-Clause License
 
 // <copyright file="Scanner.cs" company="Edgerunner.org">
 // Copyright 2020 
@@ -38,6 +38,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -125,7 +126,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          {
             types = new List<Type>();
          }
-         
+
          types = types.Where(t => typeof(Parser).IsAssignableFrom(t));
 
          foreach (var type in types)
@@ -250,7 +251,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          return value;
       }
 
-      private List<GrammarReference> FindGrammars([NotNull] string path, string name = null)
+      private List<GrammarReference> FindGrammars([NotNull] string path, string grammarName = null)
       {
          var di = new DirectoryInfo(path);
          var files = di.GetFiles("*.dll");
@@ -261,35 +262,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             try
             {
                var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
-
-               // We make parsers an explicit list to avoid multiple enumerations
-               var parsers = FindGrammarParsersInAssembly(assembly).ToList();
-               var lexers = FindGrammarLexersInAssembly(assembly);
-               IEnumerable<LexerType> matches;
-               if (!string.IsNullOrEmpty(name))
-                  matches = from lexer in lexers
-                            where lexer.GrammarName == name
-                            select lexer;
-               else
-                  matches = lexers;
-
-               foreach (var lexer in matches)
-               {
-                  var parser = (from candidate in parsers
-                                where candidate.GrammarName == lexer.GrammarName
-                                select candidate).FirstOrDefault();
-
-                  var rules = parser.ActualType == null
-                                 ? new List<string>()
-                                 : GetParserRulesForGrammarParser(parser.ActualType).ToList();
-                  var grammarRef = new GrammarReference(
-                                                        file,
-                                                        lexer.GrammarName,
-                                                        lexer.ActualType,
-                                                        parser.ActualType,
-                                                        rules);
-                  results.Add(grammarRef);
-               }
+               results.AddRange(AssembleGrammars(grammarName, assembly, file));
             }
             catch (FileLoadException)
             {
@@ -304,44 +277,14 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
          return results;
       }
 
-      private List<GrammarReference> FindGrammarsInFile([NotNull] string filePath, string name = null)
+      private List<GrammarReference> FindGrammarsInFile([NotNull] string filePath, string grammarName = null)
       {
          var file = new FileInfo(filePath);
-         var results = new List<GrammarReference>();
 
          try
          {
             var assembly = Assembly.Load(File.ReadAllBytes(file.FullName));
-
-            // We make parsers an explicit list to avoid multiple enumerations
-            var parsers = FindGrammarParsersInAssembly(assembly).ToList();
-            var lexers = FindGrammarLexersInAssembly(assembly);
-            IEnumerable<LexerType> matches;
-            if (!string.IsNullOrEmpty(name))
-               matches = from lexer in lexers
-                         where lexer.GrammarName == name
-                         select lexer;
-            else
-               matches = lexers;
-
-            foreach (var lexer in matches)
-            {
-               ParserType parser;
-               parser = (from candidate in parsers
-                         where candidate.GrammarName == lexer.GrammarName
-                         select candidate).FirstOrDefault();
-
-               var rules = parser.ActualType == null
-                              ? new List<string>()
-                              : GetParserRulesForGrammarParser(parser.ActualType).ToList();
-               var grammarRef = new GrammarReference(
-                                                     file,
-                                                     lexer.GrammarName,
-                                                     lexer.ActualType,
-                                                     parser.ActualType,
-                                                     rules);
-               results.Add(grammarRef);
-            }
+            return AssembleGrammars(grammarName, assembly, file);
          }
          catch (FileLoadException)
          {
@@ -352,7 +295,105 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grammar
             // do nothing for now, perhaps log later
          }
 
-         return results;
+         return new List<GrammarReference>();
+      }
+
+      private List<GrammarReference> AssembleGrammars(string grammarName, Assembly assembly, FileInfo fileInfo)
+      {
+         var results = new List<GrammarReference>();
+         List<ParserType> matches;
+         // We make parsers and lexers an explicit list to avoid multiple enumerations
+         var parsers = FindGrammarParsersInAssembly(assembly).ToList();
+         var lexers = FindGrammarLexersInAssembly(assembly).ToList();
+         if (!string.IsNullOrEmpty(grammarName))
+            matches = (from parser in parsers
+               where parser.GrammarName == grammarName
+               select parser).ToList();
+         else
+            matches = parsers;
+
+         switch (matches.Count)
+         {
+            case 0:
+               return results;
+            case 1:
+               results.Add(BuildGrammarReferenceFromParser(fileInfo, lexers, matches[0]));
+               break;
+            default:
+               results.AddRange(parsers.Select(parserType =>
+                  BuildGrammarReferenceFromParser(fileInfo, lexers, parserType)));
+               break;
+         }
+
+         //foreach (var grammarReference in results) 
+         //   lexers.Remove(grammarReference.Lexer);
+
+
+         //foreach (var lexer in matches)
+         //{
+         //   ParserType parser;
+         //   parser = (from candidate in parsers
+         //      where candidate.GrammarName == lexer.GrammarName
+         //      select candidate).FirstOrDefault();
+
+         //   var rules = parser.ActualType == null
+         //      ? new List<string>()
+         //      : GetParserRulesForGrammarParser(parser.ActualType).ToList();
+         //   var grammarRef = new GrammarReference(
+         //      fileInfo,
+         //      lexer.GrammarName,
+         //      lexer.ActualType,
+         //      parser.ActualType,
+         //      rules);
+         //   results.Add(grammarRef);
+         //}
+
+         return results.OrderBy(o => o.GrammarName).ToList();
+      }
+
+      private GrammarReference BuildGrammarReferenceFromParser(FileInfo fileInfo, IList<LexerType> lexers, ParserType parser)
+      {
+         var lexerTypes = lexers.ToList();
+         var rules = GetParserRulesForGrammarParser(parser.ActualType).ToList();
+
+         switch (lexerTypes.Count)
+         {
+            case 0:
+               return null;
+            case 1:
+               return new GrammarReference(
+                  fileInfo,
+                  parser.GrammarName,
+                  lexerTypes[0].ActualType,
+                  parser.ActualType,
+                  rules);
+         }
+
+#pragma warning disable S3267
+         foreach (var lexer in lexerTypes)
+         {
+            if (parser.GrammarName == lexer.GrammarName)
+               return new GrammarReference(
+                  fileInfo,
+                  parser.GrammarName,
+                  lexer.ActualType,
+                  parser.ActualType,
+                  rules);
+         }
+
+         foreach (var lexer in lexerTypes)
+         {
+            if (parser.GrammarName.StartsWith(lexer.GrammarName))
+               return new GrammarReference(
+                  fileInfo,
+                  parser.GrammarName,
+                  lexer.ActualType,
+                  parser.ActualType,
+                  rules);
+         }
+#pragma warning restore S3267
+
+         return null;
       }
 
       /// <summary>
