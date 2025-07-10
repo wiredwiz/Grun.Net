@@ -32,6 +32,13 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisualAnalyzer));
          this.splitContainer1 = new System.Windows.Forms.SplitContainer();
          this.CodeEditor = new FastColoredTextBoxNS.FastColoredTextBox();
+         this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+         this.panel1 = new System.Windows.Forms.Panel();
+         this.CmbRules = new System.Windows.Forms.ComboBox();
+         this.lblParserRule = new System.Windows.Forms.Label();
+         this.panel2 = new System.Windows.Forms.Panel();
+         this.lblChannel = new System.Windows.Forms.Label();
+         this.numChannel = new System.Windows.Forms.NumericUpDown();
          this.tabControlParse = new System.Windows.Forms.TabControl();
          this.tabParseTree = new System.Windows.Forms.TabPage();
          this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -104,18 +111,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
          this.StripLabelDelay = new System.Windows.Forms.ToolStripStatusLabel();
          this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-         this.CmbRules = new System.Windows.Forms.ComboBox();
-         this.lblParserRule = new System.Windows.Forms.Label();
-         this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-         this.lblChannel = new System.Windows.Forms.Label();
-         this.numChannel = new System.Windows.Forms.NumericUpDown();
-         this.panel1 = new System.Windows.Forms.Panel();
-         this.panel2 = new System.Windows.Forms.Panel();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).BeginInit();
+         this.flowLayoutPanel2.SuspendLayout();
+         this.panel1.SuspendLayout();
+         this.panel2.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.numChannel)).BeginInit();
          this.tabControlParse.SuspendLayout();
          this.tabParseTree.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
@@ -135,10 +139,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.splitContainer2.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.ParseMessageListView)).BeginInit();
          this.StatusStrip1.SuspendLayout();
-         this.flowLayoutPanel2.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.numChannel)).BeginInit();
-         this.panel1.SuspendLayout();
-         this.panel2.SuspendLayout();
          this.SuspendLayout();
          // 
          // splitContainer1
@@ -183,7 +183,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.CodeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
          this.CodeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
          this.CodeEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.CodeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
          this.CodeEditor.IsReplaceMode = false;
          this.CodeEditor.LeftBracket = '(';
          this.CodeEditor.LeftBracket2 = '[';
@@ -201,6 +200,78 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.CodeEditor.TextChangedDelayed += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.CodeEditor_TextChangedDelayed);
          this.CodeEditor.DragDrop += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragDrop);
          this.CodeEditor.DragEnter += new System.Windows.Forms.DragEventHandler(this.CodeEditor_DragEnter);
+         // 
+         // flowLayoutPanel2
+         // 
+         this.flowLayoutPanel2.AutoSize = true;
+         this.flowLayoutPanel2.Controls.Add(this.panel1);
+         this.flowLayoutPanel2.Controls.Add(this.panel2);
+         this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
+         this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+         this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+         this.flowLayoutPanel2.Size = new System.Drawing.Size(323, 97);
+         this.flowLayoutPanel2.TabIndex = 1;
+         // 
+         // panel1
+         // 
+         this.panel1.Controls.Add(this.CmbRules);
+         this.panel1.Controls.Add(this.lblParserRule);
+         this.panel1.Location = new System.Drawing.Point(3, 3);
+         this.panel1.Name = "panel1";
+         this.panel1.Size = new System.Drawing.Size(314, 43);
+         this.panel1.TabIndex = 0;
+         // 
+         // CmbRules
+         // 
+         this.CmbRules.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+         this.CmbRules.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+         this.CmbRules.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.CmbRules.FormattingEnabled = true;
+         this.CmbRules.Location = new System.Drawing.Point(95, 8);
+         this.CmbRules.Name = "CmbRules";
+         this.CmbRules.Size = new System.Drawing.Size(203, 28);
+         this.CmbRules.TabIndex = 0;
+         this.CmbRules.SelectedIndexChanged += new System.EventHandler(this.ParserRulesCombo_SelectedIndexChanged);
+         // 
+         // lblParserRule
+         // 
+         this.lblParserRule.AutoSize = true;
+         this.lblParserRule.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.lblParserRule.Location = new System.Drawing.Point(5, 11);
+         this.lblParserRule.Name = "lblParserRule";
+         this.lblParserRule.Size = new System.Drawing.Size(92, 20);
+         this.lblParserRule.TabIndex = 0;
+         this.lblParserRule.Text = "Parser Rule";
+         this.lblParserRule.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // panel2
+         // 
+         this.panel2.Controls.Add(this.lblChannel);
+         this.panel2.Controls.Add(this.numChannel);
+         this.panel2.Location = new System.Drawing.Point(3, 52);
+         this.panel2.Name = "panel2";
+         this.panel2.Size = new System.Drawing.Size(146, 42);
+         this.panel2.TabIndex = 1;
+         // 
+         // lblChannel
+         // 
+         this.lblChannel.AutoSize = true;
+         this.lblChannel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.lblChannel.Location = new System.Drawing.Point(5, 10);
+         this.lblChannel.Name = "lblChannel";
+         this.lblChannel.Size = new System.Drawing.Size(81, 20);
+         this.lblChannel.TabIndex = 1;
+         this.lblChannel.Text = "Channel #";
+         this.lblChannel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+         // 
+         // numChannel
+         // 
+         this.numChannel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.numChannel.Location = new System.Drawing.Point(92, 8);
+         this.numChannel.Name = "numChannel";
+         this.numChannel.Size = new System.Drawing.Size(45, 26);
+         this.numChannel.TabIndex = 3;
+         this.numChannel.ValueChanged += new System.EventHandler(this.numChannel_ValueChanged);
          // 
          // tabControlParse
          // 
@@ -871,77 +942,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          this.StripLabelDelay.Size = new System.Drawing.Size(0, 0);
          this.StripLabelDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
          // 
-         // CmbRules
-         // 
-         this.CmbRules.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-         this.CmbRules.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-         this.CmbRules.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.CmbRules.FormattingEnabled = true;
-         this.CmbRules.Location = new System.Drawing.Point(95, 8);
-         this.CmbRules.Name = "CmbRules";
-         this.CmbRules.Size = new System.Drawing.Size(203, 28);
-         this.CmbRules.TabIndex = 0;
-         this.CmbRules.SelectedIndexChanged += new System.EventHandler(this.ParserRulesCombo_SelectedIndexChanged);
-         // 
-         // lblParserRule
-         // 
-         this.lblParserRule.AutoSize = true;
-         this.lblParserRule.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.lblParserRule.Location = new System.Drawing.Point(5, 11);
-         this.lblParserRule.Name = "lblParserRule";
-         this.lblParserRule.Size = new System.Drawing.Size(92, 20);
-         this.lblParserRule.TabIndex = 0;
-         this.lblParserRule.Text = "Parser Rule";
-         this.lblParserRule.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-         // 
-         // flowLayoutPanel2
-         // 
-         this.flowLayoutPanel2.AutoSize = true;
-         this.flowLayoutPanel2.Controls.Add(this.panel1);
-         this.flowLayoutPanel2.Controls.Add(this.panel2);
-         this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-         this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-         this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-         this.flowLayoutPanel2.Size = new System.Drawing.Size(323, 97);
-         this.flowLayoutPanel2.TabIndex = 1;
-         // 
-         // lblChannel
-         // 
-         this.lblChannel.AutoSize = true;
-         this.lblChannel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.lblChannel.Location = new System.Drawing.Point(5, 10);
-         this.lblChannel.Name = "lblChannel";
-         this.lblChannel.Size = new System.Drawing.Size(81, 20);
-         this.lblChannel.TabIndex = 1;
-         this.lblChannel.Text = "Channel #";
-         this.lblChannel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-         // 
-         // numChannel
-         // 
-         this.numChannel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.numChannel.Location = new System.Drawing.Point(92, 8);
-         this.numChannel.Name = "numChannel";
-         this.numChannel.Size = new System.Drawing.Size(45, 26);
-         this.numChannel.TabIndex = 3;
-         // 
-         // panel1
-         // 
-         this.panel1.Controls.Add(this.CmbRules);
-         this.panel1.Controls.Add(this.lblParserRule);
-         this.panel1.Location = new System.Drawing.Point(3, 3);
-         this.panel1.Name = "panel1";
-         this.panel1.Size = new System.Drawing.Size(314, 43);
-         this.panel1.TabIndex = 0;
-         // 
-         // panel2
-         // 
-         this.panel2.Controls.Add(this.lblChannel);
-         this.panel2.Controls.Add(this.numChannel);
-         this.panel2.Location = new System.Drawing.Point(3, 52);
-         this.panel2.Name = "panel2";
-         this.panel2.Size = new System.Drawing.Size(146, 42);
-         this.panel2.TabIndex = 1;
-         // 
          // VisualAnalyzer
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -961,6 +961,12 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
          this.splitContainer1.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.CodeEditor)).EndInit();
+         this.flowLayoutPanel2.ResumeLayout(false);
+         this.panel1.ResumeLayout(false);
+         this.panel1.PerformLayout();
+         this.panel2.ResumeLayout(false);
+         this.panel2.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.numChannel)).EndInit();
          this.tabControlParse.ResumeLayout(false);
          this.tabParseTree.ResumeLayout(false);
          this.tabParseTree.PerformLayout();
@@ -983,12 +989,6 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ((System.ComponentModel.ISupportInitialize)(this.ParseMessageListView)).EndInit();
          this.StatusStrip1.ResumeLayout(false);
          this.StatusStrip1.PerformLayout();
-         this.flowLayoutPanel2.ResumeLayout(false);
-         ((System.ComponentModel.ISupportInitialize)(this.numChannel)).EndInit();
-         this.panel1.ResumeLayout(false);
-         this.panel1.PerformLayout();
-         this.panel2.ResumeLayout(false);
-         this.panel2.PerformLayout();
          this.ResumeLayout(false);
          this.PerformLayout();
 

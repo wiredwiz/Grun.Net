@@ -1197,5 +1197,10 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
          ParseTreeView.UseLabelNames = UseLabelNamesMnuItem.CheckState == CheckState.Checked;
          ParseSource();
       }
+
+      private void numChannel_ValueChanged(object sender, EventArgs e)
+      {
+         ParseSource();
+      }
    }
 }
