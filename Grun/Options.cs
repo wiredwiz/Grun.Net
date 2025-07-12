@@ -40,6 +40,8 @@ using CommandLine;
 
 namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 {
+   using System.Data.Common;
+
    /// <summary>
    /// Class that represents command line options.
    /// </summary>
@@ -60,6 +62,9 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
 
       [Value(2, MetaName = "Input Filename", HelpText = "File name to parse", Required = false)]
       public string FileName { get; set; }
+
+      [Option('c', "channel", Min = 0, Default = 0, HelpText = "Token channel to use in parsing", Required = false)]
+      public int Channel { get; set; }
 
       [Option("trace", Required = false, HelpText = "Trace grammar parsing")]
       public bool Trace { get; set; }

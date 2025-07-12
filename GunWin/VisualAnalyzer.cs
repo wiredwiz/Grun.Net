@@ -198,6 +198,20 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       }
 
       /// <summary>
+      /// Gets or sets the token channel to use when parsing.
+      /// </summary>
+      /// <value>The token channel.</value>
+      public int TokenChannel
+      {
+         get => (int)Math.Round(numChannel.Value, MidpointRounding.ToEven);
+         set
+         {
+            numChannel.Value = value;
+            ParseSource();
+         }
+      }
+
+      /// <summary>
       ///    Parses the source code.
       /// </summary>
       public void ParseSource()
@@ -402,6 +416,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
 
       private void BuildParseTreeTreeViewGuide(ITree tree)
       {
+         // TODO: Add support to determine current selected node path, then reselect as best as possible after building the tree
          ParseTreeView.SuspendLayout();
          ParseTreeView.BeginUpdate();
          ParseTreeView.Nodes.Clear();

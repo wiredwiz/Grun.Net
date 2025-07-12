@@ -82,6 +82,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                            visualAnalyzer.LoadSourceFile(o.FileName, encodingToUse);
                         }
 
+                        visualAnalyzer.TokenChannel = o.Channel;
+
                         if (o.Diagnostics) visualAnalyzer.ParseWithDiagnostics = true;
                         if (o.Trace) visualAnalyzer.ParseWithTracing = true;
                         if (o.Sll) visualAnalyzer.ParseWithSllMode = true;

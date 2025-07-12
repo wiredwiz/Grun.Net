@@ -112,6 +112,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             var loadGui = false;
                             var showParseTree = false;
                             var writeSvg = false;
+                            int channel = 0;
                             ISyntaxHighlightingGuide guide = null;
 
                             if (o.Tokens) options |= Grammar.ParseOption.Tokens;
@@ -122,6 +123,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                options |= Grammar.ParseOption.Tree;
                                showParseTree = true;
                             }
+
+                            channel = o.Channel;
 
                             if (!string.IsNullOrEmpty(o.SvgFileName))
                             {
@@ -241,7 +244,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                             // Now we attempt to parse, but still handle a lexer-only grammar.
                             if (grammar.Parser != null)
                             {
-                               var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options, null);
+                               var grammarParser = analyzer.BuildParserWithOptions(grammar, data, options, null, channel);
                                analyzer.ExecuteParsing(grammarParser, o.RuleName);
 
                                if (showParseTree)
