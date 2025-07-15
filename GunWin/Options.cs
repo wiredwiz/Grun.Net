@@ -57,7 +57,7 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
       [Option("file", HelpText = "File name to parse", Required = false)]
       public string FileName { get; set; }
 
-      [Option('c', "channel", Min = 0, Default = 0, HelpText = "Token channel to use in parsing", Required = false)]
+      [Option('c', "channel", Default = 0, HelpText = "Token channel to use in parsing", Required = false)]
       public int Channel { get; set; }
 
       [Option("trace", HelpText = "Trace grammar parsing", Required = false)]
