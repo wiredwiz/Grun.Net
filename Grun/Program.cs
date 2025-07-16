@@ -124,6 +124,11 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun
                                showParseTree = true;
                             }
 
+                            if (o.Channel < 0)
+                            {
+                               Console.WriteLine(Resources.NegativeChannelErrMsg);
+                               return;
+                            }
                             channel = o.Channel;
 
                             if (!string.IsNullOrEmpty(o.SvgFileName))

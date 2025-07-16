@@ -82,6 +82,8 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.GrunWin
                            visualAnalyzer.LoadSourceFile(o.FileName, encodingToUse);
                         }
 
+                        if (o.Channel < 0)
+                           throw new ArgumentException("Channel must not be negative");
                         visualAnalyzer.TokenChannel = o.Channel;
 
                         if (o.Diagnostics) visualAnalyzer.ParseWithDiagnostics = true;

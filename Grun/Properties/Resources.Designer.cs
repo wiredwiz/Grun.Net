@@ -97,6 +97,15 @@ namespace Org.Edgerunner.ANTLR4.Tools.Testing.Grun.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel must not be a negative number.
+        /// </summary>
+        internal static string NegativeChannelErrMsg {
+            get {
+                return ResourceManager.GetString("NegativeChannelErrMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Press any key to continue.
         /// </summary>
         internal static string PressAnyKeyMessage {

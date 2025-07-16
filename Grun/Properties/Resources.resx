@@ -141,4 +141,7 @@
   <data name="FileNotFoundErrorMessage" xml:space="preserve">
     <value>File "{0}" could not be found.</value>
   </data>
+  <data name="NegativeChannelErrMsg" xml:space="preserve">
+    <value>Channel must not be a negative number</value>
+  </data>
 </root>
